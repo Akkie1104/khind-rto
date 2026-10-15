@@ -1,0 +1,45 @@
+name: Validate KHIND RTO storefront
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Check JavaScript syntax
+        run: |
+          node --check script.js
+          node --check catalogue.js
+      - name: Assert essential storefront controls and privacy safeguards
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const html=fs.readFileSync('index.html','utf8');
+          const js=fs.readFileSync('script.js','utf8');
+          const css=fs.readFileSync('retail-2026.css','utf8');
+          const checks=[
+            ['fixed dark appearance',html.includes('data-theme="dark"')&&!html.includes('theme-toggle')],
+            ['budget controls',['80','100','150','all'].every(value=>html.includes('data-budget="'+value+'"'))],
+            ['budget uses regular rate',js.includes('plan.rate<=budgetCap')],
+            ['normal rate and total disclosed',js.includes('shop-price-commitment')&&js.includes('money(sched.total+1)')],
+            ['agent identity',html.includes('Ejen KHIND RTO Berdaftar')],
+            ['privacy notice',html.includes('Jangan hantar gambar IC')],
+            ['brand image',html.includes('id="hero-image"')],
+            ['contrast styling',css.includes('Family-first KHIND RTO / dark-only system')],
+            ['valid canonical',html.includes('href="https://khindrto.akizen.my/"')],
+            ['no user theme persistence',!js.includes('localStorage.getItem(\'khind-theme\')')]
+          ];
+          for(const [description,passed] of checks){
+            console.log((passed?'PASS ':'FAIL ')+description);
+          }
+          if(checks.some(([,passed])=>!passed))process.exit(1);
+          NODE

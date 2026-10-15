@@ -33,3 +33,20 @@ Images for most products currently reference KHIND-associated external CDNs rath
 - Confirm applicable written approval for independently produced advertisements; registered agent status does not automatically settle every advertising-permission requirement.
 - Do not accept NRIC photos, credit-card details or payments through this static website.
 - Keep `akizen.my` hosted independently in the `Akkie1104/akizen` repository.
+
+
+## Family-first UX direction (15 October 2026)
+
+**Audience hypothesis, not a proven demographic statistic:** Malaysian households setting up a home or replacing an essential appliance, with insufficient upfront cash for a full purchase but enough stable disposable income to comfortably maintain the normal monthly rate. Also serve customers who independently value KHIND Care Plan / warranty. Do not imply that customers with low income necessarily qualify.
+
+- Display the *regular* monthly rate after any promotion, contract duration, estimated RTO total and plan-specific benefits close to each product.
+- The budget filter uses the **normal monthly rate** and cheapest available listed plan, not the temporary promotion rate. It does not check customer creditworthiness or affordability.
+- Tell customers plainly that cash purchase can cost less overall and may be more appropriate for them.
+- Only market warranty, insurance, installation and servicing where the product's plan and KHIND documents actually support them.
+- No fabricated conversion rates, testimonials, approval guarantees, urgency, or savings claims.
+
+**Validate with real enquiries:** Weekly, record (privately) the number of website visitors (once analytics is configured), budget-filter interactions, product-specific WhatsApp enquiries, qualified prospects, submitted applications, approvals and completed sales. Ask prospects their main objection (monthly rate, duration, total cost, trust, service value). Do not upload personal details or NRIC data into GitHub.
+
+**Research context:** DOSM 2024 household-income/expenditure survey establishes broad purchasing-power pressures, *not* KHIND-specific demand. NN/g and Baymard product-page research supports visible pricing, clear total costs and trust signals. Future design changes should be tested against real prospect behavior.
+
+**Maintenance:** Promotions in October–December 2026 must be reviewed when they expire. Verify product data with KHIND before publishing new claims.

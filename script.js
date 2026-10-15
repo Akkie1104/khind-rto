@@ -130,7 +130,7 @@ function schedule(p,plan){
  return {first,discount,end,promoLabel,total:discount?first*6+plan.rate*(p.months-6):plan.rate*p.months};
 }
 const heroImage=document.querySelector('#hero-image');
-const heroProduct=byId.DHP90||products[0]||null;
+const heroProduct=byId.WM1248||products[0]||null;
 function showHeroFallback(){
   if(!heroImage||heroImage.dataset.failed)return;
   heroImage.dataset.failed='1';
@@ -148,6 +148,13 @@ if(heroImage&&heroProduct){
   else heroImage.addEventListener('error',showHeroFallback,{once:true});
 }else if(heroImage){
   showHeroFallback();
+}
+if(heroProduct&&heroProduct.plans.length){
+ const plan=heroProduct.plans[0], preview=schedule(heroProduct,plan);
+ const rate=document.querySelector('#hero-rate'),regular=document.querySelector('#hero-regular'),terms=document.querySelector('#hero-terms');
+ if(rate)rate.textContent=money(preview.first);
+ if(regular)regular.textContent=preview.discount?'Selepas 6 bulan: '+money(plan.rate)+'/bulan · '+heroProduct.months+' bulan':'Kadar biasa '+money(plan.rate)+'/bulan · '+heroProduct.months+' bulan';
+ if(terms)terms.textContent=preview.discount?'6 bulan pertama; tertakluk kelayakan promosi.':'Kadar rujukan; sahkan terma akhir.';
 }
 const banner=document.querySelector('#campaign');
 if(yearEndCampaign) banner.innerHTML='<b>Promosi 1 Okt – 31 Dis 2026</b><span>Produk individu terpilih: 50% untuk 6 bulan pertama · Kombo: RM65 untuk 6 bulan pertama · DHP90: dari RM30 untuk 6 bulan pertama.<small>Kadar biasa bersambung selepas tempoh promosi. Tertakluk kelayakan, stok dan pengesahan KHIND.</small></span>';
@@ -182,18 +189,39 @@ function searchableText(p){
   return [p.name,p.id,p.description,categoryLabels[p.category],...(p.keywords||[])].filter(Boolean).join(' ').toLowerCase();
 }
 function promoEligible(p){
-  return yearEndCampaign&&p.plans&&p.plans.length>0;
+  return yearEndCampaign&&p.yearEndPromo&&p.plans&&p.plans.length>0;
 }
 function rtoCardSummary(p,plan,sched){
-  const multi=p.plans.length>1;
-  const firstLabel=sched.discount?(multi?'Dari · 6 bulan pertama':'6 bulan pertama'):(multi?'Dari · kadar bulanan':'Kadar bulanan');
-  const next=p.sourceConflict
-    ? 'Tempoh pelan perlu disahkan dengan KHIND.'
-    : sched.discount
-      ? 'Kemudian '+(multi?'dari ':'')+money(plan.rate)+'/bulan.'
-      : (multi?'Pilihan pelan lain tersedia.':'Sepanjang '+p.months+' bulan.');
-  return '<div class="shop-price" aria-label="Ringkasan RTO"><span class="shop-price-label">'+firstLabel+'</span><div class="shop-price-main"><strong>'+money(sched.first)+'</strong><span>/bulan</span></div><span class="shop-price-next">'+next+'</span></div><p class="pricing-foot">'+(sched.discount?'Promosi hingga '+sched.end+' · ':'')+'Lihat butiran untuk jumlah & manfaat pelan.</p>';
+ const multi=p.plans.length>1;
+ const firstLabel=sched.discount?'6 bulan pertama':'Kadar bulanan biasa';
+ const next=sched.discount?'Selepas promosi: '+(multi?'dari ':'')+money(plan.rate)+'/bulan':(multi?'Pilihan pelan lain tersedia.':'Kadar ini sepanjang tempoh kontrak.');
+ const total=p.sourceConflict?'Perlu pengesahan':money(sched.total+1);
+ return '<div class="shop-price" aria-label="Ringkasan RTO">'+
+ '<span class="shop-price-label">'+firstLabel+'</span>'+
+ '<div class="shop-price-main"><strong>'+money(sched.first)+'</strong><span>/bulan</span></div>'+
+ '<span class="shop-price-next">'+next+'</span>'+
+ '<div class="shop-price-commitment"><span>Tempoh pelan</span><strong>'+p.months+' bulan</strong></div>'+
+ '<div class="shop-price-commitment"><span>Anggaran jumlah RTO*</span><strong>'+total+'</strong></div>'+
+ '<p class="pricing-foot">*Termasuk anggaran fi pemprosesan RM1. Caj tambahan & bayaran pertama perlu pengesahan KHIND.</p>'+
+ '</div>';
 }
+let budgetCap=null;
+const budgetButtons=[...document.querySelectorAll('[data-budget]')];
+const budgetFeedback=document.querySelector('#budget-feedback');
+function setBudget(value){
+ budgetCap=value==='all'?null:Number(value);
+ budgetButtons.forEach(button=>{
+  const selected=button.dataset.budget===value;
+  button.classList.toggle('active',selected);
+  button.setAttribute('aria-pressed',String(selected));
+ });
+ if(budgetFeedback)budgetFeedback.textContent=budgetCap===null?
+  'Semua bajet dipaparkan. Bandingkan kadar biasa, tempoh dan jumlah pembayaran.':
+  'Pelan dengan kadar biasa sehingga '+money(budgetCap)+'/bulan. Ini bukan semakan kelayakan.';
+ render();
+ document.querySelector('#koleksi').scrollIntoView({behavior:'smooth',block:'start'});
+}
+budgetButtons.forEach(button=>button.addEventListener('click',()=>setBudget(button.dataset.budget)));
 function render(){
  const searchInput=document.querySelector('#search');
  if(!products.length){
@@ -204,9 +232,10 @@ function render(){
  }
  const term=searchInput.value.trim().toLowerCase();
  const cash=document.querySelector('#payment').value==='cash';
- const shown=term
+ let shown=term
    ?products.filter(p=>searchableText(p).includes(term))
    :products.filter(p=>category==='all'?p.category!=='bundle':p.category===category);
+ if(budgetCap!==null)shown=shown.filter(p=>p.plans.some(plan=>plan.rate<=budgetCap));
  renderCategoryStory(term);
  document.querySelector('#count').textContent=shown.length+(term?' hasil carian':' '+(category==='bundle'?'kombo':'model'));
  grid.classList.remove('category-view');
@@ -224,6 +253,7 @@ function render(){
    const decisions=decisionPoints(p).slice(0,3).map(x=>'<li>'+escapeHTML(x)+'</li>').join('');
    const categoryResult=term?'<p class="result-category">'+escapeHTML(categoryLabels[p.category]||'Produk')+'</p>':'';
    const promo=promoEligible(p)&&sched?'<span class="promo-tag">'+escapeHTML(sched.promoLabel)+'</span>':'';
+   const benefit=!cash&&p.benefits?'<p class="card-benefits"><b>Waranti & manfaat pelan</b>'+escapeHTML(p.benefits)+'</p>':'';
    const conflict=p.sourceConflict?'<p class="verification-flag">Tempoh pelan perlu disahkan dengan KHIND sebelum membuat keputusan.</p>':'';
    let pricing='',action='Lihat pelan & butiran',buttonAttr='data-product="'+p.id+'"';
    if(cash){
@@ -246,7 +276,7 @@ function render(){
      pricing='<div class="cash-unavailable"><strong>Pelan belum disahkan</strong><span>Hubungi Hakim untuk semakan.</span></div>';
    }
    const askUrl=enquiry('saya berminat dengan '+p.name+' ('+p.id+').');
-   return '<article class="card" data-model="'+escapeHTML(p.id)+'"><div class="product-art">'+productVisual(p)+'</div><div class="card-content">'+categoryResult+'<p class="model">'+escapeHTML(p.category==='bundle'?'PAKEJ DUA PERALATAN':p.id)+'</p><h3>'+escapeHTML(p.name)+'</h3><p class="description">'+escapeHTML(p.description)+'</p><ul class="decision-points" aria-label="Maklumat ringkas">'+decisions+'</ul>'+promo+pricing+conflict+'<p class="stock">'+escapeHTML(p.stock)+'</p><div class="card-actions"><button aria-label="Lihat butiran '+escapeHTML(p.name+' '+p.id)+'" '+buttonAttr+'>'+action+'</button><a class="card-whatsapp" href="'+askUrl+'" target="_blank" rel="noopener noreferrer" aria-label="Tanya Hakim tentang '+escapeHTML(p.name+' '+p.id)+'"><span class="wa-mark" aria-hidden="true">WA</span><span>Tanya</span></a></div></div></article>';
+   return '<article class="card" data-model="'+escapeHTML(p.id)+'"><div class="product-art">'+productVisual(p)+'</div><div class="card-content">'+categoryResult+'<p class="model">'+escapeHTML(p.category==='bundle'?'PAKEJ DUA PERALATAN':p.id)+'</p><h3>'+escapeHTML(p.name)+'</h3><p class="description">'+escapeHTML(p.description)+'</p><ul class="decision-points" aria-label="Maklumat ringkas">'+decisions+'</ul>'+promo+pricing+benefit+conflict+'<p class="stock">'+escapeHTML(p.stock)+'</p><div class="card-actions"><button aria-label="Lihat butiran '+escapeHTML(p.name+' '+p.id)+'" '+buttonAttr+'>'+action+'</button><a class="card-whatsapp" href="'+askUrl+'" target="_blank" rel="noopener noreferrer" aria-label="Tanya Hakim tentang '+escapeHTML(p.name+' '+p.id)+'"><span class="wa-mark" aria-hidden="true">WA</span><span>Tanya</span></a></div></div></article>';
  }).join('') || '<p class="empty">Tiada model sepadan. Cuba istilah lain seperti aircond, fridge, washer atau dryer.</p>';
  grid.querySelectorAll('[data-product]').forEach(b=>b.addEventListener('click',()=>openDetail(products.find(p=>p.id===b.dataset.product))));
  grid.querySelectorAll('[data-rto-product]').forEach(b=>b.addEventListener('click',()=>{
@@ -324,7 +354,7 @@ function comparisonHtml(p,planIndex){
   const monthly=sched.discount
     ?money(sched.first)+'/bln (1–6), kemudian '+money(plan.rate)+'/bln'
     :money(plan.rate)+'/bln';
-  return '<section class="payment-comparison" aria-labelledby="compare-title"><h3 id="compare-title">RTO berbanding bayaran penuh</h3><p>Jumlah RTO boleh lebih tinggi kerana manfaat servis, perlindungan dan sokongan bergantung pada pelan. Semak manfaat sebenar dalam perjanjian sebelum membuat keputusan.</p><div class="compare-grid"><div class="compare-head"><span></span><b>Bayaran penuh</b><b>RTO</b></div><div><span>Cara bayar</span><strong>Sekali</strong><strong>'+monthly+'</strong></div><div><span>Jumlah</span><strong>'+money(cashAmount)+'</strong><strong>'+(p.sourceConflict?'Perlu pengesahan':money(sched.total+1))+'</strong></div><div><span>Servis / perlindungan</span><strong>Manfaat RTO tidak semestinya disertakan</strong><strong>Mengikut manfaat pelan</strong></div><div><span>Pemilikan</span><strong>Selepas bayaran penuh</strong><strong>Selepas semua bayaran RTO selesai</strong></div></div></section>';
+  return '<section class="payment-comparison" aria-labelledby="compare-title"><h3 id="compare-title">Bandingkan jumlah sebelum memilih</h3><p>Jumlah RTO boleh lebih tinggi daripada pembelian tunai. Manfaat waranti, KHIND Care Plan, servis dan perlindungan bergantung pada model dan pelan. Harga tunai mungkin lebih sesuai jika anda tidak memerlukan bayaran berperingkat atau manfaat tambahan.</p><div class="compare-grid"><div class="compare-head"><span></span><b>Bayaran penuh</b><b>RTO</b></div><div><span>Cara bayar</span><strong>Sekali</strong><strong>'+monthly+'</strong></div><div><span>Jumlah</span><strong>'+money(cashAmount)+'</strong><strong>'+(p.sourceConflict?'Perlu pengesahan':money(sched.total+1))+'</strong></div><div><span>Servis / perlindungan</span><strong>Manfaat RTO tidak semestinya disertakan</strong><strong>Mengikut manfaat pelan</strong></div><div><span>Pemilikan</span><strong>Selepas bayaran penuh</strong><strong>Selepas semua bayaran RTO selesai</strong></div></div></section>';
 }
 function setDetailMode(p,mode,planIndex=0){
   document.querySelectorAll('[data-detail-payment]').forEach(button=>{
@@ -375,7 +405,7 @@ function setDetailMode(p,mode,planIndex=0){
   const totalRows=p.sourceConflict
     ? '<div><dt>Jumlah komitmen</dt><dd>Perlu pengesahan tempoh</dd></div>'
     : '<div><dt>Tempoh</dt><dd>'+p.months+' bulan</dd></div><div><dt>Jumlah sewaan</dt><dd>'+money(sched.total)+'</dd></div><div><dt>Fi pemprosesan</dt><dd>RM1</dd></div><div class="total"><dt>Jumlah anggaran</dt><dd>'+money(sched.total+1)+'</dd></div>';
-  detail.innerHTML='<div class="breakdown"><dl>'+paymentRows+totalRows+'</dl></div><div class="plan-benefits"><h3>Termasuk dalam pelan</h3><p>'+escapeHTML(p.benefits)+'</p></div>'+comparisonHtml(p,selected)+sourceConflictHtml(p)+'<p class="fine">'+(sched.discount?'Promosi hingga '+sched.end+'. ':'')+'Anggaran tidak termasuk caj kerja tambahan, caj lewat atau penamatan awal. Jumlah bayaran pertama dan kelayakan promosi perlu disahkan oleh KHIND.</p>'+(p.category==='cooling'?'<p><b>Trade-in aircond:</b> 1 Oktober–31 Disember 2026 untuk unit Sejuk Syiok terpilih di Semenanjung Malaysia. Trade-in 1 unit menerima RM150 Touch ’n Go eWallet; 2 unit menerima RM300, tertakluk terma kempen.</p>':'')+'<a class="button dark modal-cta" href="'+enquiry(message)+'" target="_blank" rel="noopener noreferrer">Tanya tentang pilihan ini di WhatsApp ↗</a><p class="fine">Jangan hantar gambar IC atau butiran kad dalam chat. Gunakan pautan rasmi KHIND untuk dokumen dan pembayaran.</p>';
+  detail.innerHTML='<div class="breakdown"><dl>'+paymentRows+totalRows+'</dl></div><div class="plan-benefits"><h3>Manfaat pelan yang dipilih</h3><p>'+escapeHTML(p.benefits)+'</p></div>'+comparisonHtml(p,selected)+sourceConflictHtml(p)+'<p class="fine">'+(sched.discount?'Promosi hingga '+sched.end+'. ':'')+'Anggaran tidak termasuk caj kerja tambahan, caj lewat atau penamatan awal. Jumlah bayaran pertama dan kelayakan promosi perlu disahkan oleh KHIND.</p>'+(p.category==='cooling'?'<p><b>Trade-in aircond:</b> 1 Oktober–31 Disember 2026 untuk unit Sejuk Syiok terpilih di Semenanjung Malaysia. Trade-in 1 unit menerima RM150 Touch ’n Go eWallet; 2 unit menerima RM300, tertakluk terma kempen.</p>':'')+'<a class="button dark modal-cta" href="'+enquiry(message)+'" target="_blank" rel="noopener noreferrer">Tanya tentang pilihan ini di WhatsApp ↗</a><p class="fine">Jangan hantar gambar IC atau butiran kad dalam chat. Gunakan pautan rasmi KHIND untuk dokumen dan pembayaran.</p>';
 }
 function openDetail(p){
   lastProductId=p.id;
@@ -399,29 +429,6 @@ document.querySelector('#browse-laundry').addEventListener('click',()=>{
   syncClearSearch();
   document.querySelector('[data-category="laundry"]').click();
 });
-
-
-
-
-const themeToggle=document.querySelector('.theme-toggle');
-const themeMedia=window.matchMedia('(prefers-color-scheme: dark)');
-let chosenTheme=null;
-try {chosenTheme=localStorage.getItem('khind-theme');} catch {}
-function applyTheme(){
- const dark=chosenTheme?chosenTheme==='dark':themeMedia.matches;
- document.documentElement.dataset.theme=dark?'dark':'light';
- themeToggle.setAttribute('aria-pressed',String(dark));
- themeToggle.setAttribute('aria-label',dark?'Gunakan tema cerah':'Gunakan tema gelap');
- themeToggle.querySelector('img').src='assets/'+(dark?'sun':'moon')+'.svg';
-}
-applyTheme();
-themeToggle.addEventListener('click',()=>{
- chosenTheme=document.documentElement.dataset.theme==='dark'?'light':'dark';
- try {localStorage.setItem('khind-theme',chosenTheme);} catch {}
- applyTheme();
-});
-themeMedia.addEventListener('change',applyTheme);
-
 
 
 
