@@ -1,0 +1,8 @@
+/* Align new full-catalogue links with the existing dark homepage. */
+@media(min-width:56.26em){.desktop-nav{gap:clamp(.7rem,1vw,1.2rem)}.desktop-nav a{font-size:.77rem}}
+.site-footer .footer-inner>a{text-decoration:underline;text-underline-offset:.18rem}
+@media(max-width:43.75em){.site-footer .footer-inner{align-items:start}.site-footer .footer-inner>a{min-height:2rem}}
+.browse-all-banner{display:flex;justify-content:center;padding:1.5rem 0 0}.browse-all-banner .button-primary{min-height:3.15rem}
+.footer-link-group{display:flex;flex-wrap:wrap;justify-content:end;gap:.45rem .9rem}
+.footer-link-group a{font-size:.8rem;text-decoration:underline;text-underline-offset:.18rem}
+@media(max-width:43.75em){.footer-link-group{justify-content:start}}

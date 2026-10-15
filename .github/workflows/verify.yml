@@ -20,6 +20,7 @@ jobs:
           node --check script.js
           node --check catalogue.js
           node --check motion-2026.js
+          node --check storefront.js
       - name: Assert essential storefront controls and privacy safeguards
         run: |
           node --input-type=module <<'NODE'
@@ -54,5 +55,18 @@ jobs:
           for(const [description,passed] of checks){
             console.log((passed?'PASS ':'FAIL ')+description);
           }
-          if(checks.some(([,passed])=>!passed))process.exit(1);
+          const pages=['catalogue','combos','promotions','cara-rto','faq','mohon','privasi'];
+          const models=['WM1248','DHP90','WD1468','RFS600A','RFM466A','RF480','WM150A','ACSON-1.0','ACSON-1.5','ACSON-2.0','SI6029BP','WD1438','CD12D','COMBO-1','COMBO-2','COMBO-3','COMBO-4','COMBO-5','COMBO-6','COMBO-7','COMBO-8','COMBO-9','COMBO-10'];
+          const shopChecks=[
+            ['all storefront sections exist',pages.every(name=>fs.existsSync(name+'/index.html'))],
+            ['23 SEO product pages exist',models.every(name=>fs.existsSync('products/'+name+'/index.html'))],
+            ['homepage links to full catalogue',html.includes('href="catalogue/"')],
+            ['new styles present',fs.existsSync('storefront.css')&&fs.existsSync('storefront.js')],
+            ['domain sitemap present',fs.existsSync('sitemap.xml')&&fs.readFileSync('sitemap.xml','utf8').includes('https://khindrto.akizen.my/products/WM1248/')],
+            ['agent disclosure on all pages',[...pages.map(x=>x+'/index.html'),...models.map(x=>'products/'+x+'/index.html')].every(path=>fs.readFileSync(path,'utf8').includes('Laman promosi bebas'))],
+            ['customer links go to agent',fs.readFileSync('mohon/index.html','utf8').includes('wa.me/60174201247')],
+            ['no false official status',!fs.readFileSync('mohon/index.html','utf8').includes('laman rasmi HQ')]
+          ];
+          for(const [description,passed] of shopChecks)console.log((passed?'PASS ':'FAIL ')+description);
+          if([...checks,...shopChecks].some(([,passed])=>!passed))process.exit(1);
           NODE

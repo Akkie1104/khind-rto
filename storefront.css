@@ -1,0 +1,130 @@
+@font-face{font-family:Manrope;src:url("assets/manrope.woff2") format("woff2");font-style:normal;font-weight:200 800;font-display:swap}
+/* Agent storefront: shared catalogue, product, campaign and help pages.
+   Independent sales agent; not an official KHIND corporate website. */
+:root{--ax:#f1c92a;--ac:#f6f4e9;--bg:#0d120e;--pane:#1c241d;--pane2:#252e25;--stroke:#435144;--quiet:#b9c9b7}
+*,*:before,*:after{box-sizing:border-box}
+html{scroll-behavior:smooth;color-scheme:dark}
+body.agent-body{margin:0;background:var(--bg);color:var(--ac);font:400 clamp(1rem,.97rem + .14vw,1.075rem)/1.6 Manrope,system-ui,sans-serif}
+.agent-body a{color:inherit;text-decoration:none}
+.agent-body button,.agent-body input,.agent-body select{font:inherit}
+.agent-container{width:min(84rem,calc(100% - 2.25rem));margin:auto}
+.agent-smallbar{background:#232818;border-bottom:1px solid #555333;color:#eee2a6;font-size:.78rem;padding:.45rem 0}
+.agent-smallbar .agent-container{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.4rem 1rem}
+.agent-head{position:sticky;top:0;background:rgba(12,18,13,.96);backdrop-filter:blur(13px);z-index:30;border-bottom:1px solid var(--stroke)}
+.agent-head-inner{display:flex;align-items:center;gap:1.25rem;min-height:4.35rem}
+.agent-logo{display:flex;flex-direction:column;line-height:1.05;min-width:max-content}
+.agent-logo b{font-size:1.65rem;letter-spacing:-.075em}
+.agent-logo span{font-size:.72rem;color:#f7ce2d;font-weight:750;margin-top:.12rem}
+.agent-nav{display:flex;align-items:center;gap:1.35rem;margin-left:auto}
+.agent-nav a{font-size:.85rem;font-weight:700;color:#d7e1d5;white-space:nowrap}
+.agent-nav a:hover,.agent-nav a[aria-current=page]{color:var(--ax)}
+.agent-head-cta,.agent-primary,.agent-secondary{display:inline-flex;justify-content:center;align-items:center;gap:.5rem;min-height:2.9rem;border-radius:.55rem;padding:.72rem 1.1rem;font-weight:800;font-size:.89rem;line-height:1.3}
+.agent-head-cta,.agent-primary{background:var(--ax);color:#13150f!important;border:1px solid var(--ax)}
+.agent-head-cta:hover,.agent-primary:hover{background:#ffde64}
+.agent-secondary{background:transparent;border:1px solid #66715a;color:#fff!important}
+.agent-secondary:hover{border-color:var(--ax)}
+.agent-breadcrumb{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;font-size:.78rem;color:var(--quiet);padding:1.1rem 0}
+.agent-breadcrumb a{text-decoration:underline;text-underline-offset:.18rem}
+.agent-kicker{text-transform:uppercase;letter-spacing:.11em;font-size:.74rem;color:#f4d34b;font-weight:850}
+.agent-display{font-size:clamp(2rem,1.52rem + 2.1vw,3.65rem);line-height:1.14;letter-spacing:-.055em;margin:.5rem 0 1rem}
+.agent-lead{font-size:clamp(1rem,.96rem + .2vw,1.15rem);color:#d7e1d4;max-width:52rem;margin:0 0 1.4rem}
+.agent-gradient{background:radial-gradient(ellipse at 84% 0%,rgba(226,171,34,.17),transparent 62%),linear-gradient(110deg,#152016,#242a1a 70%,#312817)}
+.agent-pagehero{border:1px solid #535033;border-radius:1rem;padding:clamp(1.25rem,3vw,3rem);margin:.6rem 0 2rem}
+.agent-pagehero .agent-display{max-width:55rem}
+.agent-toolbar{display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:end;margin:1.5rem 0}
+.agent-input-group label,.agent-filter-select label{display:block;font-weight:700;font-size:.82rem;margin-bottom:.35rem}
+.agent-toolbar input,.agent-toolbar select{background:#171f17;color:#f8faf6;border:1px solid #576658;border-radius:.5rem;min-height:3rem;width:100%;padding:.6rem .75rem}
+.agent-input-group{max-width:38rem}
+.agent-filter-pills{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.2rem}
+.agent-filter-pills a,.agent-filter-pills button{border:1px solid #536452;border-radius:100px;background:#1d291e;color:#e0e6dd;display:inline-flex;align-items:center;justify-content:center;min-height:2.6rem;padding:.45rem .85rem;font-size:.85rem;cursor:pointer}
+.agent-filter-pills a.active,.agent-filter-pills button.active{background:var(--ax);color:#11140e;border-color:var(--ax);font-weight:850}
+.agent-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1rem 0 3rem}
+.agent-item{display:flex;flex-direction:column;background:var(--pane);border:1px solid var(--stroke);border-radius:.85rem;overflow:hidden}
+.agent-item-image{display:flex;align-items:center;justify-content:center;min-height:14.5rem;padding:1rem;background:linear-gradient(130deg,#f9f9f4,#e8e9e1);overflow:hidden}
+.agent-item-image img{width:100%;height:14rem;object-fit:contain;mix-blend-mode:multiply}
+.agent-item-image .agent-pair{display:flex;align-items:center;width:100%;height:14rem;gap:.3rem}
+.agent-item-image .agent-pair img{width:49%;height:100%;object-fit:contain}
+.agent-item-info{padding:1.15rem;display:flex;flex-direction:column;flex:1}
+.agent-item h2,.agent-item h3{font-size:1.12rem;line-height:1.35;letter-spacing:-.02em;margin:.35rem 0}
+.agent-item-copy{color:var(--quiet);font-size:.88rem;line-height:1.5;margin:.2rem 0 .95rem}
+.agent-price{margin:auto 0 .65rem;font-size:1.9rem;font-weight:900;line-height:1.25;color:#f8d145}
+.agent-price small{font-size:.84rem;color:#dce2d6;font-weight:600}
+.agent-price-notes{font-size:.82rem;color:#cbd8c7;margin:.1rem 0 1rem}
+.agent-tiny{font-size:.77rem;color:#c7d1c3;line-height:1.5}
+.agent-item .agent-primary{margin-top:auto}
+.agent-pill{display:inline-flex;border:1px solid #645b2d;color:#f4d865;background:#2b2b1a;padding:.24rem .6rem;border-radius:100px;font-size:.72rem;font-weight:750;width:max-content}
+.agent-detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(19rem,.78fr);gap:clamp(1.3rem,3vw,3rem);margin:1.1rem 0 2.5rem;align-items:start}
+.agent-media{border-radius:1rem;border:1px solid #aaa79a;background:linear-gradient(140deg,#fbfbf7,#e7e8e0);min-height:32rem;padding:2.2rem;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.agent-media img{display:block;max-width:100%;width:100%;max-height:31rem;object-fit:contain;mix-blend-mode:multiply}
+.agent-media .agent-pair{display:flex;width:100%;gap:.6rem;align-items:center}
+.agent-media .agent-pair img{width:48%}
+.agent-details-info{min-width:0}
+.agent-details-info h1{font-size:clamp(1.8rem,1.5rem + 1.2vw,2.8rem);line-height:1.18;letter-spacing:-.045em;margin:.5rem 0 .8rem}
+.agent-details-info>p{color:#cfdbcd}
+.agent-plan{background:#252e22;border:1px solid #4d5a3e;border-radius:.75rem;padding:1.15rem;margin:1.15rem 0}
+.agent-plan-label{font-size:.75rem;letter-spacing:.05em;color:#d9e3d5;font-weight:800}
+.agent-plan-price{font-size:2.4rem;color:var(--ax);line-height:1.1;font-weight:850;margin:.5rem 0}
+.agent-plan-price small{font-size:.95rem;color:#e0e8db}
+.agent-plan dl{margin:.65rem 0}
+.agent-plan dl>div{display:flex;justify-content:space-between;gap:.8rem;padding:.45rem 0;border-top:1px solid #41503e;font-size:.88rem}
+.agent-plan dt{color:#cbd8c9}
+.agent-plan dd{margin:0;text-align:right;font-weight:800}
+.agent-plan-select{margin-top:1rem}
+.agent-plan-select label{font-size:.84rem;display:block;margin-bottom:.35rem}
+.agent-plan-select select{background:#192119;border:1px solid #6b7761;border-radius:.4rem;color:#fff;min-height:2.9rem;width:100%;padding:.4rem}
+.agent-action-row{display:flex;flex-wrap:wrap;gap:.55rem;margin:.9rem 0 1.4rem}
+.agent-notice{padding:.95rem 1.1rem;background:#29301c;border-left:3px solid var(--ax);color:#e6e9d7;border-radius:.25rem;font-size:.87rem;line-height:1.6}
+.agent-section{margin:2.5rem 0}
+.agent-section h2{font-size:clamp(1.35rem,1.2rem + .55vw,1.85rem);line-height:1.25}
+.agent-copy{color:#d0dbce;max-width:55rem}
+.agent-three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.agent-feature{background:#1b261c;border:1px solid var(--stroke);border-radius:.8rem;padding:1.3rem}
+.agent-feature h3{font-size:1.03rem;margin:.1rem 0 .5rem;color:#f9f7e9}
+.agent-feature p{font-size:.9rem;color:#cfdacd;margin:0}
+.agent-steps{counter-reset:steps}
+.agent-steps article{position:relative;padding:1.2rem;border-left:2px solid #705c25;margin-bottom:.7rem;background:#1a231b;border-radius:.4rem}
+.agent-steps article:before{counter-increment:steps;content:counter(steps,decimal-leading-zero);display:block;color:#efd044;font-weight:900;margin-bottom:.4rem}
+.agent-faq details{border-bottom:1px solid #465345}
+.agent-faq summary{padding:1rem 0;font-weight:750;cursor:pointer}
+.agent-faq details p{max-width:53rem;font-size:.93rem;color:#ced8ca}
+.agent-aside{margin:1.5rem 0;padding:1.2rem;background:#282c1b;border:1px solid #5a522b;border-radius:.7rem}
+.agent-foot{border-top:1px solid var(--stroke);background:#090e0a;padding:2.3rem 0;margin-top:3rem}
+.agent-foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2rem}
+.agent-foot b{color:#f0d051}
+.agent-foot p,.agent-foot a{font-size:.84rem;color:#c7d4c3}
+.agent-foot-col{display:flex;flex-direction:column;gap:.5rem}
+.agent-mobile-bar{display:none}
+.agent-hidden{display:none!important}
+.agent-result-count{font-size:.85rem;color:#c9d6c6}
+.agent-media-note{font-size:.75rem;color:#c6d4c5;margin:.65rem 0}
+@media(max-width:66rem){.agent-nav{gap:.8rem}.agent-nav a{font-size:.77rem}.agent-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:50rem){
+ .agent-head-inner{flex-wrap:wrap;padding:.75rem 0;gap:.5rem}
+ .agent-nav{order:3;width:100%;overflow-x:auto;margin:0;padding:.4rem 0}
+ .agent-nav a{min-height:2rem}
+ .agent-head-cta{margin-left:auto;padding:.5rem .75rem;font-size:.78rem;min-height:2.5rem}
+ .agent-detail{grid-template-columns:1fr}
+ .agent-media{min-height:20rem}
+ .agent-three{grid-template-columns:1fr}
+ .agent-foot-grid{grid-template-columns:1fr;gap:1rem}
+ .agent-toolbar{grid-template-columns:1fr}
+ .agent-input-group{max-width:none}
+ .agent-mobile-bar{display:flex;position:sticky;bottom:0;z-index:25;padding:.7rem 1rem;background:rgba(11,17,12,.95);border-top:1px solid #526251;gap:.6rem}
+ .agent-mobile-bar>*{flex:1}
+}
+@media(max-width:36rem){
+ .agent-container{width:calc(100% - 1.5rem)}
+ .agent-grid{grid-template-columns:1fr;gap:.85rem}
+ .agent-item-image{min-height:15rem}
+ .agent-item-image img{height:14rem}
+ .agent-pagehero{padding:1.2rem;margin:.5rem 0 1.3rem}
+ .agent-media{padding:1.25rem;min-height:18rem}
+ .agent-media img{max-height:19rem}
+ .agent-display{font-size:clamp(2rem,8.2vw,2.7rem)}
+ .agent-head-cta{font-size:.73rem}
+}
+@media(hover:hover) and (pointer:fine){
+ .agent-item{transition:transform .18s ease,border-color .18s ease}
+ .agent-item:hover{transform:translateY(-2px);border-color:#94813e}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
