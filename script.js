@@ -141,8 +141,9 @@ function showHeroFallback(){
   heroImage.after(fallback);
 }
 if(heroImage&&heroProduct){
-  heroImage.src=heroProduct.image||'';
-  heroImage.alt=heroProduct.name+' '+heroProduct.id;
+  const featuredStudio=heroProduct.id==='WM1248';
+  heroImage.src=featuredStudio?'assets/wm1248-studio-hero.webp':heroProduct.image||'';
+  heroImage.alt=featuredStudio?'Ilustrasi studio mesin basuh KHIND WM1248 9kg; rujuk foto rasmi untuk butiran tepat':heroProduct.name+' '+heroProduct.id;
   heroImage.closest('.hero-product-image').dataset.model=heroProduct.id;
   if(!heroProduct.image)showHeroFallback();
   else heroImage.addEventListener('error',showHeroFallback,{once:true});

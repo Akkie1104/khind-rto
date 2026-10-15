@@ -30,9 +30,12 @@ jobs:
           const motion=fs.readFileSync('motion-2026.css','utf8');
           const photography=fs.readFileSync('photo-2026.css','utf8');
           const checks=[
-            ['verified official photo stylesheet loaded',html.includes('photo-2026.css?v=photo-1')],
+            ['studio photo stylesheet loaded',html.includes('photo-2026.css?v=photo-2')],
+            ['generated hero local image exists',fs.existsSync('assets/wm1248-studio-hero.webp')],
+            ['studio hero is labeled accurately',html.includes('Ilustrasi studio · Semak foto rasmi')],
+            ['hero JS does not override studio with official photo',js.includes("featuredStudio?'assets/wm1248-studio-hero.webp'")],
             ['official WM1248 source link',html.includes('https://www.khindrto.com.my/products/9kg-front-load-washer-wm1248')],
-            ['photography uses real original source',html.includes('WM1248_Front%20Left.jpg')],
+            ['official catalogue WM1248 photo retained',fs.readFileSync('catalogue.js','utf8').includes('WM1248_Front%20Left.jpg')],
             ['realistic light image mat',photography.includes('mix-blend-mode:multiply')],
             ['motion assets loaded',html.includes('motion-2026.css')&&html.includes('motion-2026.js')],
             ['reduced motion supported',motion.includes('prefers-reduced-motion:reduce')],
