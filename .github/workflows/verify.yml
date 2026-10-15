@@ -19,6 +19,7 @@ jobs:
         run: |
           node --check script.js
           node --check catalogue.js
+          node --check motion-2026.js
       - name: Assert essential storefront controls and privacy safeguards
         run: |
           node --input-type=module <<'NODE'
@@ -26,7 +27,11 @@ jobs:
           const html=fs.readFileSync('index.html','utf8');
           const js=fs.readFileSync('script.js','utf8');
           const css=fs.readFileSync('retail-2026.css','utf8');
+          const motion=fs.readFileSync('motion-2026.css','utf8');
           const checks=[
+            ['motion assets loaded',html.includes('motion-2026.css')&&html.includes('motion-2026.js')],
+            ['reduced motion supported',motion.includes('prefers-reduced-motion:reduce')],
+            ['no perpetual motion loop',!motion.includes('infinite')],
             ['fixed dark appearance',html.includes('data-theme="dark"')&&!html.includes('theme-toggle')],
             ['budget controls',['80','100','150','all'].every(value=>html.includes('data-budget="'+value+'"'))],
             ['budget uses regular rate',js.includes('plan.rate<=budgetCap')],

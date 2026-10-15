@@ -1,0 +1,225 @@
+/* KHIND RTO – restrained motion & legibility layer, v1.1
+   Goal: visible feedback, clear scan hierarchy, no perpetual animation.
+   Pair with motion-2026.js for optional viewport entrance cues.
+*/
+:root{
+  --motion-out:cubic-bezier(.2,.75,.25,1);
+  --motion-fast:170ms;
+  --motion-normal:260ms;
+}
+body{font-size:clamp(1rem,.965rem + .15vw,1.08rem);line-height:1.63}
+.section-label{letter-spacing:.09em}
+html[data-theme=dark] .store-hero{
+  box-shadow:0 24px 66px rgba(0,0,0,.25);
+  isolation:isolate;
+}
+html[data-theme=dark] .store-hero::after{
+  content:"";position:absolute;z-index:-1;
+  inset:0 0 0 auto;width:40%;
+  background:radial-gradient(ellipse at 60% 14%,rgba(242,202,34,.10),transparent 65%);
+  pointer-events:none;
+}
+.hero-copy{animation:hero-enter .56s var(--motion-out) both}
+.hero-product{animation:hero-enter .66s var(--motion-out) .08s both}
+@keyframes hero-enter{
+  from{opacity:.01;transform:translateY(13px)}
+  to{opacity:1;transform:translateY(0)}
+}
+/* Clear interactive affordance; no infinite decoration. */
+html[data-theme=dark] .button-primary,
+html[data-theme=dark] .header-contact,
+html[data-theme=dark] .card-actions>button,
+html[data-theme=dark] .contact-button,
+html[data-theme=dark] .modal-cta{
+  transition:transform var(--motion-fast) var(--motion-out),
+    box-shadow var(--motion-fast) var(--motion-out),
+    background-color var(--motion-fast) ease;
+}
+html[data-theme=dark] .budget-options button,
+html[data-theme=dark] .filters button,
+html[data-theme=dark] .payment-switch button{
+  transition:background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    transform var(--motion-fast) var(--motion-out);
+}
+html[data-theme=dark] .budget-options button.active{
+  box-shadow:0 0 0 1px rgba(255,229,112,.28),0 5px 18px rgba(0,0,0,.15);
+}
+html[data-theme=dark] .category-section,
+html[data-theme=dark] .catalogue-section,
+html[data-theme=dark] .value-section{scroll-margin-top:5rem}
+html[data-theme=dark] .value-grid{gap:1rem}
+html[data-theme=dark] .value-grid article{
+  position:relative;overflow:hidden;
+  border-color:#404d3e;
+  background:linear-gradient(148deg,#222b20,#1a211b);
+  border-radius:.8rem;
+  transition:transform var(--motion-normal) var(--motion-out),
+    border-color var(--motion-normal) ease;
+}
+html[data-theme=dark] .value-grid article:before{
+  content:"";position:absolute;left:0;top:0;width:100%;height:3px;
+  background:linear-gradient(90deg,rgba(243,205,53,.72),transparent 78%);
+}
+html[data-theme=dark] .value-grid h3{font-size:1.09rem;line-height:1.35}
+html[data-theme=dark] .value-grid p{font-size:.95rem;line-height:1.65}
+html[data-theme=dark] .simple-heading h2,
+html[data-theme=dark] .catalogue-heading h2{
+  line-height:1.2;
+}
+html[data-theme=dark] .filters button{position:relative}
+html[data-theme=dark] .filters button.active{
+  border-bottom-color:#7b6727;
+}
+html[data-theme=dark] .filters b{font-size:.92rem}
+html[data-theme=dark] .filters small{font-size:.8rem}
+html[data-theme=dark] .catalogue-tools{box-shadow:0 6px 18px rgba(0,0,0,.13)}
+html[data-theme=dark] .products{align-items:stretch}
+html[data-theme=dark] .card{
+  transition:transform var(--motion-normal) var(--motion-out),
+    box-shadow var(--motion-normal) var(--motion-out),
+    border-color var(--motion-fast) ease;
+  animation:card-present .24s var(--motion-out) both;
+}
+@keyframes card-present{
+  from{opacity:.62;transform:translateY(5px)}
+  to{opacity:1;transform:translateY(0)}
+}
+html[data-theme=dark] .product-art{
+  overflow:hidden;
+  background:linear-gradient(135deg,#f6f7f4,#e6ebe3);
+}
+html[data-theme=dark] .product-art>img,
+html[data-theme=dark] .combo-art img{
+  transition:transform .32s var(--motion-out);
+}
+html[data-theme=dark] .card h3{
+  font-size:clamp(1.08rem,1.05rem + .15vw,1.22rem);
+  letter-spacing:-.025em;
+  line-height:1.35;
+}
+html[data-theme=dark] .card .description{
+  font-size:.91rem;line-height:1.45;margin-bottom:.7rem;
+}
+html[data-theme=dark] .card .decision-points{
+  margin-bottom:.9rem;font-size:.82rem;line-height:1.5;
+}
+html[data-theme=dark] .promo-tag{
+  border-radius:.3rem;padding:.3rem .52rem;
+  font-size:.71rem;letter-spacing:.025em;
+}
+html[data-theme=dark] .shop-price{padding-top:.95rem}
+html[data-theme=dark] .shop-price-label{font-size:.88rem}
+html[data-theme=dark] .shop-price-main strong{
+  font-size:2.08rem;letter-spacing:-.04em;
+}
+html[data-theme=dark] .shop-price-next{
+  font-size:.91rem;line-height:1.5;
+}
+html[data-theme=dark] .shop-price-commitment{
+  font-size:.86rem;line-height:1.45;
+  padding-block:.5rem;
+}
+html[data-theme=dark] .pricing-foot{
+  margin-top:.62rem;
+  font-size:.79rem;line-height:1.56;
+}
+html[data-theme=dark] .card-benefits{
+  padding:.85rem .9rem;
+  font-size:.84rem;line-height:1.65;
+  background:linear-gradient(135deg,#292f21,#21291f);
+  border-color:#4a5c3e;
+}
+html[data-theme=dark] .card-benefits b{
+  font-size:.83rem;letter-spacing:.01em;
+}
+html[data-theme=dark] .card-actions{
+  margin-top:1rem;gap:1rem;
+}
+html[data-theme=dark] .card-actions>button{
+  min-height:2.95rem;padding-inline:1rem;
+  border-radius:.55rem;font-size:.9rem;
+}
+html[data-theme=dark] .card-whatsapp{
+  font-size:.88rem;white-space:nowrap;
+}
+html[data-theme=dark] dialog[open]{
+  animation:dialog-enter .23s var(--motion-out) both;
+}
+@keyframes dialog-enter{
+  from{opacity:.45;transform:translateY(13px) scale(.99)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+html[data-theme=dark] dialog::backdrop{
+  background:rgba(5,8,5,.79);
+}
+/* Reveal only when JS has explicitly opted each section into observation.
+   Without JS all content stays visible. */
+.reveal-on-scroll{
+  opacity:0;transform:translateY(15px);
+}
+.reveal-on-scroll.is-visible{
+  animation:section-enter .42s var(--motion-out) both;
+}
+@keyframes section-enter{
+  from{opacity:.01;transform:translateY(15px)}
+  to{opacity:1;transform:translateY(0)}
+}
+html[data-theme=dark] .faq-list summary{transition:color .18s ease}
+html[data-theme=dark] .faq-list details[open] summary{color:#f5d64b}
+@media(hover:hover) and (pointer:fine){
+  html[data-theme=dark] .button-primary:hover,
+  html[data-theme=dark] .header-contact:hover,
+  html[data-theme=dark] .card-actions>button:hover,
+  html[data-theme=dark] .contact-button:hover,
+  html[data-theme=dark] .modal-cta:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,.24);
+  }
+  html[data-theme=dark] .budget-options button:hover{
+    transform:translateY(-2px);
+  }
+  html[data-theme=dark] .value-grid article:hover{
+    transform:translateY(-3px);border-color:#897532;
+  }
+  html[data-theme=dark] .card:hover{
+    transform:translateY(-3px);
+    border-color:#7f7438;
+    box-shadow:0 18px 40px rgba(0,0,0,.28);
+  }
+  html[data-theme=dark] .card:hover .product-art>img,
+  html[data-theme=dark] .card:hover .combo-art img{
+    transform:scale(1.035);
+  }
+}
+@media(max-width:43.75em){
+  html[data-theme=dark] .hero-copy{padding-block:2.3rem 2rem}
+  html[data-theme=dark] .hero-intro{font-size:1rem;line-height:1.68}
+  html[data-theme=dark] .value-heading>p:not(.section-label){
+    font-size:.98rem;line-height:1.67;
+  }
+  html[data-theme=dark] .value-grid article{padding:1.25rem}
+  html[data-theme=dark] .value-grid p{font-size:.94rem}
+  html[data-theme=dark] .products{gap:1.1rem}
+  html[data-theme=dark] .card-content{padding:1.15rem}
+  html[data-theme=dark] .card h3{font-size:1.18rem}
+  html[data-theme=dark] .card-actions>button{min-height:3.05rem}
+  html[data-theme=dark] .hero-product-info{padding:1.2rem 1rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-copy,.hero-product,.reveal-on-scroll.is-visible,
+  html[data-theme=dark] .card,html[data-theme=dark] dialog[open]{
+    animation:none!important;
+  }
+  .reveal-on-scroll{
+    opacity:1!important;transform:none!important;
+  }
+  html[data-theme=dark] .card,
+  html[data-theme=dark] .product-art img,
+  html[data-theme=dark] .budget-options button,
+  html[data-theme=dark] .value-grid article{
+    transition:none!important;
+  }
+  html{scroll-behavior:auto}
+}
