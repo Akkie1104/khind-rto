@@ -28,7 +28,12 @@ jobs:
           const js=fs.readFileSync('script.js','utf8');
           const css=fs.readFileSync('retail-2026.css','utf8');
           const motion=fs.readFileSync('motion-2026.css','utf8');
+          const photography=fs.readFileSync('photo-2026.css','utf8');
           const checks=[
+            ['verified official photo stylesheet loaded',html.includes('photo-2026.css?v=photo-1')],
+            ['official WM1248 source link',html.includes('https://www.khindrto.com.my/products/9kg-front-load-washer-wm1248')],
+            ['photography uses real original source',html.includes('WM1248_Front%20Left.jpg')],
+            ['realistic light image mat',photography.includes('mix-blend-mode:multiply')],
             ['motion assets loaded',html.includes('motion-2026.css')&&html.includes('motion-2026.js')],
             ['reduced motion supported',motion.includes('prefers-reduced-motion:reduce')],
             ['no perpetual motion loop',!(/animation[^;\n]*\binfinite\b/.test(motion))],
