@@ -21,6 +21,7 @@ jobs:
           node --check catalogue.js
           node --check motion-2026.js
           node --check storefront.js
+          node --check shopping-guide.js
       - name: Assert essential storefront controls and privacy safeguards
         run: |
           node --input-type=module <<'NODE'
@@ -29,6 +30,8 @@ jobs:
           const js=fs.readFileSync('script.js','utf8');
           const css=fs.readFileSync('retail-2026.css','utf8');
           const motion=fs.readFileSync('motion-2026.css','utf8');
+          const guide=fs.readFileSync('shopping-guide.js','utf8');
+          const guideCss=fs.readFileSync('shopping-guide.css','utf8');
           const photography=fs.readFileSync('photo-2026.css','utf8');
           const checks=[
             ['studio photo stylesheet loaded',html.includes('photo-2026.css?v=photo-2')],
@@ -38,6 +41,13 @@ jobs:
             ['official WM1248 source link',html.includes('https://www.khindrto.com.my/products/9kg-front-load-washer-wm1248')],
             ['official catalogue WM1248 photo retained',fs.readFileSync('catalogue.js','utf8').includes('WM1248_Front%20Left.jpg')],
             ['realistic light image mat',photography.includes('mix-blend-mode:multiply')],
+            ['opt-in guided chooser mounted',html.includes('id="guided-shop"')&&html.includes('data-guide-open')],
+            ['quiz scripts load locally',html.includes('shopping-guide.js?v=1')&&html.includes('shopping-guide.css?v=1')],
+            ['recommendations use the normal monthly rate',guide.includes('monthly(p)<=cap')],
+            ['no automatic first-visit pop-up',guide.includes('get("pilih")==="1"')],
+            ['no misleading over-budget matches',guide.includes('Tiada pelan dalam had bajet ini.')],
+            ['quiz stays accessible',guideCss.includes('prefers-reduced-motion:reduce')&&html.includes('aria-labelledby="guide-title"')],
+            ['catalogue invites guided selection',fs.readFileSync('catalogue/index.html','utf8').includes('../?pilih=1')],
             ['motion assets loaded',html.includes('motion-2026.css')&&html.includes('motion-2026.js')],
             ['reduced motion supported',motion.includes('prefers-reduced-motion:reduce')],
             ['no perpetual motion loop',!(/animation[^;\n]*\binfinite\b/.test(motion))],
