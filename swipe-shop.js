@@ -528,7 +528,7 @@
     const items = savedProducts().slice(0, savedLimit);
     $("shortlist-count").textContent = items.length + " / " + savedLimit;
     $("shortlist-body").innerHTML =
-      '<p id="shortlist-intro" class="shortlist-intro">Banding fakta yang tersenarai sahaja. Tiada pilihan dilabel terbaik secara automatik.</p>' +
+      '<p id="shortlist-intro" class="shortlist-intro">Banding fakta yang tersenarai sahaja. Kami tidak membuat penarafan automatik.</p>' +
       (removedFromShortlist ? '<button type="button" id="shortlist-undo-remove" class="shortlist-undo-remove">' +
         '↶ Undo remove: ' + escape(removedFromShortlist.id) + '</button>' : "") +
       (items.length ? '<div class="shortlist-cards">' + items.map(shortlistCard).join("") +
