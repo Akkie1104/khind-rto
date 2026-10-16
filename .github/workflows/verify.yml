@@ -23,6 +23,9 @@ jobs:
           node --check storefront.js
           node --check shopping-guide.js
           node --check swipe-shop.js
+          node --check swipe-telemetry.js
+          node --check swipe-experiment-entry.js
+          node --check experiment-console.js
           node tests/swipe-shop.test.cjs
           node tests/swipe-variant-b.test.cjs
           node tests/swipe-variant-c.test.cjs
@@ -30,6 +33,9 @@ jobs:
           node tests/swipe-accessibility.test.cjs
           node tests/swipe-shortlist.test.cjs
           node tests/swipe-i18n.test.cjs
+          node tests/swipe-telemetry.test.cjs
+          node tests/swipe-analytics-events.test.cjs
+          node tests/swipe-collector.test.cjs
       - name: Assert essential storefront controls and privacy safeguards
         run: |
           node --input-type=module <<'NODE'
@@ -51,7 +57,7 @@ jobs:
             ['official catalogue WM1248 photo retained',fs.readFileSync('catalogue.js','utf8').includes('WM1248_Front%20Left.jpg')],
             ['realistic light image mat',photography.includes('mix-blend-mode:multiply')],
             ['dedicated full-screen swipe route',html.includes('href="pilih/"')&&fs.existsSync('pilih/index.html')],
-            ['source scripts load locally',swipePage.includes('../catalogue.js')&&swipePage.includes('../swipe-shop.js?v=5')&&swipePage.includes('../swipe-shop.css?v=5')],
+            ['source scripts load locally',swipePage.includes('../catalogue.js')&&swipePage.includes('../swipe-shop.js?v=6')&&swipePage.includes('../swipe-shop.css?v=5')],
             ['product facts come from catalogue only',guide.includes('window.KHIND_PRODUCTS')&&guide.includes('p.image')&&guide.includes('p.plans')&&guide.includes('p.months')],
             ['no quiz or onboarding before first card',swipePage.includes('id="card-slot"')&&!swipePage.includes('<form')&&!swipePage.includes('input type=')],
             ['only supplied official image URLs',guide.includes('approvedImage(p.image)')&&guideCss.includes('object-fit:contain')],
@@ -64,7 +70,7 @@ jobs:
             ['progress and saved count shown',swipePage.includes('id="progress-track"')&&swipePage.includes('id="saved-count"')],
             ['WhatsApp uses agent and saved model IDs',guide.includes('wa.me/60174201247')&&guide.includes('items.map(p => p.id)')],
             ['swipe reduced motion support',guideCss.includes('prefers-reduced-motion:reduce')],
-            ['no data persistence or analytics in guide',!guide.includes('localStorage')&&!guide.includes('sessionStorage')&&!guide.includes('fetch(')],
+            ['shop engine never reads visitor storage or submits analytics directly',!guide.includes('localStorage')&&!guide.includes('sessionStorage')&&!guide.includes('fetch(')],
             ['catalogue invites direct swipe',fs.readFileSync('catalogue/index.html','utf8').includes('../pilih/')],
             ['motion assets loaded',html.includes('motion-2026.css')&&html.includes('motion-2026.js')],
             ['reduced motion supported',motion.includes('prefers-reduced-motion:reduce')],

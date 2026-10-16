@@ -23,7 +23,7 @@ for (const route of routes) {
     html.includes('role="progressbar"'));
   check(route + ": visible keyboard instruction and same shared assets",
     html.includes('id="swipe-instructions"') &&
-    html.includes("../swipe-shop.js?v=5") &&
+    html.includes("../swipe-shop.js?v=6") &&
     html.includes("../swipe-shop.css?v=5"));
 }
 check("WCAG 2.2 AA target minimum, 44 CSS px implementation",
@@ -45,7 +45,7 @@ check("Skip and Save distinguishable by text and icons",
   fs.readFileSync("pilih/index.html","utf8").includes("♥</span> Simpan"));
 check("No long-press or multi-touch requirement, swipe operates on pointerup",
   script.includes('card.addEventListener("pointerup"') &&
-  script.includes("commitDecision(dx > 0)") &&
+  script.includes('commitDecision(dx > 0, false, "gesture")') &&
   script.includes("event.isPrimary === false") &&
   script.includes('$("skip-button").addEventListener("click"') &&
   script.includes('$("save-button").addEventListener("click"'));

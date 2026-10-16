@@ -1,0 +1,13 @@
+# Edit before deploying. Configure a D1 database and a first-party custom domain.
+name = "khind-swipes-analytics"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = false
+
+[[d1_databases]]
+binding = "DB"
+database_name = "khind-swipe-events"
+database_id = "REPLACE_WITH_REAL_D1_DATABASE_ID"
+
+[triggers]
+crons = ["0 3 * * *"]
