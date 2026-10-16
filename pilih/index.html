@@ -10,9 +10,9 @@
   <link rel="canonical" href="https://khindrto.akizen.my/pilih/">
   <link rel="icon" href="../assets/hakim-mark.svg" type="image/svg+xml">
   <link rel="preload" href="../assets/manrope.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../swipe-shop.css?v=3">
+  <link rel="stylesheet" href="../swipe-shop.css?v=4">
   <script src="../catalogue.js?v=cd12d-plan-promo" defer></script>
-  <script src="../swipe-shop.js?v=3" defer></script>
+  <script src="../swipe-shop.js?v=4" defer></script>
   <title>Leret & Pilih Peralatan KHIND RTO | Hakim</title>
 </head>
 <body>
@@ -49,10 +49,14 @@
     <div class="sheet-head"><span>MAKLUMAT PRODUK</span><button class="sheet-close" type="button" data-close-details aria-label="Tutup butiran">✕</button></div>
     <div id="details-body" class="sheet-body"></div>
   </dialog>
-  <dialog id="shortlist-sheet" class="bottom-sheet" aria-labelledby="shortlist-title">
-    <div class="sheet-handle" aria-hidden="true"></div>
-    <div class="sheet-head"><h2 id="shortlist-title">Pilihan disimpan</h2><button class="sheet-close" type="button" data-close-shortlist aria-label="Tutup simpanan">✕</button></div>
-    <div id="shortlist-body" class="sheet-body"></div>
+  <dialog id="shortlist-sheet" class="bottom-sheet shortlist-screen" aria-labelledby="shortlist-title" aria-describedby="shortlist-intro">
+    <header class="shortlist-head">
+      <div><p class="shortlist-eyebrow">SAVED SELECTIONS <span id="shortlist-count">0 / 3</span></p>
+        <h2 id="shortlist-title" tabindex="-1">Pilihan disimpan</h2></div>
+      <button class="sheet-close" type="button" data-close-shortlist aria-label="Tutup simpanan">✕</button>
+    </header>
+    <div id="shortlist-body" class="shortlist-body"></div>
+    <footer id="shortlist-footer" class="shortlist-footer"></footer>
   </dialog>
   <p id="live-message" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
 </body>
