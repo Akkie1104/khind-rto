@@ -82,16 +82,20 @@
     } catch (_) { return null; }
     return VARIANTS[variant];
   }
+  // Consume the entry marker exactly once on the landing page. Ordinary later
+  // direct navigations cannot silently be counted as randomized exposures.
+  const pageVariant = getPathVariant();
+  let randomizedOnLoad = false;
+  try {
+    const session = storage("session");
+    randomizedOnLoad = !!pageVariant && session?.getItem(ACTIVE_KEY) === pageVariant &&
+      storage("local")?.getItem(ASSIGN_KEY) === pageVariant;
+    session?.removeItem(ACTIVE_KEY);
+  } catch (_) { randomizedOnLoad = false; }
   function context() {
-    const variant = getPathVariant();
-    if (!variant) return null;
-    let enrolled = false;
-    try {
-      enrolled = storage("session")?.getItem(ACTIVE_KEY) === variant &&
-        storage("local")?.getItem(ASSIGN_KEY) === variant;
-    } catch (_) { enrolled = false; }
-    return { experiment: EXPERIMENT, variant,
-      assignment_mode: enrolled ? "randomized" : "direct" };
+    if (!pageVariant) return null;
+    return { experiment: EXPERIMENT, variant: pageVariant,
+      assignment_mode: randomizedOnLoad ? "randomized" : "direct" };
   }
   function validate(event) {
     const errors = [];
@@ -173,7 +177,9 @@
     return event;
   }
   const sample = (name, variant = "A") => make(name, {
-    action_source: "automatic", saved_count: 1,
+    action_source: ["card_swipe_left", "card_swipe_right"].includes(name) ? "gesture" :
+      ["card_skip_button", "card_save_button", "card_undo"].includes(name) ? "button" : "automatic",
+    saved_count: 1,
     ...(name.startsWith("card_") || name === "product_details_open" ?
       { product_id: "WM1248", card_position: 1 } : {}),
     ...(name.startsWith("filter_") ? { question_type: "category_entry" } : {}),
