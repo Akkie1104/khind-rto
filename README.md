@@ -4,6 +4,21 @@ Independent KHIND RTO agent storefront for Malaysian customers, with a product c
 
 **Customer domain:** https://khindrto.akizen.my/
 
+## Controlled A/B/C experiment & validation
+
+The new **/pilih-exp/** route assigns a stable anonymous A/B/C variant (1:1:1).
+Only a bucket letter is saved across visits; anonymous event session IDs are tab-scoped.
+Direct visits to A/B/C are marked as **direct**, not randomized.
+All **15 requested events** are implemented and validated against a strict PII-free schema.
+Production event collection is deliberately **disabled** until a first-party collector
+and appropriate privacy disclosure are configured.
+
+For predeployment QA, open **/experiment-console/**, then use **?debug=1** on an
+A/B/C chooser in a separate browser tab. The validation console displays each
+event and schema check without network collection or persistence.
+See **[SWIPE-EXPERIMENT-ANALYTICS.md](SWIPE-EXPERIMENT-ANALYTICS.md)** for
+exact event fields, privacy limits, tests and optional Cloudflare Worker/D1 setup.
+
 ## Hosting
 
 Static HTML, CSS and JavaScript; no build step or server-side processing.
@@ -20,7 +35,7 @@ The DNS provider already has a CNAME for `khindrto` that targets `Akkie1104.gith
 
 - `index.html`: Page, SEO metadata and customer journey.
 - `catalogue.js`: Authoritative structured product and price reference data used by the swipe shop.
-- `pilih/index.html`, `swipe-shop.js`, `swipe-shop.css`: Full-screen, mobile-first swipe shopping. Starts on a product card, with Skip/Save/Undo, details, comparison after two saves, and product-specific WhatsApp enquiry. No form or tracking.
+- `pilih/index.html`, `swipe-shop.js`, `swipe-shop.css`: Full-screen, mobile-first swipe shopping. Starts on a product card, with Skip/Save/Undo, details, comparison after two saves, and product-specific WhatsApp enquiry. No customer details form. Privacy-minimal swipe event instrumentation is present but collection is disabled pending first-party deployment.
 - `script.js`: Search, filters, product details and WhatsApp enquiries.
 - `retail-2026.css`: Current page styling.
 - `style.css`: Legacy styling retained for reference.
@@ -30,7 +45,7 @@ Images for most products currently reference KHIND-associated external CDNs rath
 
 **Budget-first experimental variant:** `/pilih-c/` asks only “What monthly amount feels comfortable?” with up to three broad price bands automatically derived from distinct cheapest **regular monthly plan rates** among dated, image-backed entries in `catalogue.js`, plus “Not sure.” No bands or amounts are hardcoded. The selected band's closest actual plan rate is shown along with its name and the real contract duration on every swipe card, including when that matching plan is Premium rather than Basic. All dated eligible individual products remain available, ordered by distance to the selected band (in-band first, then nearest outside), rather than making eligibility or affordability claims. “Not sure” opens the unchanged control ordering. The gate and cards do not collect personal information or track choices; this is not a creditworthiness or approval assessment. The recorded verification date is not real-time confirmation of rates or stock: reconfirm with KHIND before closing a sale. Control and category variant routes remain unchanged.
 
-**A/B experiment variant:** `/pilih-b/` asks one category question before showing the *same* swipe engine: Washing machine, Refrigerator, Air conditioner, or Show me everything. Control `/pilih/` remains question-free. Both use the same `catalogue.js`, official product photos and customer enquiry flow. The washing choice includes washer-dryers but not dryer-only products. No additional questions, forms, tracking or automatic allocation are added. The variants are separate URLs to permit controlled link distribution and later measurement. To evaluate an A/B test, distribute visits randomly and track comparable conversion metrics through an appropriately disclosed analytics mechanism; two URLs alone are not an experiment.
+**A/B experiment variant:** `/pilih-b/` asks one category question before showing the *same* swipe engine: Washing machine, Refrigerator, Air conditioner, or Show me everything. Control `/pilih/` remains question-free. Both use the same `catalogue.js`, official product photos and customer enquiry flow. The washing choice includes washer-dryers but not dryer-only products. No additional questions or customer forms are added. Optional controlled allocation and privacy-minimal event validation now exist through /pilih-exp/ and the QA console. The variants are separate URLs to permit controlled link distribution and later measurement. To evaluate an A/B test, distribute visits randomly and track comparable conversion metrics through an appropriately disclosed analytics mechanism; two URLs alone are not an experiment.
 
 The homepage swipe CTA and catalogue invitation link to `/pilih/`. Individual product entries in the swipe deck require a supplied official product image, valid listed plans and a contract duration; bundles remain in the catalogue until their own official imagery is available. Existing product image URLs are used without editing the appliance.
 
@@ -38,7 +53,7 @@ The homepage swipe CTA and catalogue invitation link to `/pilih/`. Individual pr
 
 The shared swipe deck (control `/pilih/` and experimental `/pilih-b/`, `/pilih-c/`) never opens with a rescue question. If a visitor skips **three consecutive product cards** without saving or opening Details, a single compact rescue asks **“Which do you need?”** with **Laundry / Fridge / Aircond / Not sure** plus a separate **“Skip this question.”** bypass. The rescue appears only when multiple product categories are still present among unseen cards; a category-filtered deck never asks for the same preference again. Opening Details or saving interrupts the skip streak. Choosing a category moves matching *unseen* items ahead of other unseen items, without losing products, modifying catalogue prices, or showing previously skipped cards. “Not sure” and bypass resume the original order. The question is limited to **once per browsing run** (unless Undo explicitly returns to before the trigger); Undo restores both the previous card and deck ordering. The restart action resets this run. The visitor can always continue through all products.
 
-This is a navigation preference, not creditworthiness, approval or loan eligibility logic. No analytics, form, local storage or external service is required. Behavior is checked in `tests/swipe-rescue.test.cjs` plus the A/B/C smoke tests.
+This is a navigation preference, not creditworthiness, approval or loan eligibility logic. The shared chooser has no customer form; production analytics is disabled by default. Anonymous controlled experiment assignment through /pilih-exp/ uses first-party bucket storage. Behavior is checked in `tests/swipe-rescue.test.cjs` plus the A/B/C smoke tests.
 
 ## Swipe accessibility (WCAG 2.2 AA)
 
@@ -52,13 +67,13 @@ The three swipe routes use a dedicated full-height mobile shortlist when visitor
 
 Every saved row displays seven **source-backed** fields from `catalogue.js`: model, product category, the existing description as capacity/major specification, the actual regular monthly plan amount selected by the existing A/B/C experience, contract term, the *recorded cash promotion state*, and the original stock note (or an explicit unknown-status message). Monthly amounts are described as catalogue reference rates with their recorded verification dates, **not live quote or approval**. Cash promotions are never presented as discounts on monthly RTO plans. No product is labeled “best.”
 
-Actions are **View details** (the chosen saved product, returning to shortlist after the details sheet closes), **Remove** (with an immediate Undo remove affordance), **Keep swiping**, and **Ask Hakim about these** (WhatsApp with the exact currently saved model IDs). Removal clears prior swipe-Undo snapshots to avoid resurrecting deleted products; Remove itself has its own Undo within the shortlist. The shortlist has no login, storage, analytics or personal-data form. See `tests/swipe-shortlist.test.cjs` for the 1/2/3-saved, model/date/promotion/availability and interaction checks.
+Actions are **View details** (the chosen saved product, returning to shortlist after the details sheet closes), **Remove** (with an immediate Undo remove affordance), **Keep swiping**, and **Ask Hakim about these** (WhatsApp with the exact currently saved model IDs). Removal clears prior swipe-Undo snapshots to avoid resurrecting deleted products; Remove itself has its own Undo within the shortlist. The shortlist has no login or personal-data form; its interaction events use the strict anonymous experiment schema when enabled. See `tests/swipe-shortlist.test.cjs` for the 1/2/3-saved, model/date/promotion/availability and interaction checks.
 
 ## Bilingual guided shopping (English / Bahasa Melayu)
 
 All three swipe routes have EN/BM switches in the page header, Details modal and saved shortlist modal. Malay is the initial page and document language; switching updates `<html lang>`, visible UX copy, document title, metadata description, screen-reader status/ARIA labels, decision prompts, budget/category choices and WhatsApp enquiry wording. The user's current deck, visited/skipped history, position, saved picks, source monthly rate/plan and budget filter remain in memory unchanged. If Details is open, it stays open on the same appliance; when closed, it remains closed. The shortlist likewise remains in its current state.
 
-Product names, model IDs, capacities and other catalogue facts are never translated or fabricated; supplied Malay descriptions and stock notes are marked `lang="ms"` even under an English interface. No new cookies, storage or analytics. Switches are keyboard-accessible and at least 44 CSS pixels. See `tests/swipe-i18n.test.cjs` for state-preservation tests.
+Product names, model IDs, capacities and other catalogue facts are never translated or fabricated; supplied Malay descriptions and stock notes are marked `lang="ms"` even under an English interface. Language switching itself does not reset assignments, persist personal data, or create additional analytics events. Switches are keyboard-accessible and at least 44 CSS pixels. See `tests/swipe-i18n.test.cjs` for state-preservation tests.
 
 ## Operational checks
 
