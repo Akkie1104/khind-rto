@@ -34,6 +34,12 @@ Images for most products currently reference KHIND-associated external CDNs rath
 
 The homepage swipe CTA and catalogue invitation link to `/pilih/`. Individual product entries in the swipe deck require a supplied official product image, valid listed plans and a contract duration; bundles remain in the catalogue until their own official imagery is available. Existing product image URLs are used without editing the appliance.
 
+## Contextual rescue after three skips
+
+The shared swipe deck (control `/pilih/` and experimental `/pilih-b/`, `/pilih-c/`) never opens with a rescue question. If a visitor skips **three consecutive product cards** without saving or opening Details, a single compact rescue asks **“Which do you need?”** with **Laundry / Fridge / Aircond / Not sure** plus a separate **“Skip this question.”** bypass. The rescue appears only when multiple product categories are still present among unseen cards; a category-filtered deck never asks for the same preference again. Opening Details or saving interrupts the skip streak. Choosing a category moves matching *unseen* items ahead of other unseen items, without losing products, modifying catalogue prices, or showing previously skipped cards. “Not sure” and bypass resume the original order. The question is limited to **once per browsing run** (unless Undo explicitly returns to before the trigger); Undo restores both the previous card and deck ordering. The restart action resets this run. The visitor can always continue through all products.
+
+This is a navigation preference, not creditworthiness, approval or loan eligibility logic. No analytics, form, local storage or external service is required. Behavior is checked in `tests/swipe-rescue.test.cjs` plus the A/B/C smoke tests.
+
 ## Operational checks
 
 - Verify current products, pricing, availability, campaign eligibility and payment terms with KHIND before promoting.
