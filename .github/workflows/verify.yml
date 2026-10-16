@@ -35,6 +35,7 @@ jobs:
           node tests/swipe-i18n.test.cjs
           node tests/swipe-telemetry.test.cjs
           node tests/swipe-analytics-events.test.cjs
+          node tests/swipe-collector.test.cjs
       - name: Assert essential storefront controls and privacy safeguards
         run: |
           node --input-type=module <<'NODE'
