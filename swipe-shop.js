@@ -38,16 +38,36 @@
     Number.isInteger(Number(p.months)) && Number(p.months) > 0 &&
     plansFor(p).length && approvedImage(p.image);
   const sourceProducts = Array.isArray(window.KHIND_PRODUCTS) ? window.KHIND_PRODUCTS : [];
-  // Round-robin by existing categories so a visitor sees variety early without answering questions.
-  const lanes = new Map();
-  sourceProducts.filter(valid).forEach(p => {
-    if (!lanes.has(p.category)) lanes.set(p.category, []);
-    lanes.get(p.category).push(p);
-  });
-  const deck = [];
-  while ([...lanes.values()].some(list => list.length)) {
-    for (const list of lanes.values()) if (list.length) deck.push(list.shift());
+  // Variant B asks one question before rendering. Control always starts with a product.
+  const categoryGate = $("one-question-gate");
+  const isVariantB = document.documentElement.getAttribute("data-swipe-variant") === "one-question" && !!categoryGate;
+  const choices = ["washing", "fridge", "cooling", "all"];
+  function matchesChoice(p, choice) {
+    if (choice === "all") return true;
+    if (choice === "fridge") return p.category === "fridge";
+    if (choice === "cooling") return p.category === "cooling";
+    if (choice === "washing") {
+      // The shared "laundry" category also includes dryer-only products.
+      // Include washer-dryers, exclude dryer-only entries using supplied catalogue text.
+      const facts = [p.name, p.description, ...(Array.isArray(p.keywords) ? p.keywords : [])].join(" ");
+      return p.category === "laundry" && /basuh|washer|wash/i.test(facts);
+    }
+    return false;
   }
+  function buildDeck(choice) {
+    // Preserve the exact control ordering strategy within the selected subset.
+    const lanes = new Map();
+    sourceProducts.filter(valid).filter(p => matchesChoice(p, choice)).forEach(p => {
+      if (!lanes.has(p.category)) lanes.set(p.category, []);
+      lanes.get(p.category).push(p);
+    });
+    const result = [];
+    while ([...lanes.values()].some(list => list.length)) {
+      for (const list of lanes.values()) if (list.length) result.push(list.shift());
+    }
+    return result;
+  }
+  let deck = isVariantB ? [] : buildDeck("all");
 
   const state = { index: 0, saved: [], history: [], prompting: false, prompted: false, comparing: false, busy: false };
   const cardSlot = $("card-slot");
@@ -238,7 +258,7 @@
   function renderPrompt() {
     decisionPrompt.innerHTML =
       '<div class="prompt-card"><p class="prompt-kicker">2 PILIHAN DISIMPAN</p>' +
-      '<h2>Dah jumpa yang menarik?</h2><p>Banding kedua-duanya dulu, atau teruskan lihat produk lain.</p>' +
+      '<h2>' + (isVariantB ? 'Pilihan anda sudah sedia.' : 'Dah jumpa yang menarik?') + '</h2><p>Banding kedua-duanya dulu, atau teruskan lihat produk lain.</p>' +
       '<button type="button" class="prompt-primary" id="compare-now">Banding produk <span aria-hidden="true">↗</span></button>' +
       '<button type="button" class="prompt-secondary" id="keep-swiping">Teruskan leret</button>' +
       '<a class="prompt-whatsapp" href="' + escape(whatsappUrl(savedProducts())) +
@@ -367,5 +387,19 @@
   [detailsSheet, shortlistSheet].forEach(dialog => dialog.addEventListener("click", event => {
     if (event.target === dialog) dialog.close();
   }));
-  render();
+  if (isVariantB) {
+    categoryGate.querySelectorAll("[data-deck-choice]").forEach(button => {
+      button.addEventListener("click", () => {
+        const choice = button.getAttribute("data-deck-choice");
+        if (!choices.includes(choice) || categoryGate.hidden) return;
+        deck = buildDeck(choice);
+        categoryGate.hidden = true;
+        document.body.classList.remove("awaiting-choice");
+        render();
+        cardSlot.querySelector("#active-card")?.focus({ preventScroll: true });
+      });
+    });
+  } else {
+    render();
+  }
 })();
