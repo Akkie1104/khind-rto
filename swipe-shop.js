@@ -1050,7 +1050,7 @@
         if (!choices.includes(choice) || categoryGate.hidden) return;
         emit("filter_answered", { action_source: "button", question_type: "category_entry",
           answer_kind: choice === "all" ? "unsure" : "selected",
-          filter_category: choice });
+          filter_category: choice === "washing" ? "laundry" : choice });
         deck = buildDeck(choice);
         categoryGate.hidden = true;
         document.body.classList.remove("awaiting-choice");
