@@ -78,8 +78,8 @@ for (const variant of ["pilih", "pilih-b", "pilih-c"]) {
   check("rescue container is embedded and hidden at load in " + variant,
     html.includes('id="rescue-question"') &&
     html.includes('aria-labelledby="rescue-title" hidden') &&
-    html.includes("swipe-shop.js?v=4") &&
-    html.includes("swipe-shop.css?v=4"));
+    html.includes("swipe-shop.js?v=5") &&
+    html.includes("swipe-shop.css?v=5"));
 }
 check("compact rescue includes reduced height and motion-safe styles",
   css.includes(".rescue-options{display:grid;grid-template-columns:repeat(2") &&
@@ -98,8 +98,8 @@ check("third consecutive skip pauses before next card", basic.rescue() &&
   basic.get("save-button").disabled &&
   basic.get("undo-button").disabled === false);
 check("one exact category question with requested alternatives",
-  basic.get("rescue-question").innerHTML.includes("Which do you need?") &&
-  ["Laundry", "Fridge", "Aircond", "Not sure", "Skip this question."].every(label =>
+  basic.get("rescue-question").innerHTML.includes("Apa yang anda perlukan?") &&
+  ["Dobi", "Peti sejuk", "Penyaman udara", "Tak pasti", "Langkau soalan ini."].every(label =>
     basic.get("rescue-question").innerHTML.includes(label)) &&
   (basic.get("rescue-question").innerHTML.match(/\?/g) || []).length === 1);
 basic.respond("fridge");
@@ -191,7 +191,7 @@ check("no low-information category prompt when just one group remains", !oneCate
 
 const engagement = launch();
 engagement.save(); engagement.save();
-check("existing two-save comparison still appears", engagement.get("decision-prompt").innerHTML.includes("Banding produk"));
+check("existing two-save comparison still appears", engagement.get("decision-prompt").innerHTML.includes("Bandingkan"));
 engagement.get("decision-prompt").querySelector("#keep-swiping").click();
 check("comparison does not introduce an immediate rescue question", !engagement.rescue());
 console.log("Conditional rescue checks passed.");
