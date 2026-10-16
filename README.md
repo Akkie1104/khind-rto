@@ -28,6 +28,8 @@ The DNS provider already has a CNAME for `khindrto` that targets `Akkie1104.gith
 
 Images for most products currently reference KHIND-associated external CDNs rather than local copies. If an image disappears from the original source, it may disappear here too. Review imagery separately before a production promotion.
 
+**A/B experiment variant:** `/pilih-b/` asks one category question before showing the *same* swipe engine: Washing machine, Refrigerator, Air conditioner, or Show me everything. Control `/pilih/` remains question-free. Both use the same `catalogue.js`, official product photos and customer enquiry flow. The washing choice includes washer-dryers but not dryer-only products. No additional questions, forms, tracking or automatic allocation are added. The variants are separate URLs to permit controlled link distribution and later measurement. To evaluate an A/B test, distribute visits randomly and track comparable conversion metrics through an appropriately disclosed analytics mechanism; two URLs alone are not an experiment.
+
 The homepage swipe CTA and catalogue invitation link to `/pilih/`. Individual product entries in the swipe deck require a supplied official product image, valid listed plans and a contract duration; bundles remain in the catalogue until their own official imagery is available. Existing product image URLs are used without editing the appliance.
 
 ## Operational checks
