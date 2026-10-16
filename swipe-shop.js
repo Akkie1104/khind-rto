@@ -895,7 +895,7 @@
   $("undo-button").addEventListener("click", undo);
   $("saved-open").addEventListener("click", openShortlist);
   // Delegation also covers controls recreated by language changes and deck renders.
-  document.addEventListener("click", event => {
+  document.addEventListener?.("click", event => {
     const link = event.target?.closest?.("a");
     if (!link) return;
     const href = link.getAttribute("href") || "";
