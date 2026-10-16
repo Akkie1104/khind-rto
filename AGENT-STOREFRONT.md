@@ -3,6 +3,7 @@
 This is an independent KHIND RTO agent marketing site, NOT the official KHIND HQ website. It must not claim to be HQ or collect payments, IC images, OTPs, or card numbers.
 
 ## Pages
+- `/pilih/`: Mobile-first swipe experience; starts directly on a product, supports Save/Skip/Undo, details bottom sheet, compare and WhatsApp enquiry. Uses only `catalogue.js` product facts and the supplied image URLs.
 - `/`: Agent homepage with quick budget selector and selected products.
 - `/catalogue/`: Browse all available products, filter by category and normal monthly rate.
 - `/combos/`: Two-appliance combinations.
