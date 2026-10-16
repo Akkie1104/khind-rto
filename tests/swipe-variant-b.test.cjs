@@ -134,7 +134,7 @@ verify("after two saved, B retains Compare, Keep swiping, Ask Hakim",
   app.get("decision-prompt").innerHTML.includes("Banding produk") &&
   app.get("decision-prompt").innerHTML.includes("Teruskan leret") &&
   app.get("decision-prompt").innerHTML.includes("Tanya Hakim"));
-verify("no second question at two-save prompt", !app.get("decision-prompt").innerHTML.includes("?"));
+verify("no second question at two-save prompt", app.get("decision-prompt").innerHTML.includes("<h2>Pilihan anda sudah sedia.</h2>") && !app.get("decision-prompt").innerHTML.includes("Dah jumpa yang menarik?"));
 app.get("decision-prompt").querySelector("#compare-now").click();
 verify("comparison works in B", app.get("compare-view").innerHTML.includes("WM1248") &&
   app.get("compare-view").innerHTML.includes("WD1468"));
