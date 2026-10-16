@@ -28,6 +28,7 @@ class Element {
   }
   querySelectorAll() { return []; }
   setAttribute(name, value) { this.attributes[name] = value; }
+  focus() { this.focused = true; }
   showModal() { this.open = true; }
   close() { this.open = false; }
   click() { if (this.listeners.click) this.listeners.click({ target: this }); }
