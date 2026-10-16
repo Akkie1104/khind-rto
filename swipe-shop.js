@@ -788,45 +788,52 @@
       render();
       return;
     }
-    compareView.innerHTML = '<div class="compare-heading"><button type="button" id="compare-back">← Kembali</button>' +
-      '<span>' + items.length + ' PILIHAN</span></div>' +
-      '<h1>Banding sebelum pilih.</h1><p>Leret jadual ke tepi untuk lihat semua pilihan yang disimpan.</p>' +
+    compareView.innerHTML = '<div class="compare-heading"><button type="button" id="compare-back">← ' +
+      t("compareBack") + '</button><span>' + items.length + ' ' + t("savedKicker") + '</span></div>' +
+      '<h1>' + t("compareHeading") + '</h1><p>' + t("compareHelp") + '</p>' +
       '<div class="compare-scroll"><div class="compare-grid">' +
       items.map(p => {
         const plan = shownPlan(p);
-        return '<article class="compare-item"><div class="compare-photo">' + photo(p, "compare-appliance", false) + '</div>' +
-          '<span class="compare-model">' + escape(p.id) + '</span><h2>' + escape(p.name) + '</h2>' +
-          '<div class="compare-metric"><small>' +
-          (isVariantC && selectedBudgetBand ? 'Kadar biasa · ' + escape(plan.name) : 'Kadar biasa dari') +
-          '</small><strong>' + money(plan.rate) + '/bln</strong></div>' +
-          '<div class="compare-metric"><small>Tempoh</small><strong>' + Number(p.months) + ' bulan</strong></div>' +
-          '<div class="compare-metric"><small>Jumlah anggaran*</small><strong>' +
+        return '<article class="compare-item"><div class="compare-photo">' + photo(p, "compare-appliance", false) +
+          '</div><span class="compare-model">' + escape(p.id) + '</span>' +
+          '<h2 lang="ms">' + escape(p.name) + '</h2>' +
+          '<div class="compare-metric"><small>' + t("monthlyRate") + '</small><strong>' +
+          money(plan.rate) + t("monthSuffix") + '</strong></div>' +
+          '<div class="compare-metric"><small>' + t("term") + '</small><strong>' +
+          Number(p.months) + t("months") + '</strong></div>' +
+          '<div class="compare-metric"><small>' + t("compareEstimated") + '</small><strong>' +
           money(plan.rate * Number(p.months)) + '</strong></div>' +
           (p.cash != null && Number.isFinite(Number(p.cash)) ?
-            '<div class="compare-metric"><small>Harga tunai rujukan</small><strong>' + money(p.cash) + '</strong></div>' : "") +
-          '<div class="compare-benefits"><small>Manfaat disenaraikan</small><p>' + escape(p.benefits || "Sahkan butiran pelan.") + '</p></div>' +
-          '<a href="../products/' + encodeURIComponent(p.id) + '/">Butiran produk ↗</a></article>';
+            '<div class="compare-metric"><small>' + t("cashReference") + '</small><strong>' +
+            money(p.cash) + '</strong></div>' : "") +
+          '<div class="compare-benefits"><small>' + t("listedBenefits") +
+            '</small><p lang="ms">' + escape(p.benefits || "") + '</p></div>' +
+          '<a href="../products/' + encodeURIComponent(p.id) + '/">' + t("viewDetails") + ' ↗</a></article>';
       }).join("") + '</div></div>' +
-      '<p class="compare-note">*Jumlah anggaran kadar biasa × tempoh; belum mengambil kira promosi/caj. Ini bukan penilaian kelayakan. Manfaat berbeza mengikut pelan.</p>' +
+      '<p class="compare-note">' + t("shortlistDisclaimer") + '</p>' +
       '<a class="compare-contact" href="' + escape(whatsappUrl(items)) +
-      '" target="_blank" rel="noopener noreferrer">Tanya Hakim tentang pilihan ini ↗</a>' +
-      '<button class="continue-after-compare" id="compare-continue" type="button">Teruskan leret →</button>';
+      '" target="_blank" rel="noopener noreferrer">' + t("askAboutThese") + ' ↗</a>' +
+      '<button class="continue-after-compare" id="compare-continue" type="button">' +
+      t("keepSwiping") + ' →</button>';
     bindImageErrors(compareView);
     const back = () => { state.comparing = false; render(); focusCurrentCard(); };
     $("compare-back").addEventListener("click", back);
     $("compare-continue").addEventListener("click", back);
-    announce("Paparan perbandingan untuk " + items.length + " produk.");
+    announce(t("compare") + ": " + items.length + t("savedUnit") + ".");
   }
   function renderEnd() {
     const items = savedProducts();
     completeView.innerHTML = '<div class="end-icon" aria-hidden="true">✓</div>' +
-      '<p class="end-kicker">SEMUA PILIHAN TELAH DILIHAT</p><h1 id="completion-title" tabindex="-1">Selesai meleret.</h1>' +
-      '<p>' + (items.length ? "Anda telah simpan " + items.length + " pilihan. Banding sebelum membuat keputusan." :
-        "Tiada produk disimpan. Anda boleh lihat sekali lagi atau semak katalog.") + '</p>' +
-      (items.length >= 2 ? '<button class="prompt-primary" type="button" id="end-compare">Banding produk ↗</button>' : "") +
-      (items.length ? '<button class="prompt-secondary" type="button" id="end-shortlist">Lihat simpanan (' + items.length + ')</button>' : "") +
-      '<button class="prompt-secondary" type="button" id="restart-deck">Lihat semula dari awal</button>' +
-      '<a class="text-link" href="../catalogue/">Katalog penuh ↗</a>';
+      '<p class="end-kicker">' + t("completionKicker") + '</p>' +
+      '<h1 id="completion-title" tabindex="-1">' + t("completionHeading") + '</h1>' +
+      '<p>' + (items.length ? t("completionSaved") + items.length + t("completionSavedEnd") :
+        t("completionEmpty")) + '</p>' +
+      (items.length >= 2 ? '<button class="prompt-primary" type="button" id="end-compare">' +
+        t("compare") + ' ↗</button>' : "") +
+      (items.length ? '<button class="prompt-secondary" type="button" id="end-shortlist">' +
+        t("seeSaved") + items.length + ')</button>' : "") +
+      '<button class="prompt-secondary" type="button" id="restart-deck">' + t("restart") + '</button>' +
+      '<a class="text-link" href="../catalogue/">' + t("fullCatalogue") + ' ↗</a>';
     $("end-compare")?.addEventListener("click", openShortlist);
     $("end-shortlist")?.addEventListener("click", openShortlist);
     $("restart-deck").addEventListener("click", () => {
@@ -841,7 +848,7 @@
       focusCurrentCard();
       announce(nextCardAnnouncement());
     });
-    announce("Selesai melihat " + deck.length + " produk.");
+    announce(t("doneAnnounce") + deck.length + t("savedUnit") + ".");
   }
 
   $("skip-button").addEventListener("click", () => commitDecision(false));
