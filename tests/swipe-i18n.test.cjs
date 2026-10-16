@@ -77,6 +77,9 @@ check("A: one saved and one skipped before switch",
   a.current() === "ACSON-1.0" && a.get("saved-count").textContent === "1" &&
   a.get("deck-position").textContent === "Pilihan 3");
 a.get("language-main").click();
+check("A: visible Skip button and active category translate to English",
+  a.get("skip-button").innerHTML.includes("Skip") &&
+  a.get("card-slot").innerHTML.includes("Aircond"));
 check("A: language tag/title/description metadata switch to English",
   a.doc.documentElement.lang === "en" && a.doc.title.includes("Help me choose") &&
   a.get('meta[name="description"]').getAttribute("content").startsWith("Compare KHIND") &&
