@@ -336,3 +336,23 @@ button:focus-visible,a:focus-visible,.product-card:focus-visible{outline:3px sol
 @media(prefers-reduced-motion:reduce){
  .shortlist-screen *{scroll-behavior:auto!important;transition:none!important}
 }
+
+/* Bilingual language controls available in page header and both modal dialogs. */
+.header-start,.sheet-actions{display:flex;align-items:center;gap:.45rem;min-width:0}
+.header-start{justify-self:start}
+.language-switch{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+  min-width:2.75rem;min-height:2.75rem;padding:.4rem .48rem;border:1px solid #849a72;
+  border-radius:.7rem;background:#253425;color:#f8f8ed;font-weight:900;
+  font-size:.78rem;letter-spacing:.04em}
+.language-switch:hover{background:#384a32;border-color:#f3ce43}
+.language-switch:focus-visible{outline:3px solid #ffe17a;outline-offset:3px}
+.sheet-actions .language-switch{min-width:2.75rem;min-height:2.75rem}
+.shortlist-head .sheet-actions{flex-shrink:0}
+.shop-header{column-gap:.4rem}
+@media(max-width:370px){
+  .header-start{gap:.2rem}
+  .home-link{gap:.15rem;font-size:.72rem}
+  .language-switch{padding:.35rem;min-width:2.65rem}
+  .shop-identity strong{font-size:1.06rem}
+  .shop-identity small{font-size:.54rem}
+}
