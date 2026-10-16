@@ -75,7 +75,7 @@ for (const route of ["pilih", "pilih-b", "pilih-c"]) {
     page.includes('id="shortlist-title" tabindex="-1"') &&
     page.includes('id="shortlist-body"') &&
     page.includes('id="shortlist-footer"') &&
-    page.includes("../swipe-shop.js?v=4"));
+    page.includes("../swipe-shop.js?v=5"));
 }
 check("Shortlist mobile styling supports 1–3, 44 px targets, reduced motion",
   css.includes(".shortlist-screen[open]") &&
@@ -112,8 +112,8 @@ check("No unsupported winning-product labels",
   !/TERBAIK|BEST CHOICE|#1 PICK/i.test(html));
 check("One item offers all four actions", html.includes('id="saved-details-0"') &&
   html.includes('id="saved-remove-0"') &&
-  a.get("shortlist-footer").innerHTML.includes("Keep swiping") &&
-  a.get("shortlist-footer").innerHTML.includes("Ask Hakim about these") &&
+  a.get("shortlist-footer").innerHTML.includes("Teruskan lihat produk") &&
+  a.get("shortlist-footer").innerHTML.includes("Tanya Hakim tentang pilihan ini") &&
   a.get("shortlist-footer").innerHTML.includes("wa.me/60174201247"));
 a.get("shortlist-body").querySelector("#saved-details-0").click();
 check("Details shows saved model and not currently active unrelated model",
@@ -141,7 +141,7 @@ check("Keep swiping returns to active deck and restores keyboard focus",
 const b = run();
 b.save(); b.save();
 check("2 saves still present original two-save choice prompt",
-  b.get("decision-prompt").innerHTML.includes("Banding produk"));
+  b.get("decision-prompt").innerHTML.includes("Bandingkan"));
 b.get("decision-prompt").querySelector("#compare-now").click();
 check("Compare now opens the new factual two-product shortlist",
   b.get("shortlist-sheet").open &&
@@ -200,5 +200,5 @@ const rate = budget.products.find(p=>p.id===budget.model());
 check("Budget C uses the same factual shortlist with a valid plan and term",
   budget.get("shortlist-body").innerHTML.includes("Kadar bulanan biasa") &&
   budget.get("shortlist-body").innerHTML.includes("Disemak ") &&
-  budget.get("shortlist-footer").innerHTML.includes("Ask Hakim about these"));
+  budget.get("shortlist-footer").innerHTML.includes("Tanya Hakim tentang pilihan ini"));
 console.log("Factual shortlist smoke tests passed.");
