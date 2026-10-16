@@ -90,9 +90,9 @@ verify("variant asks exactly one question", gateHtml.includes("What are you look
 verify("variant offers exactly four accessible buttons", (gateHtml.match(/<button type="button" data-deck-choice=/g) || []).length === 4 &&
   options.every(([key, label]) => gateHtml.includes('data-deck-choice="' + key + '"') && gateHtml.includes(label)));
 verify("variant uses shared assets with no product duplication",
-  variantMarkup.includes("../swipe-shop.js?v=3") &&
+  variantMarkup.includes("../swipe-shop.js?v=4") &&
   variantMarkup.includes("../catalogue.js?v=cd12d-plan-promo") &&
-  variantMarkup.includes("../swipe-shop.css?v=3"));
+  variantMarkup.includes("../swipe-shop.css?v=4"));
 verify("question fits short mobile viewports", css.includes("@media(max-height:620px)") &&
   css.includes("@media(max-width:370px)"));
 
@@ -138,6 +138,7 @@ verify("after two saved, B retains Compare, Keep swiping, Ask Hakim",
   app.get("decision-prompt").innerHTML.includes("Tanya Hakim"));
 verify("no second question at two-save prompt", app.get("decision-prompt").innerHTML.includes("<h2>Pilihan anda sudah sedia.</h2>") && !app.get("decision-prompt").innerHTML.includes("Dah jumpa yang menarik?"));
 app.get("decision-prompt").querySelector("#compare-now").click();
-verify("comparison works in B", app.get("compare-view").innerHTML.includes("WM1248") &&
-  app.get("compare-view").innerHTML.includes("WD1468"));
+verify("factual shortlist works in B", app.get("shortlist-sheet").open &&
+  app.get("shortlist-body").innerHTML.includes("WM1248") &&
+  app.get("shortlist-body").innerHTML.includes("WD1468"));
 console.log("Experiment B checks passed.");
