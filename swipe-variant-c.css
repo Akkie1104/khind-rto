@@ -1,0 +1,27 @@
+/* Experiment C: budget-first entry only. Shared swipe cards remain unchanged. */
+.budget-choice-options{gap:.62rem}
+.budget-choice-options button{grid-template-columns:2.1rem minmax(0,1fr) 1.8rem}
+.budget-choice-options button:last-child{background:#253226;color:#f3f6ea;border-color:#526348}
+.budget-choice-options button:last-child:hover{background:#313d2b;border-color:var(--yellow)}
+.budget-choice-options button:last-child .question-option-number{color:#d6d59b}
+.budget-choice-options button:last-child .question-option-arrow{border-color:#647057}
+.budget-choice-options button:not(:last-child){border-color:#83743a;background:linear-gradient(120deg,#35402a,#273122)}
+.budget-choice-options button:not(:last-child):hover{border-color:var(--yellow);background:#465033}
+.budget-choice-options .budget-amount{font-variant-numeric:tabular-nums;letter-spacing:-.015em}
+.budget-choice-options .budget-amount small{font-size:.66rem;color:#bfceb5;margin-left:.1rem;font-weight:650}
+.budget-choice-options button:last-child small{color:#c3cfbb}
+.budget-choice-options .budget-option-caption{display:block;font-weight:600;color:#c6d5bb;font-size:.62rem;line-height:1.35;margin-top:.2rem}
+.budget-choice-options button:last-child .budget-option-caption{color:#b2c4a9}
+.budget-choice-options .question-option-arrow{font-size:.95rem}
+.budget-note{color:#c5d2c0;font-size:.7rem;line-height:1.5;margin:.25rem 0 .85rem}
+.budget-rate-plan{display:block;font-size:.6rem;color:#e0ebbd;font-weight:750;line-height:1.4;margin:.12rem 0 .02rem}
+@media(max-width:370px){
+ .budget-choice-options{gap:.48rem}
+ .budget-choice-options button{min-height:3.36rem;padding:.6rem .75rem}
+ .question-content h1{font-size:1.72rem}
+}
+@media(max-height:620px){
+ .budget-choice-options button{min-height:3rem;padding:.56rem .75rem}
+ .budget-choice-options .budget-option-caption{font-size:.59rem}
+}
+@media(prefers-reduced-motion:reduce){.budget-choice-options button{transition:none}}

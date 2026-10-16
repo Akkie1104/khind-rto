@@ -3,6 +3,7 @@
 This is an independent KHIND RTO agent marketing site, NOT the official KHIND HQ website. It must not claim to be HQ or collect payments, IC images, OTPs, or card numbers.
 
 ## Pages
+- `/pilih-c/`: Budget-first experimental variant. Exactly one optional monthly-comfort question; broad bands are generated from current catalogue's dated regular rates, plus Not sure. Shared swipe controls, products and official images; rankings use the closest actual available plan. No eligibility/approval claims, personal data or tracking.
 - `/pilih-b/`: A/B variant — exactly one up-front category question, then the same swipe deck, with washing-machine, refrigerator, air conditioner or all-product filtering. No category question on control route. No analytics or visitor assignment enabled.
 - `/pilih/`: Mobile-first swipe experience; starts directly on a product, supports Save/Skip/Undo, details bottom sheet, compare and WhatsApp enquiry. Uses only `catalogue.js` product facts and the supplied image URLs.
 - `/`: Agent homepage with quick budget selector and selected products.

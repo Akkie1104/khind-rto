@@ -42,6 +42,8 @@
   const categoryGate = $("one-question-gate");
   const isVariantB = document.documentElement.getAttribute("data-swipe-variant") === "one-question" && !!categoryGate;
   const choices = ["washing", "fridge", "cooling", "all"];
+  const budgetGate = $("budget-question-gate");
+  const isVariantC = document.documentElement.getAttribute("data-swipe-variant") === "budget-first" && !!budgetGate;
   function matchesChoice(p, choice) {
     if (choice === "all") return true;
     if (choice === "fridge") return p.category === "fridge";
@@ -67,7 +69,48 @@
     }
     return result;
   }
-  let deck = isVariantB ? [] : buildDeck("all");
+  // Prices and dated catalogue entries are sourced exclusively from catalogue.js.
+  // They are reference regular monthly rates, not real-time offers or approval results.
+  const hasDatedRates = p => /^\d{4}-\d{2}-\d{2}$/.test(String(p.verifiedDate || ""));
+  const verifiedPool = buildDeck("all").filter(hasDatedRates);
+  function deriveBudgetBands() {
+    // Up to three contiguous broad groups of distinct real starting rates.
+    // Every displayed endpoint is an actual catalogue plan rate.
+    const values = [...new Set(verifiedPool.map(p => cheapest(p).rate))].sort((a, b) => a - b);
+    const groups = Math.min(3, values.length);
+    const bands = [];
+    for (let i = 0; i < groups; i++) {
+      const bucket = values.slice(Math.floor(i * values.length / groups),
+        Math.floor((i + 1) * values.length / groups));
+      if (!bucket.length) continue;
+      bands.push({ min: bucket[0], max: bucket[bucket.length - 1] });
+    }
+    return bands;
+  }
+  const budgetBands = isVariantC ? deriveBudgetBands() : [];
+  let selectedBudgetBand = null;
+  const distanceToBand = (rate, band) => rate < band.min ? band.min - rate :
+    rate > band.max ? rate - band.max : 0;
+  function closestPlanToBand(p, band) {
+    if (!band) return cheapest(p);
+    const center = (band.min + band.max) / 2;
+    return plansFor(p).sort((a, b) =>
+      distanceToBand(a.rate, band) - distanceToBand(b.rate, band) ||
+      Math.abs(a.rate - center) - Math.abs(b.rate - center) ||
+      a.rate - b.rate)[0];
+  }
+  const shownPlan = p => isVariantC && selectedBudgetBand ?
+    closestPlanToBand(p, selectedBudgetBand) : cheapest(p);
+  function buildBudgetDeck(band) {
+    if (!band) return buildDeck("all");
+    const center = (band.min + band.max) / 2;
+    return verifiedPool.map((p, index) => ({ p, index,
+      plan: closestPlanToBand(p, band) })).sort((a, b) =>
+      distanceToBand(a.plan.rate, band) - distanceToBand(b.plan.rate, band) ||
+      Math.abs(a.plan.rate - center) - Math.abs(b.plan.rate - center) ||
+      a.index - b.index).map(item => item.p);
+  }
+  let deck = isVariantB || isVariantC ? [] : buildDeck("all");
 
   const state = { index: 0, saved: [], history: [], prompting: false, prompted: false, comparing: false, busy: false };
   const cardSlot = $("card-slot");
@@ -96,7 +139,7 @@
       '<span class="no-photo">Imej rasmi tidak tersedia.</span>';
   }
   function productCard(p) {
-    const plan = cheapest(p);
+    const plan = shownPlan(p);
     const total = plan.rate * Number(p.months);
     return '<article id="active-card" class="product-card" tabindex="0" aria-label="' +
       escape(p.name) + '. Anak panah kiri untuk langkau, kanan untuk simpan.">' +
@@ -109,7 +152,8 @@
       '<div class="product-copy"><p class="product-overline">' + escape(p.category) + ' <span>· ' + escape(p.id) + '</span></p>' +
       '<h1>' + escape(p.name) + '</h1><p class="product-subtitle">' + escape(p.description || "") + '</p>' +
       (p.stock ? '<p class="product-stock">' + escape(p.stock) + '</p>' : '') +
-      '<div class="price-row"><div><span class="price-kicker">KADAR BULANAN BIASA DARI</span>' +
+      '<div class="price-row"><div><span class="price-kicker">' +
+      (isVariantC && selectedBudgetBand ? 'KADAR BULANAN BIASA · ' + escape(plan.name) : 'KADAR BULANAN BIASA DARI') + '</span>' +
       '<p class="product-price">' + money(plan.rate) + '<small>/bulan</small></p></div>' +
       '<div class="price-duration"><strong>' + Number(p.months) + '</strong><span>bulan</span></div></div>' +
       '<div class="product-extras"><span>Anggaran jumlah dari <strong>' + money(total) +
@@ -303,7 +347,8 @@
     $("shortlist-body").innerHTML = items.map(p =>
       '<article class="shortlist-row"><div class="shortlist-photo">' + photo(p, "shortlist-appliance", false) +
       '</div><div><span>' + escape(p.id) + '</span><h3>' + escape(p.name) +
-      '</h3><p>Dari ' + money(cheapest(p).rate) + '/bulan biasa</p></div></article>').join("") +
+      '</h3><p>' + (isVariantC && selectedBudgetBand ? escape(shownPlan(p).name) + ' · ' : 'Dari ') +
+      money(shownPlan(p).rate) + '/bulan biasa</p></div></article>').join("") +
       '<div class="shortlist-choices">' +
       (items.length >= 2 ? '<button type="button" class="prompt-primary" id="compare-saved">Banding ' + items.length + ' pilihan ↗</button>' : "") +
       '<a class="prompt-whatsapp" href="' + escape(whatsappUrl(items)) +
@@ -334,10 +379,12 @@
       '<h1>Banding sebelum pilih.</h1><p>Leret jadual ke tepi untuk lihat semua pilihan yang disimpan.</p>' +
       '<div class="compare-scroll"><div class="compare-grid">' +
       items.map(p => {
-        const plan = cheapest(p);
+        const plan = shownPlan(p);
         return '<article class="compare-item"><div class="compare-photo">' + photo(p, "compare-appliance", false) + '</div>' +
           '<span class="compare-model">' + escape(p.id) + '</span><h2>' + escape(p.name) + '</h2>' +
-          '<div class="compare-metric"><small>Kadar biasa dari</small><strong>' + money(plan.rate) + '/bln</strong></div>' +
+          '<div class="compare-metric"><small>' +
+          (isVariantC && selectedBudgetBand ? 'Kadar biasa · ' + escape(plan.name) : 'Kadar biasa dari') +
+          '</small><strong>' + money(plan.rate) + '/bln</strong></div>' +
           '<div class="compare-metric"><small>Tempoh</small><strong>' + Number(p.months) + ' bulan</strong></div>' +
           '<div class="compare-metric"><small>Jumlah anggaran*</small><strong>' +
           money(plan.rate * Number(p.months)) + '</strong></div>' +
@@ -387,7 +434,35 @@
   [detailsSheet, shortlistSheet].forEach(dialog => dialog.addEventListener("click", event => {
     if (event.target === dialog) dialog.close();
   }));
-  if (isVariantB) {
+  if (isVariantC) {
+    const options = $("budget-options");
+    const bandLabel = band => band.min === band.max ? money(band.min) :
+      money(band.min) + " – " + money(band.max);
+    options.innerHTML = budgetBands.map((band, i) =>
+      '<button type="button" data-budget-choice="' + i + '">' +
+      '<span class="question-option-number" aria-hidden="true">0' + (i + 1) + '</span>' +
+      '<span class="budget-amount">' + bandLabel(band) + ' <small>/month</small>' +
+      '<span class="budget-option-caption">Listed regular monthly rates</span></span>' +
+      '<span class="question-option-arrow" aria-hidden="true">↗</span></button>'
+    ).join("") + '<button type="button" data-budget-choice="unsure">' +
+      '<span class="question-option-number" aria-hidden="true">↗</span>' +
+      '<span>Not sure<span class="budget-option-caption">Browse all products</span></span>' +
+      '<span class="question-option-arrow" aria-hidden="true">→</span></button>';
+    options.addEventListener("click", event => {
+      const button = event.target.closest("[data-budget-choice]");
+      if (!button || budgetGate.hidden) return;
+      const value = button.getAttribute("data-budget-choice");
+      if (value !== "unsure" && !/^\d+$/.test(value)) return;
+      const selected = value === "unsure" ? null : budgetBands[Number(value)];
+      if (value !== "unsure" && !selected) return;
+      selectedBudgetBand = selected;
+      deck = buildBudgetDeck(selectedBudgetBand);
+      budgetGate.hidden = true;
+      document.body.classList.remove("awaiting-choice");
+      render();
+      cardSlot.querySelector("#active-card")?.focus({ preventScroll: true });
+    });
+  } else if (isVariantB) {
     categoryGate.querySelectorAll("[data-deck-choice]").forEach(button => {
       button.addEventListener("click", () => {
         const choice = button.getAttribute("data-deck-choice");
