@@ -314,15 +314,15 @@
         Number.isFinite(promo) && promo > 0 && promo < regular) {
       return t("promoCash") + money(promo) + t("promoCheck");
     }
-    return "Tiada promosi disahkan dalam data.";
+    return t("noPromotion");
   }
   function factualAvailability(p) {
     return typeof p.stock === "string" && p.stock.trim() ?
-      p.stock.trim() : "Status stok semasa tidak dinyatakan. Sahkan dengan KHIND.";
+      p.stock.trim() : t("unknownStock");
   }
   function monthlyReference(p) {
     const date = String(p.verifiedDate || "");
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return "Kadar perlu disahkan";
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return t("rateToConfirm");
     return money(shownPlan(p).rate) + t("monthSuffix");
   }
   function rescueCategory(p) {
@@ -378,8 +378,11 @@
   }
   function whatsappUrl(items) {
     const ids = items.map(p => p.id).join(", ");
-    const message = "Salam Hakim, saya berminat dengan produk KHIND RTO berikut: " + ids +
-      ". Boleh bantu semak kadar biasa, jumlah keseluruhan, tempoh, manfaat pelan, stok dan proses rasmi? Terima kasih.";
+    const message = language === "ms" ?
+      "Salam Hakim, saya berminat dengan produk KHIND RTO berikut: " + ids +
+        ". Boleh bantu semak kadar biasa, jumlah keseluruhan, tempoh, manfaat pelan, stok dan proses rasmi? Terima kasih." :
+      "Hello Hakim, I'm interested in these KHIND RTO products: " + ids +
+        ". Please help confirm regular monthly amounts, total costs, terms, benefits, stock and the official application process. Thank you.";
     return "https://wa.me/60174201247?text=" + encodeURIComponent(message);
   }
   // A persistent, polite status region communicates outcomes without moving pointer focus.
@@ -769,14 +772,14 @@
     } else {
       focusCurrentCard();
     }
-    announce("Kembali ke produk. " + state.saved.length + " produk disimpan.");
+    announce(t("backProducts") + state.saved.length + t("savedUnit") + ".");
   }
   function openShortlist() {
     if (!state.saved.length) return;
     renderShortlist();
     shortlistSheet.showModal();
     $("shortlist-title").focus({ preventScroll: true });
-    announce("Paparan simpanan. " + state.saved.length + " daripada " + savedLimit + " produk disimpan.");
+    announce(t("picksView") + state.saved.length + t("outOf") + savedLimit + t("savedUnit") + ".");
   }
   function renderCompare() {
     const items = savedProducts();
