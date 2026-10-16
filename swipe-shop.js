@@ -868,20 +868,111 @@
     else dialog.close();
   }));
   shortlistSheet.addEventListener("close", () => { removedFromShortlist = null; });
-  if (isVariantC) {
+  function renderBudgetOptions() {
+    if (!isVariantC || budgetGate.hidden) return;
     const options = $("budget-options");
     const bandLabel = band => band.min === band.max ? money(band.min) :
       money(band.min) + " – " + money(band.max);
     options.innerHTML = budgetBands.map((band, i) =>
       '<button type="button" data-budget-choice="' + i + '">' +
       '<span class="question-option-number" aria-hidden="true">0' + (i + 1) + '</span>' +
-      '<span class="budget-amount">' + bandLabel(band) + ' <small>/month</small>' +
-      '<span class="budget-option-caption">Listed regular monthly rates</span></span>' +
+      '<span class="budget-amount">' + bandLabel(band) + ' <small>' + t("monthlyShort") + '</small>' +
+      '<span class="budget-option-caption">' + t("listedRates") + '</span></span>' +
       '<span class="question-option-arrow" aria-hidden="true">↗</span></button>'
     ).join("") + '<button type="button" data-budget-choice="unsure">' +
       '<span class="question-option-number" aria-hidden="true">↗</span>' +
-      '<span>Not sure<span class="budget-option-caption">Browse all products</span></span>' +
+      '<span>' + t("notSure") + '<span class="budget-option-caption">' + t("browseAll") + '</span></span>' +
       '<span class="question-option-arrow" aria-hidden="true">→</span></button>';
+  }
+  function applyStaticTranslations() {
+    document.documentElement.lang = language;
+    document.documentElement.setAttribute?.("lang", language);
+    const inEnglish = language === "en";
+    const variantName = isVariantB ? (inEnglish ? "Category-first" : "Pilihan kategori") :
+      isVariantC ? (inEnglish ? "Budget-first" : "Pilihan bajet") : null;
+    document.title = (inEnglish ? "Help me choose KHIND RTO appliances" : "Bantu saya pilih peralatan KHIND RTO") +
+      (variantName ? " — " + variantName : "") + " | Hakim";
+    const description = document.querySelector('meta[name="description"]');
+    description?.setAttribute("content", inEnglish ?
+      "Compare KHIND RTO appliances, regular monthly rates and terms. Save up to three picks and ask independent agent Hakim." :
+      "Pilih peralatan KHIND RTO, banding kadar bulanan biasa dan tempoh. Simpan sehingga tiga pilihan dan tanya ejen bebas Hakim.");
+    const set = (id, value) => { const node = $(id); if (node) node.textContent = value; };
+    set("skip-content-link", t("help"));
+    set("home-label", t("home"));
+    set("agent-label", t("withHakim"));
+    set("saved-label", t("savedLabel"));
+    set("hint-skip", "← " + t("skip"));
+    set("hint-save", t("save") + " →");
+    set("swipe-instructions", t("shortcutHint"));
+    set("footer-disclosure", t("footerDisclosure"));
+    set("details-heading-label", t("detailsHeading"));
+    set("shortlist-kicker", t("savedKicker"));
+    set("shortlist-title", t("yourPicks"));
+    $("undo-button").setAttribute("aria-label", t("undoAria"));
+    $("undo-button").querySelector("span:last-child").textContent = t("undo");
+    document.querySelector("[data-close-details]")?.setAttribute("aria-label", t("closeDetails"));
+    document.querySelector("[data-close-shortlist]")?.setAttribute("aria-label", t("closeShortlist"));
+    document.querySelector(".home-link")?.setAttribute("aria-label", t("goBack"));
+    $("progress-track").setAttribute("aria-label", t("progressLabel"));
+    if (isVariantB) {
+      set("gate-marker", t("categoryMarker"));
+      set("gate-eyebrow", t("categoryEyebrow"));
+      set("one-question-title", t("categoryQ"));
+      set("gate-explainer", t("categoryExplanation"));
+      set("gate-option-washing", t("washing"));
+      set("gate-option-fridge", t("refrigerator"));
+      set("gate-option-cooling", t("airconditioner"));
+      set("gate-option-all", t("showEverything"));
+      set("gate-disclosure", t("categoryDisclosure"));
+    }
+    if (isVariantC) {
+      set("gate-marker", t("budgetMarker"));
+      set("gate-eyebrow", t("budgetEyebrow"));
+      set("budget-question-title", t("budgetQ"));
+      set("gate-explainer", t("budgetExplanation"));
+      set("gate-disclosure", t("budgetDisclosure"));
+      renderBudgetOptions();
+    }
+    ["language-main", "language-details", "language-shortlist"].forEach(id => {
+      const button = $(id);
+      if (!button) return;
+      button.textContent = inEnglish ? "BM" : "EN";
+      button.setAttribute("lang", inEnglish ? "ms" : "en");
+      button.setAttribute("aria-label", t("switch"));
+      button.setAttribute("aria-pressed", "false");
+    });
+  }
+  function switchLanguage(buttonId) {
+    const previous = language;
+    language = language === "ms" ? "en" : "ms";
+    if (previous === language) return;
+    // Rebuild only localized views. Shopping state, deck order, history, preferences,
+    // saved/skipped decisions and native dialog open state remain untouched.
+    const detailsOpen = detailsSheet.open;
+    const shortlistOpen = shortlistSheet.open;
+    const shortlistScroll = shortlistOpen ? $("shortlist-body").scrollTop : 0;
+    applyStaticTranslations();
+    if (!(isVariantB && !categoryGate.hidden) && !(isVariantC && !budgetGate.hidden)) {
+      render();
+    }
+    if (shortlistOpen) {
+      renderShortlist();
+      $("shortlist-body").scrollTop = shortlistScroll;
+    }
+    if (detailsOpen && detailsProduct) {
+      openDetails(detailsProduct, detailsReturnToShortlist);
+    }
+    $(buttonId)?.focus({ preventScroll: true });
+    announce(t("languageChanged"));
+  }
+  ["language-main", "language-details", "language-shortlist"].forEach(id => {
+    $(id)?.addEventListener("click", () => switchLanguage(id));
+  });
+  applyStaticTranslations();
+
+  if (isVariantC) {
+    const options = $("budget-options");
+    renderBudgetOptions();
     options.addEventListener("click", event => {
       const button = event.target.closest("[data-budget-choice]");
       if (!button || budgetGate.hidden) return;
