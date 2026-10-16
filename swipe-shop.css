@@ -182,3 +182,18 @@ button:focus-visible,a:focus-visible,.product-card:focus-visible{outline:3px sol
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+/* Conditional rescue: entirely hidden until three uninterested skips; no opening quiz. */
+.rescue-question{height:100%;width:100%;display:flex;align-items:center;justify-content:center;overflow-y:auto;overscroll-behavior:contain;padding:.35rem}
+.rescue-card{width:100%;max-width:30rem;margin:auto;padding:clamp(.95rem,3.8vw,1.5rem);border:1px solid #6c754b;border-radius:1.1rem;background:radial-gradient(circle at 80% -10%,#34402a,#19251b 58%,#121c14);box-shadow:0 1rem 2rem #0005}
+.rescue-eyebrow{font-size:.62rem;font-weight:900;letter-spacing:.13em;color:var(--yellow);margin:0 0 .55rem}
+.rescue-card h2{font-size:clamp(1.4rem,5.5vw,1.8rem);font-weight:900;letter-spacing:-.05em;line-height:1.2;margin:0}
+.rescue-card h2:focus{outline:none}
+.rescue-explainer{font-size:.77rem;color:#c8d6c2;line-height:1.45;margin:.45rem 0 1.05rem}
+.rescue-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+.rescue-options button{min-height:3.2rem;min-width:0;display:flex;justify-content:space-between;align-items:center;gap:.25rem;text-align:left;padding:.7rem .8rem;background:#293829;color:#fbfcef;border:1px solid #596c4d;border-radius:.7rem;font-weight:850;font-size:.88rem}
+.rescue-options button:hover{background:#354830;border-color:var(--yellow)}
+.rescue-options button span{color:var(--yellow);font-size:1rem}
+.rescue-options button:last-child{background:#34382b;border-color:#827247}
+.rescue-bypass{display:block;margin:.9rem auto 0;min-height:2.5rem;padding:.45rem 1rem;border:0;background:transparent;color:#e0e9d8;text-decoration:underline;text-underline-offset:4px;font-size:.77rem;font-weight:750}
+@media(max-height:43rem){.rescue-card{padding:.85rem}.rescue-explainer{margin:.35rem 0 .75rem}.rescue-options button{min-height:2.7rem}.rescue-bypass{margin-top:.35rem;min-height:2rem}}
+@media(max-width:370px){.rescue-options{gap:.43rem}.rescue-options button{min-height:3rem;padding:.62rem;font-size:.81rem}}
