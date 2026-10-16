@@ -54,6 +54,12 @@ Every saved row displays seven **source-backed** fields from `catalogue.js`: mod
 
 Actions are **View details** (the chosen saved product, returning to shortlist after the details sheet closes), **Remove** (with an immediate Undo remove affordance), **Keep swiping**, and **Ask Hakim about these** (WhatsApp with the exact currently saved model IDs). Removal clears prior swipe-Undo snapshots to avoid resurrecting deleted products; Remove itself has its own Undo within the shortlist. The shortlist has no login, storage, analytics or personal-data form. See `tests/swipe-shortlist.test.cjs` for the 1/2/3-saved, model/date/promotion/availability and interaction checks.
 
+## Bilingual guided shopping (English / Bahasa Melayu)
+
+All three swipe routes have EN/BM switches in the page header, Details modal and saved shortlist modal. Malay is the initial page and document language; switching updates `<html lang>`, visible UX copy, document title, metadata description, screen-reader status/ARIA labels, decision prompts, budget/category choices and WhatsApp enquiry wording. The user's current deck, visited/skipped history, position, saved picks, source monthly rate/plan and budget filter remain in memory unchanged. If Details is open, it stays open on the same appliance; when closed, it remains closed. The shortlist likewise remains in its current state.
+
+Product names, model IDs, capacities and other catalogue facts are never translated or fabricated; supplied Malay descriptions and stock notes are marked `lang="ms"` even under an English interface. No new cookies, storage or analytics. Switches are keyboard-accessible and at least 44 CSS pixels. See `tests/swipe-i18n.test.cjs` for state-preservation tests.
+
 ## Operational checks
 
 - Verify current products, pricing, availability, campaign eligibility and payment terms with KHIND before promoting.
