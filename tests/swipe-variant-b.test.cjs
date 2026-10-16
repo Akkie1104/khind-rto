@@ -10,10 +10,10 @@ const script = fs.readFileSync("swipe-shop.js", "utf8");
 const catalogue = fs.readFileSync("catalogue.js", "utf8");
 const css = fs.readFileSync("swipe-variant-b.css", "utf8");
 const options = [
-  ["washing", "Washing machine", ["WM1248", "WD1468", "WM150A", "WD1438"]],
-  ["fridge", "Refrigerator", ["RFS600A", "RFM466A", "RF480"]],
-  ["cooling", "Air conditioner", ["ACSON-1.0", "ACSON-1.5", "ACSON-2.0"]],
-  ["all", "Show me everything", null]
+  ["washing", "Mesin basuh", ["WM1248", "WD1468", "WM150A", "WD1438"]],
+  ["fridge", "Peti sejuk", ["RFS600A", "RFM466A", "RF480"]],
+  ["cooling", "Penyaman udara", ["ACSON-1.0", "ACSON-1.5", "ACSON-2.0"]],
+  ["all", "Lihat semua", null]
 ];
 
 class Element {
@@ -85,14 +85,14 @@ function verify(name, condition) {
 
 verify("control has no question or choice gate", !controlMarkup.includes('id="one-question-gate"'));
 const gateHtml = variantMarkup.split('<section id="one-question-gate"')[1]?.split('</section>')[0] ?? "";
-verify("variant asks exactly one question", gateHtml.includes("What are you looking for today?") &&
+verify("variant asks exactly one question", gateHtml.includes("Apa yang anda cari hari ini?") &&
   (gateHtml.match(/\?/g) || []).length === 1);
 verify("variant offers exactly four accessible buttons", (gateHtml.match(/<button type="button" data-deck-choice=/g) || []).length === 4 &&
   options.every(([key, label]) => gateHtml.includes('data-deck-choice="' + key + '"') && gateHtml.includes(label)));
 verify("variant uses shared assets with no product duplication",
-  variantMarkup.includes("../swipe-shop.js?v=4") &&
+  variantMarkup.includes("../swipe-shop.js?v=5") &&
   variantMarkup.includes("../catalogue.js?v=cd12d-plan-promo") &&
-  variantMarkup.includes("../swipe-shop.css?v=4"));
+  variantMarkup.includes("../swipe-shop.css?v=5"));
 verify("question fits short mobile viewports", css.includes("@media(max-height:620px)") &&
   css.includes("@media(max-width:370px)"));
 
@@ -133,8 +133,8 @@ verify("Undo preserved for B", app.get("saved-count").textContent === "0" && app
 app.get("save-button").click();
 app.get("save-button").click();
 verify("after two saved, B retains Compare, Keep swiping, Ask Hakim",
-  app.get("decision-prompt").innerHTML.includes("Banding produk") &&
-  app.get("decision-prompt").innerHTML.includes("Teruskan leret") &&
+  app.get("decision-prompt").innerHTML.includes("Bandingkan") &&
+  app.get("decision-prompt").innerHTML.includes("Teruskan lihat produk") &&
   app.get("decision-prompt").innerHTML.includes("Tanya Hakim"));
 verify("no second question at two-save prompt", app.get("decision-prompt").innerHTML.includes("<h2>Pilihan anda sudah sedia.</h2>") && !app.get("decision-prompt").innerHTML.includes("Dah jumpa yang menarik?"));
 app.get("decision-prompt").querySelector("#compare-now").click();
