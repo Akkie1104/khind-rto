@@ -5,6 +5,180 @@
   "use strict";
 
   const $ = id => document.getElementById(id);
+  // UI language is view-only, never part of the deck, saved list or navigation history.
+  // Catalogue product facts keep their original language, clearly marked lang="ms".
+  let language = "ms";
+  const copy = {
+    help: ["Bantu saya pilih", "Help me choose"],
+    home: ["Utama", "Home"],
+    withHakim: ["bersama Hakim", "with Hakim"],
+    yourPicks: ["Pilihan anda", "Your picks"],
+    save: ["Simpan", "Save"],
+    skip: ["Langkau", "Skip"],
+    undo: ["Undur", "Undo"],
+    viewDetails: ["Lihat butiran", "View details"],
+    details: ["Butiran produk", "Product details"],
+    compare: ["Bandingkan", "Compare"],
+    monthlyBudget: ["Bajet bulanan", "Monthly budget"],
+    notSure: ["Tak pasti", "Not sure"],
+    askHakim: ["Tanya Hakim", "Ask Hakim"],
+    remove: ["Buang", "Remove"],
+    keepSwiping: ["Teruskan lihat produk", "Keep swiping"],
+    switch: ["Switch to English", "Tukar ke Bahasa Melayu"],
+    languageChanged: ["Bahasa Melayu dipilih.", "English selected."],
+    goBack: ["Kembali ke laman utama", "Go to homepage"],
+    savedAria: ["Lihat pilihan disimpan, ", "View saved picks, "],
+    savedUnit: [" produk", " products"],
+    nextCard: ["Seterusnya, ", "Next, "],
+    of: [" daripada ", " of "],
+    ratePerMonth: [" sebulan, ", " per month, "],
+    months: [" bulan", " months"],
+    monthSuffix: ["/bulan", "/month"],
+    viewed: [" dilihat", " viewed"],
+    viewedAlt: [" produk telah dilihat", " products viewed"],
+    finished: ["Selesai", "Finished"],
+    choice: ["Pilihan ", "Pick "],
+    full: ["Penuh (3)", "Full (3)"],
+    saveMax: ["Had simpanan tiga produk. Buka Pilihan anda untuk membuang satu sebelum menyimpan lagi.",
+      "You can save up to three products. Open Your picks and remove one before saving another."],
+    saveItemAria: ["Simpan produk: ", "Save product: "],
+    skipItemAria: ["Langkau produk: ", "Skip product: "],
+    undoAria: ["Undur tindakan terakhir", "Undo last action"],
+    savedLabel: ["Simpan", "Saved"],
+    hintSkip: ["← Langkau", "← Skip"],
+    hintSave: ["Simpan →", "Save →"],
+    shortcutHint: ["Butang atau ← / → pada kad", "Buttons or ← / → on card"],
+    footerDisclosure: ["Laman ejen bebas, bukan KHIND HQ · Kadar & kelayakan disahkan KHIND.",
+      "Independent agent, not KHIND HQ · Rates and eligibility are subject to KHIND confirmation."],
+    detailsHeading: ["MAKLUMAT PRODUK", "PRODUCT DETAILS"],
+    closeDetails: ["Tutup butiran", "Close details"],
+    closeShortlist: ["Tutup simpanan", "Close shortlist"],
+    progressLabel: ["Produk telah dilihat", "Products viewed"],
+    stageLabel: ["Pilihan peralatan dan kad produk", "Appliance chooser and product card"],
+    unavailable: ["Imej rasmi tidak tersedia.", "Official image unavailable."],
+    unavailableLoad: ["Imej rasmi tidak dapat dimuatkan.", "Could not load official image."],
+    photo: ["FOTO PRODUK", "PRODUCT PHOTO"],
+    collection: ["KOLEKSI KHIND RTO", "KHIND RTO COLLECTION"],
+    normalFrom: ["KADAR BULANAN BIASA DARI", "REGULAR MONTHLY RATE FROM"],
+    normalSelected: ["KADAR BULANAN BIASA · ", "REGULAR MONTHLY RATE · "],
+    estimateFrom: ["Anggaran jumlah dari ", "Estimated total from "],
+    arrowHint: [". Anak panah kiri untuk langkau, kanan untuk simpan.",
+      ". Press Left Arrow to skip or Right Arrow to save."],
+    savedResult: ["Disimpan: ", "Saved: "],
+    skippedResult: ["Dilangkau: ", "Skipped: "],
+    productsSaved: [" produk disimpan. ", " products saved. "],
+    undoResult: ["Tindakan dibatalkan. Kembali ke ", "Action undone. Back to "],
+    noProducts: ["Produk belum tersedia", "No products available"],
+    noProductsBody: ["Katalog belum mempunyai imej dan kadar sah yang boleh dipaparkan.",
+      "No catalogue products with valid images and rates can currently be shown."],
+    fullCatalogue: ["Lihat katalog penuh", "View full catalogue"],
+    askRescue: ["Apa yang anda perlukan?", "Which do you need?"],
+    rescueKicker: ["BANTU KAMI CARI YANG SESUAI", "HELP US FIND WHAT FITS"],
+    rescueInfo: ["Pilih satu untuk lihat produk yang lebih relevan dahulu.",
+      "Choose one to see relevant products first."],
+    laundry: ["Dobi", "Laundry"],
+    fridge: ["Peti sejuk", "Fridge"],
+    aircond: ["Penyaman udara", "Aircond"],
+    skipQuestion: ["Langkau soalan ini.", "Skip this question."],
+    rescueChosen: ["Produk seterusnya mengutamakan kategori dipilih. ",
+      "Remaining products now prioritize your chosen category. "],
+    rescueUnchanged: ["Susunan asal dikekalkan. ", "Original order preserved. "],
+    rescuePending: ["Pilih satu kategori atau langkau soalan untuk teruskan.",
+      "Choose a category or skip this question to continue."],
+    rescuePrompt: ["Tiga produk dilangkau. Soalan pilihan dipaparkan.",
+      "Three products skipped. An optional question is now shown."],
+    twoSaved: ["2 PILIHAN DISIMPAN", "2 PICKS SAVED"],
+    twoSavedReady: ["Pilihan anda sudah sedia.", "Your picks are ready."],
+    twoSavedQuestion: ["Dah jumpa yang menarik?", "Found something you like?"],
+    twoSavedDescription: ["Bandingkan pilihan ini dahulu atau teruskan lihat produk.",
+      "Compare your saved picks or keep browsing."],
+    compareProducts: ["Bandingkan produk", "Compare products"],
+    askAbout: ["Tanya Hakim tentang ini", "Ask Hakim about these"],
+    promptSaved: ["Dua produk disimpan. Bandingkan, teruskan, atau tanya Hakim.",
+      "Two products saved. Compare, continue or ask Hakim."],
+    allSeen: ["Semua produk telah dilihat.", "All products viewed."],
+    estimated: ["Anggaran ", "Estimated "],
+    normalPlans: ["Pelan & bayaran biasa", "Plans and regular monthly payments"],
+    cashReference: ["Harga tunai rujukan: ", "Reference cash price: "],
+    listedBenefits: ["Manfaat yang disenaraikan", "Listed benefits"],
+    detailsDisclaimer: ["*Anggaran kadar biasa × tempoh, tidak termasuk promosi atau caj tambahan. Harga, stok, manfaat, tempoh dan kelayakan perlu disahkan melalui KHIND. Banding jumlah RTO dengan harga tunai.",
+      "*Estimated regular monthly amount × term, excluding promotions and additional charges. Confirm rates, stock, benefits, term and eligibility with KHIND. Compare total RTO cost with the cash price."],
+    productPage: ["Halaman produk", "Product page"],
+    officialReference: ["Rujukan rasmi", "Official reference"],
+    savedKicker: ["PILIHAN ANDA", "YOUR PICKS"],
+    savedChoice: ["PILIHAN 0", "PICK 0"],
+    checked: ["Disemak ", "Checked "],
+    dateMissing: ["Tarikh pengesahan tidak dinyatakan", "No verification date supplied"],
+    model: ["Model", "Model"],
+    category: ["Kategori", "Category"],
+    majorSpec: ["Kapasiti / spesifikasi", "Capacity / key specification"],
+    monthlyRate: ["Kadar bulanan biasa", "Regular monthly amount"],
+    term: ["Tempoh", "Term"],
+    promotion: ["Promosi", "Promotion"],
+    availability: ["Ketersediaan", "Availability"],
+    unsupplied: ["Tidak dinyatakan dalam data", "Not supplied in product data"],
+    promoCash: ["Promosi harga tunai direkodkan (", "Recorded cash-price promotion ("],
+    promoCheck: ["); status semasa perlu disahkan.", "); current status must be confirmed."],
+    noPromotion: ["Tiada promosi disahkan dalam data.", "No promotion confirmed in the data."],
+    unknownStock: ["Status stok semasa tidak dinyatakan. Sahkan dengan KHIND.",
+      "Current stock status not provided. Confirm with KHIND."],
+    rateToConfirm: ["Kadar perlu disahkan", "Rate requires confirmation"],
+    notRanked: ["Banding fakta yang tersenarai sahaja. Kami tidak membuat penarafan automatik.",
+      "Compare listed facts only. Products are not ranked automatically."],
+    undoRemove: ["Undur buang: ", "Undo remove: "],
+    emptyPicks: ["Tiada produk disimpan.", "No saved products."],
+    emptyPicksBody: ["Teruskan melihat produk untuk mencari pilihan anda.",
+      "Keep browsing to find your picks."],
+    shortlistDisclaimer: ["Kadar ialah kadar bulanan biasa daripada data rujukan bertarikh, bukan sebut harga langsung. Promosi harga tunai tidak bermaksud diskaun pelan RTO. Stok, promosi, harga dan terma perlu disahkan dengan KHIND.",
+      "Rates are dated regular monthly catalogue references, not live quotes. Cash-price promotions are not RTO plan discounts. Confirm stock, promotions, prices and terms with KHIND."],
+    askAboutThese: ["Tanya Hakim tentang pilihan ini", "Ask Hakim about these"],
+    removeResult: [" dibuang daripada simpanan. ", " removed from your picks. "],
+    remainingSaved: [" produk masih disimpan. Anda boleh undur buang.",
+      " picks remaining. You can undo the removal."],
+    restored: ["Produk dipulihkan ke simpanan. ", "Product restored to your picks. "],
+    backProducts: ["Kembali ke produk. ", "Back to products. "],
+    picksView: ["Paparan Pilihan anda. ", "Your picks. "],
+    outOf: [" daripada ", " of "],
+    completionKicker: ["SEMUA PILIHAN TELAH DILIHAT", "ALL PRODUCTS VIEWED"],
+    completionHeading: ["Selesai meleret.", "You've seen them all."],
+    completionSaved: ["Anda telah simpan ", "You've saved "],
+    completionSavedEnd: [" pilihan. Bandingkan dahulu sebelum membuat keputusan.",
+      " picks. Compare them before deciding."],
+    completionEmpty: ["Tiada produk disimpan. Anda boleh lihat sekali lagi atau semak katalog.",
+      "Nothing saved yet. Browse again or explore the catalogue."],
+    seeSaved: ["Lihat simpanan (", "View picks ("],
+    restart: ["Lihat semula dari awal", "Browse again"],
+    doneAnnounce: ["Selesai melihat ", "Finished viewing "],
+    categoryQ: ["Apa yang anda cari hari ini?", "What are you looking for today?"],
+    categoryMarker: ["BANTU SAYA PILIH", "FIND YOUR FIT"],
+    categoryEyebrow: ["SATU PILIHAN. TERUS LIHAT PRODUK.", "ONE TAP. STRAIGHT TO PRODUCTS."],
+    categoryExplanation: ["Pilih kategori yang anda perlukan dan terus lihat produk.",
+      "Choose what you need and start swiping immediately."],
+    washing: ["Mesin basuh", "Washing machine"],
+    refrigerator: ["Peti sejuk", "Refrigerator"],
+    airconditioner: ["Penyaman udara", "Air conditioner"],
+    showEverything: ["Lihat semua", "Show me everything"],
+    categoryDisclosure: ["Laman ejen bebas, bukan KHIND HQ. Kadar dan kelayakan tertakluk kepada pengesahan KHIND.",
+      "Independent agent, not KHIND HQ. Rates and eligibility must be confirmed by KHIND."],
+    budgetQ: ["Berapakah bajet bulanan yang selesa untuk anda?", "What monthly amount feels comfortable?"],
+    budgetMarker: ["BAJET BULANAN", "MONTHLY BUDGET"],
+    budgetEyebrow: ["SATU LANGKAH PILIHAN", "ONE OPTIONAL STEP"],
+    budgetExplanation: ["Julat ini berdasarkan kadar bulanan biasa dalam katalog semasa. Pilih julat atau tekan Tak pasti.",
+      "These bands use current catalogue regular monthly rates. Choose a range or select Not sure."],
+    budgetDisclosure: ["Ini hanya pilihan untuk melihat produk, bukan semakan kelayakan atau kelulusan pinjaman. Kadar dan terma perlu disahkan oleh KHIND. Laman ejen bebas, bukan KHIND HQ.",
+      "This is a browsing preference, not a loan eligibility or approval check. KHIND must confirm rates and terms. Independent agent, not KHIND HQ."],
+    listedRates: ["Kadar bulanan biasa tersenarai", "Listed regular monthly rates"],
+    browseAll: ["Lihat semua produk", "Browse all products"],
+    monthlyShort: ["/bulan", "/month"],
+    compareHeading: ["Bandingkan sebelum memilih", "Compare before choosing"],
+    compareBack: ["Kembali", "Back"],
+    compareHelp: ["Leret jadual ke tepi untuk melihat pilihan lain.", "Scroll sideways to see other picks."],
+    compareEstimated: ["Jumlah anggaran*", "Estimated total*"],
+    planDifferences: ["Manfaat berbeza mengikut pelan.", "Benefits vary by plan."],
+    detailsMore: ["Butiran produk", "Product details"]
+  };
+  const t = key => (copy[key] || [key, key])[language === "ms" ? 0 : 1];
+
   const stage = $("swipe-stage");
   if (!stage) return;
 
@@ -131,25 +305,30 @@
   let animationToken = 0;
 
   const savedProducts = () => state.saved.map(id => deck.find(p => p.id === id)).filter(Boolean);
-  const categoryLabel = { laundry: "Laundry", fridge: "Fridge",
-    cooling: "Aircond", garment: "Penjagaan pakaian", bundle: "Kombo" };
+  function labelCategory(category) {
+    return ({
+      laundry: t("laundry"), fridge: t("fridge"), cooling: t("aircond"),
+      garment: language === "ms" ? "Penjagaan pakaian" : "Garment care",
+      bundle: language === "ms" ? "Kombo" : "Bundle"
+    })[category] || String(category || t("unsupplied"));
+  }
   function factualPromotion(p) {
     // cashPromo is a recorded CASH price only. Never imply a monthly RTO discount.
     const regular = Number(p.cash), promo = Number(p.cashPromo);
     if (p.cashPromo != null && Number.isFinite(regular) && regular > 0 &&
         Number.isFinite(promo) && promo > 0 && promo < regular) {
-      return "Promosi harga tunai direkodkan (" + money(promo) + "); status semasa perlu disahkan.";
+      return t("promoCash") + money(promo) + t("promoCheck");
     }
-    return "Tiada promosi disahkan dalam data.";
+    return t("noPromotion");
   }
   function factualAvailability(p) {
     return typeof p.stock === "string" && p.stock.trim() ?
-      p.stock.trim() : "Status stok semasa tidak dinyatakan. Sahkan dengan KHIND.";
+      p.stock.trim() : t("unknownStock");
   }
   function monthlyReference(p) {
     const date = String(p.verifiedDate || "");
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return "Kadar perlu disahkan";
-    return money(shownPlan(p).rate) + "/bulan";
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return t("rateToConfirm");
+    return money(shownPlan(p).rate) + t("monthSuffix");
   }
   function rescueCategory(p) {
     if (p.category === "fridge") return "fridge";
@@ -181,20 +360,20 @@
     render();
     cardSlot.querySelector("#active-card")?.focus({ preventScroll: true });
     announce((category && category !== "unsure" ?
-      "Produk seterusnya mengutamakan kategori dipilih. " : "Susunan asal dikekalkan. ") +
+      t("rescueChosen") : t("rescueUnchanged")) +
       nextCardAnnouncement());
   }
   function renderRescue() {
     rescuePanel.innerHTML =
-      '<div class="rescue-card"><p class="rescue-eyebrow">BANTU KAMI CARI YANG SESUAI</p>' +
-      '<h2 id="rescue-title" tabindex="-1">Which do you need?</h2>' +
-      '<p class="rescue-explainer">Pilih satu untuk lihat produk yang lebih relevan dahulu.</p>' +
+      '<div class="rescue-card"><p class="rescue-eyebrow">' + t("rescueKicker") + '</p>' +
+      '<h2 id="rescue-title" tabindex="-1">' + t("askRescue") + '</h2>' +
+      '<p class="rescue-explainer">' + t("rescueInfo") + '</p>' +
       '<div class="rescue-options">' +
-      '<button type="button" id="rescue-laundry">Laundry <span aria-hidden="true">↗</span></button>' +
-      '<button type="button" id="rescue-fridge">Fridge <span aria-hidden="true">↗</span></button>' +
-      '<button type="button" id="rescue-aircond">Aircond <span aria-hidden="true">↗</span></button>' +
-      '<button type="button" id="rescue-unsure">Not sure <span aria-hidden="true">→</span></button>' +
-      '</div><button type="button" id="rescue-skip" class="rescue-bypass">Skip this question.</button>' +
+      '<button type="button" id="rescue-laundry">' + t("laundry") + ' <span aria-hidden="true">↗</span></button>' +
+      '<button type="button" id="rescue-fridge">' + t("fridge") + ' <span aria-hidden="true">↗</span></button>' +
+      '<button type="button" id="rescue-aircond">' + t("aircond") + ' <span aria-hidden="true">↗</span></button>' +
+      '<button type="button" id="rescue-unsure">' + t("notSure") + ' <span aria-hidden="true">→</span></button>' +
+      '</div><button type="button" id="rescue-skip" class="rescue-bypass">' + t("skipQuestion") + '</button>' +
       '</div>';
     ["laundry", "fridge", "aircond", "unsure"].forEach(choice => {
       rescuePanel.querySelector("#rescue-" + choice).addEventListener("click", () => answerRescue(choice));
@@ -204,8 +383,11 @@
   }
   function whatsappUrl(items) {
     const ids = items.map(p => p.id).join(", ");
-    const message = "Salam Hakim, saya berminat dengan produk KHIND RTO berikut: " + ids +
-      ". Boleh bantu semak kadar biasa, jumlah keseluruhan, tempoh, manfaat pelan, stok dan proses rasmi? Terima kasih.";
+    const message = language === "ms" ?
+      "Salam Hakim, saya berminat dengan produk KHIND RTO berikut: " + ids +
+        ". Boleh bantu semak kadar biasa, jumlah keseluruhan, tempoh, manfaat pelan, stok dan proses rasmi? Terima kasih." :
+      "Hello Hakim, I'm interested in these KHIND RTO products: " + ids +
+        ". Please help confirm regular monthly amounts, total costs, terms, benefits, stock and the official application process. Thank you.";
     return "https://wa.me/60174201247?text=" + encodeURIComponent(message);
   }
   // A persistent, polite status region communicates outcomes without moving pointer focus.
@@ -217,13 +399,13 @@
     }
   }
   function nextCardAnnouncement() {
-    if (state.rescueOpen) return "Pilih satu kategori atau langkau soalan untuk teruskan.";
-    if (state.prompting) return "Dua produk disimpan. Banding, teruskan, atau tanya Hakim.";
-    if (state.index >= deck.length) return "Semua produk telah dilihat.";
+    if (state.rescueOpen) return t("rescuePending");
+    if (state.prompting) return t("promptSaved");
+    if (state.index >= deck.length) return t("allSeen");
     const p = deck[state.index], plan = shownPlan(p);
-    return "Seterusnya, " + (state.index + 1) + " daripada " + deck.length +
-      ": " + p.name + ", " + money(plan.rate) + " sebulan, " +
-      Number(p.months) + " bulan.";
+    return t("nextCard") + (state.index + 1) + t("of") + deck.length +
+      ": " + p.name + ", " + money(plan.rate) + t("ratePerMonth") +
+      Number(p.months) + t("months") + ".";
   }
   function photo(p, className, eager) {
     const src = approvedImage(p.image);
@@ -231,29 +413,29 @@
       '" alt="' + escape(p.name + " " + p.id) +
       '" loading="' + (eager ? "eager" : "lazy") +
       '" decoding="async" referrerpolicy="no-referrer">' :
-      '<span class="no-photo">Imej rasmi tidak tersedia.</span>';
+      '<span class="no-photo">' + t("unavailable") + '</span>';
   }
   function productCard(p) {
     const plan = shownPlan(p);
     const total = plan.rate * Number(p.months);
     return '<article id="active-card" class="product-card" tabindex="0" aria-label="' +
-      escape(p.name) + '. Anak panah kiri untuk langkau, kanan untuk simpan."' +
+      escape(p.name) + t("arrowHint") + '"' +
       ' aria-describedby="swipe-instructions" aria-keyshortcuts="ArrowLeft ArrowRight">' +
-      '<div class="swipe-overlay swipe-left" aria-hidden="true">LANGKAU</div>' +
-      '<div class="swipe-overlay swipe-right" aria-hidden="true">SIMPAN ♥</div>' +
+      '<div class="swipe-overlay swipe-left" aria-hidden="true">' + t("skip").toUpperCase() + '</div>' +
+      '<div class="swipe-overlay swipe-right" aria-hidden="true">' + t("save").toUpperCase() + ' ♥</div>' +
       '<div class="product-photo">' +
-      '<div class="photo-topline"><span>KOLEKSI KHIND RTO</span><span>' + escape(p.id) + '</span></div>' +
+      '<div class="photo-topline"><span>' + t("collection") + '</span><span>' + escape(p.id) + '</span></div>' +
       photo(p, "hero-appliance", true) +
-      '<span class="photo-corner-mark" aria-hidden="true">FOTO PRODUK</span></div>' +
-      '<div class="product-copy"><p class="product-overline">' + escape(p.category) + ' <span>· ' + escape(p.id) + '</span></p>' +
-      '<h1>' + escape(p.name) + '</h1><p class="product-subtitle">' + escape(p.description || "") + '</p>' +
-      (p.stock ? '<p class="product-stock">' + escape(p.stock) + '</p>' : '') +
+      '<span class="photo-corner-mark" aria-hidden="true">' + t("photo") + '</span></div>' +
+      '<div class="product-copy"><p class="product-overline">' + escape(labelCategory(p.category)) + ' <span>· ' + escape(p.id) + '</span></p>' +
+      '<h1 lang="ms">' + escape(p.name) + '</h1><p class="product-subtitle" lang="ms">' + escape(p.description || "") + '</p>' +
+      (p.stock ? '<p class="product-stock" lang="ms">' + escape(p.stock) + '</p>' : '') +
       '<div class="price-row"><div><span class="price-kicker">' +
-      (isVariantC && selectedBudgetBand ? 'KADAR BULANAN BIASA · ' + escape(plan.name) : 'KADAR BULANAN BIASA DARI') + '</span>' +
-      '<p class="product-price">' + money(plan.rate) + '<small>/bulan</small></p></div>' +
-      '<div class="price-duration"><strong>' + Number(p.months) + '</strong><span>bulan</span></div></div>' +
-      '<div class="product-extras"><span>Anggaran jumlah dari <strong>' + money(total) +
-      '</strong>*</span><button type="button" id="details-button" class="details-button">Details <span aria-hidden="true">↗</span></button></div>' +
+      (isVariantC && selectedBudgetBand ? t("normalSelected") + escape(plan.name) : t("normalFrom")) + '</span>' +
+      '<p class="product-price">' + money(plan.rate) + '<small>' + t("monthSuffix") + '</small></p></div>' +
+      '<div class="price-duration"><strong>' + Number(p.months) + '</strong><span>' + t("months").trim() + '</span></div></div>' +
+      '<div class="product-extras"><span>' + t("estimateFrom") + '<strong>' + money(total) +
+      '</strong>*</span><button type="button" id="details-button" class="details-button">' + t("viewDetails") + ' <span aria-hidden="true">↗</span></button></div>' +
       '</div></article>';
   }
   function setControls() {
@@ -262,32 +444,32 @@
     $("skip-button").disabled = disabled;
     $("save-button").disabled = disabled || state.saved.length >= savedLimit;
     $("save-button").innerHTML = state.saved.length >= savedLimit ?
-      '<span aria-hidden="true">♥</span> Penuh (3)' :
-      '<span aria-hidden="true">♥</span> Simpan';
+      '<span aria-hidden="true">♥</span> ' + t("full") :
+      '<span aria-hidden="true">♥</span> ' + t("save");
     const current = deck[state.index];
     $("skip-button").setAttribute("aria-label", current ?
-      "Langkau produk: " + current.name : "Langkau produk");
+      t("skipItemAria") + current.name : t("skip"));
     $("save-button").setAttribute("aria-label", state.saved.length >= savedLimit ?
-      "Had simpanan 3 produk. Buka simpanan dan buang satu untuk simpan produk lain." :
-      current ? "Simpan produk: " + current.name : "Simpan produk");
+      t("saveMax") :
+      current ? t("saveItemAria") + current.name : t("save"));
     $("undo-button").disabled = state.busy || !state.history.length;
     $("saved-open").disabled = !state.saved.length;
     $("saved-count").textContent = String(state.saved.length);
-    $("saved-open").setAttribute("aria-label", "Lihat produk disimpan, " + state.saved.length + " produk");
-    $("deck-position").textContent = ended ? "Selesai" : "Pilihan " + (state.index + 1);
-    $("deck-total").textContent = state.index + " / " + deck.length + " dilihat";
+    $("saved-open").setAttribute("aria-label", t("savedAria") + state.saved.length + t("savedUnit"));
+    $("deck-position").textContent = ended ? t("finished") : t("choice") + (state.index + 1);
+    $("deck-total").textContent = state.index + " / " + deck.length + t("viewed");
     $("progress-fill").style.width = (deck.length ? 100 * state.index / deck.length : 0) + "%";
     $("progress-track").setAttribute("aria-valuemax", String(Math.max(1, deck.length)));
     $("progress-track").setAttribute("aria-valuenow", String(state.index));
     $("progress-track").setAttribute("aria-valuetext",
-      state.index + " daripada " + deck.length + " produk telah dilihat");
+      state.index + t("of") + deck.length + t("viewedAlt"));
   }
   function bindImageErrors(container) {
     container.querySelectorAll("img").forEach(img => {
       img.addEventListener("error", () => {
         const holder = document.createElement("span");
         holder.className = "no-photo";
-        holder.textContent = "Imej rasmi tidak dapat dimuatkan.";
+        holder.textContent = t("unavailableLoad");
         img.replaceWith(holder);
       }, { once: true });
     });
@@ -310,10 +492,10 @@
       return;
     }
     if (!deck.length) {
-      completeView.innerHTML = '<div class="end-icon" aria-hidden="true">!</div><h1>Produk belum tersedia</h1>' +
-        '<p>Katalog belum mempunyai imej dan kadar sah yang boleh dipaparkan.</p>' +
-        '<a class="text-link" href="../catalogue/">Lihat katalog penuh →</a>';
-      announce("Tiada produk tersedia.");
+      completeView.innerHTML = '<div class="end-icon" aria-hidden="true">!</div><h1>' + t("noProducts") + '</h1>' +
+        '<p>' + t("noProductsBody") + '</p>' +
+        '<a class="text-link" href="../catalogue/">' + t("fullCatalogue") + ' →</a>';
+      announce(t("noProducts"));
       return;
     }
     if (state.index >= deck.length) {
@@ -332,7 +514,7 @@
     if (state.busy || state.comparing || state.prompting || state.rescueOpen || state.index >= deck.length) return;
     if (save && state.saved.length >= savedLimit) {
       openShortlist();
-      announce("Simpanan penuh. Anda boleh simpan sehingga tiga produk. Buang satu sebelum menyimpan lagi.");
+      announce(t("saveMax"));
       return;
     }
     state.busy = true;
@@ -359,8 +541,8 @@
         state.prompted = true;
       }
       render();
-      announce((save ? "Disimpan: " : "Dilangkau: ") + p.name + ". " +
-        state.saved.length + " produk disimpan. " + nextCardAnnouncement());
+      announce((save ? t("savedResult") : t("skippedResult")) + p.name + ". " +
+        state.saved.length + t("productsSaved") + nextCardAnnouncement());
       // The focused card was replaced by innerHTML; move focus to its successor.
       // Button actions leave focus on their persistent button unless it became disabled.
       if (fromCardKeyboard) {
@@ -391,7 +573,7 @@
     state.comparing = false;
     render();
     focusCurrentCard();
-    announce("Tindakan dibatalkan. Kembali ke " + deck[state.index].name + ". " +
+    announce(t("undoResult") + deck[state.index].name + ". " +
       nextCardAnnouncement());
   }
   function enableDrag(card) {
@@ -446,12 +628,14 @@
   }
   function renderPrompt() {
     decisionPrompt.innerHTML =
-      '<div class="prompt-card"><p class="prompt-kicker">2 PILIHAN DISIMPAN</p>' +
-      '<h2>' + (isVariantB ? 'Pilihan anda sudah sedia.' : 'Dah jumpa yang menarik?') + '</h2><p>Banding kedua-duanya dulu, atau teruskan lihat produk lain.</p>' +
-      '<button type="button" class="prompt-primary" id="compare-now">Banding produk <span aria-hidden="true">↗</span></button>' +
-      '<button type="button" class="prompt-secondary" id="keep-swiping">Teruskan leret</button>' +
+      '<div class="prompt-card"><p class="prompt-kicker">' + t("twoSaved") + '</p>' +
+      '<h2>' + (isVariantB ? t("twoSavedReady") : t("twoSavedQuestion")) + '</h2>' +
+      '<p>' + t("twoSavedDescription") + '</p>' +
+      '<button type="button" class="prompt-primary" id="compare-now">' + t("compare") +
+      ' <span aria-hidden="true">↗</span></button>' +
+      '<button type="button" class="prompt-secondary" id="keep-swiping">' + t("keepSwiping") + '</button>' +
       '<a class="prompt-whatsapp" href="' + escape(whatsappUrl(savedProducts())) +
-      '" target="_blank" rel="noopener noreferrer">Tanya Hakim tentang ini ↗</a></div>';
+      '" target="_blank" rel="noopener noreferrer">' + t("askAbout") + ' ↗</a></div>';
     decisionPrompt.querySelector("#compare-now").addEventListener("click", () => {
       state.prompting = false;
       render();
@@ -464,85 +648,88 @@
     });
     decisionPrompt.querySelector("#compare-now").focus({ preventScroll: true });
   }
+  let detailsProduct = null;
   function openDetails(item, fromShortlist = false) {
-    const p = item && typeof item === "object" && item.id ?
-      item : deck[state.index];
+    const p = item && typeof item === "object" && item.id ? item : deck[state.index];
     if (!p || (state.rescueOpen && !fromShortlist)) return;
-    // Reading the active card resets a skip streak. Opening a saved item is
-    // a separate interaction and cannot alter which card is active.
     if (!fromShortlist) state.skipStreak = 0;
     detailsReturnToShortlist = !!fromShortlist;
+    detailsProduct = p;
     const plans = plansFor(p);
+    const previousScroll = detailsSheet.open ? $("details-body").scrollTop : 0;
     $("details-body").innerHTML =
       '<div class="details-photo">' + photo(p, "details-appliance", false) + '</div>' +
       '<div class="details-summary"><span class="detail-model">' + escape(p.id) + '</span>' +
-      '<h2 id="details-title">' + escape(p.name) + '</h2><p>' + escape(p.description || "") + '</p></div>' +
-      '<h3>Pelan & bayaran biasa</h3><div class="plan-list">' +
+      '<h2 id="details-title" lang="ms">' + escape(p.name) + '</h2>' +
+      '<p lang="ms">' + escape(p.description || "") + '</p></div>' +
+      '<h3>' + t("normalPlans") + '</h3><div class="plan-list">' +
       plans.map(q => '<div class="plan-item"><span>' + escape(q.name) + '</span><strong>' +
-        money(q.rate) + ' <small>/bulan</small></strong><small>Anggaran ' +
-        money(q.rate * Number(p.months)) + ' / ' + Number(p.months) + ' bulan*</small></div>').join("") +
-      '</div>' +
+        money(q.rate) + ' <small>' + t("monthSuffix") + '</small></strong><small>' + t("estimated") +
+        money(q.rate * Number(p.months)) + ' / ' + Number(p.months) + t("months") +
+        '*</small></div>').join("") + '</div>' +
       (Number.isFinite(Number(p.cash)) && p.cash != null ?
-        '<p class="cash-reference">Harga tunai rujukan: <strong>' + money(p.cash) + '</strong></p>' : "") +
-      (p.benefits ? '<h3>Manfaat yang disenaraikan</h3><p>' + escape(p.benefits) + '</p>' : "") +
-      (p.stock ? '<p class="stock-note">' + escape(p.stock) + '</p>' : "") +
-      '<p class="details-caveat">*Anggaran kadar biasa × tempoh, tidak termasuk promosi atau caj tambahan. Harga, stok, manfaat, tempoh dan kelayakan perlu disahkan melalui KHIND. Banding jumlah RTO dengan harga tunai.</p>' +
+        '<p class="cash-reference">' + t("cashReference") + '<strong>' + money(p.cash) + '</strong></p>' : "") +
+      (p.benefits ? '<h3>' + t("listedBenefits") + '</h3><p lang="ms">' + escape(p.benefits) + '</p>' : "") +
+      (p.stock ? '<p class="stock-note" lang="ms">' + escape(p.stock) + '</p>' : "") +
+      '<p class="details-caveat">' + t("detailsDisclaimer") + '</p>' +
       '<div class="detail-links"><a href="../products/' + encodeURIComponent(p.id) +
-      '/">Halaman produk →</a>' +
+      '/">' + t("productPage") + ' →</a>' +
       (approvedSource(p.source) ? '<a href="' + escape(approvedSource(p.source)) +
-        '" target="_blank" rel="noopener noreferrer">Rujukan rasmi ↗</a>' : "") + '</div>';
+        '" target="_blank" rel="noopener noreferrer">' + t("officialReference") + ' ↗</a>' : "") +
+      '</div>';
     bindImageErrors($("details-body"));
-    detailsSheet.showModal();
+    if (!detailsSheet.open) detailsSheet.showModal();
+    else $("details-body").scrollTop = previousScroll;
   }
   function shortlistCard(p, index) {
     const plan = shownPlan(p);
     const date = String(p.verifiedDate || "");
     const checked = /^\d{4}-\d{2}-\d{2}$/.test(date) ?
-      "Disemak " + date : "Tarikh pengesahan tidak dinyatakan";
+      t("checked") + date : t("dateMissing");
     const facts = [
-      ["Model", p.id],
-      ["Kategori", categoryLabel[p.category] || String(p.category || "Tidak dinyatakan")],
-      ["Kapasiti / spesifikasi", p.description || "Tidak dinyatakan dalam data"],
-      ["Kadar bulanan biasa", monthlyReference(p)],
-      ["Tempoh", String(p.months) + " bulan"],
-      ["Promosi", factualPromotion(p)],
-      ["Ketersediaan", factualAvailability(p)]
+      [t("model"), p.id, false],
+      [t("category"), labelCategory(p.category), false],
+      [t("majorSpec"), p.description || t("unsupplied"), !!p.description],
+      [t("monthlyRate"), monthlyReference(p), false],
+      [t("term"), String(p.months) + t("months"), false],
+      [t("promotion"), factualPromotion(p), false],
+      [t("availability"), factualAvailability(p), !!(p.stock && p.stock.trim())]
     ];
     return '<article class="saved-product" aria-labelledby="saved-product-title-' + index + '">' +
       '<div class="saved-product-top"><div class="saved-photo">' + photo(p, "shortlist-appliance", false) +
-      '</div><div class="saved-product-intro"><span class="saved-order">PILIHAN 0' +
-      (index + 1) + '</span><h3 id="saved-product-title-' + index + '">' + escape(p.name) +
+      '</div><div class="saved-product-intro"><span class="saved-order">' + t("savedChoice") +
+      (index + 1) + '</span><h3 lang="ms" id="saved-product-title-' + index + '">' + escape(p.name) +
       '</h3><p>' + escape(p.id) + '</p><strong>' + escape(monthlyReference(p)) +
-      '</strong><small>' + escape(plan.name) + ' · ' + Number(p.months) + ' bulan · ' +
+      '</strong><small>' + escape(plan.name) + ' · ' + Number(p.months) + t("months") + ' · ' +
       escape(checked) + '</small></div></div>' +
-      '<dl class="saved-facts">' + facts.map(([label, value]) =>
-        '<div class="saved-fact"><dt>' + escape(label) + '</dt><dd>' + escape(value) +
-        '</dd></div>').join("") + '</dl>' +
+      '<dl class="saved-facts">' + facts.map(([label, value, sourceMalay]) =>
+        '<div class="saved-fact"><dt>' + escape(label) + '</dt><dd' +
+        (sourceMalay ? ' lang="ms"' : "") + '>' + escape(value) + '</dd></div>').join("") + '</dl>' +
       '<div class="saved-actions"><button id="saved-details-' + index +
-      '" type="button" class="saved-view">View details <span aria-hidden="true">↗</span></button>' +
+      '" type="button" class="saved-view">' + t("viewDetails") +
+      ' <span aria-hidden="true">↗</span></button>' +
       '<button id="saved-remove-' + index +
-      '" type="button" class="saved-remove">Remove <span aria-hidden="true">×</span></button></div>' +
-      '</article>';
+      '" type="button" class="saved-remove">' + t("remove") +
+      ' <span aria-hidden="true">×</span></button></div></article>';
   }
   function renderShortlist() {
     const items = savedProducts().slice(0, savedLimit);
     $("shortlist-count").textContent = items.length + " / " + savedLimit;
     $("shortlist-body").innerHTML =
-      '<p id="shortlist-intro" class="shortlist-intro">Banding fakta yang tersenarai sahaja. Kami tidak membuat penarafan automatik.</p>' +
+      '<p id="shortlist-intro" class="shortlist-intro">' + t("notRanked") + '</p>' +
       (removedFromShortlist ? '<button type="button" id="shortlist-undo-remove" class="shortlist-undo-remove">' +
-        '↶ Undo remove: ' + escape(removedFromShortlist.id) + '</button>' : "") +
+        '↶ ' + t("undoRemove") + escape(removedFromShortlist.id) + '</button>' : "") +
       (items.length ? '<div class="shortlist-cards">' + items.map(shortlistCard).join("") +
-        '</div>' : '<div class="shortlist-empty"><h3>Tiada produk disimpan.</h3>' +
-        '<p>Teruskan meleret untuk mencari pilihan anda.</p></div>') +
-      '<p class="shortlist-disclosure">Kadar ialah kadar bulanan biasa daripada data rujukan bertarikh, bukan sebut harga langsung. ' +
-      'Promosi harga tunai tidak bermaksud diskaun pelan RTO. Stok, promosi, harga dan terma perlu disahkan dengan KHIND.</p>';
+        '</div>' : '<div class="shortlist-empty"><h3>' + t("emptyPicks") + '</h3>' +
+        '<p>' + t("emptyPicksBody") + '</p></div>') +
+      '<p class="shortlist-disclosure">' + t("shortlistDisclaimer") + '</p>';
     shortlistFooter.innerHTML = '<button class="shortlist-keep" id="shortlist-continue" type="button">' +
-      'Keep swiping <span aria-hidden="true">→</span></button>' +
+      t("keepSwiping") + ' <span aria-hidden="true">→</span></button>' +
       (items.length ? '<a class="shortlist-contact" id="shortlist-contact" href="' +
         escape(whatsappUrl(items)) + '" target="_blank" rel="noopener noreferrer">' +
-        'Ask Hakim about these <span aria-hidden="true">↗</span></a>' :
+        t("askAboutThese") + ' <span aria-hidden="true">↗</span></a>' :
         '<span class="shortlist-contact shortlist-contact-disabled" aria-disabled="true">' +
-        'Ask Hakim about these</span>');
+        t("askAboutThese") + '</span>');
     bindImageErrors($("shortlist-body"));
     items.forEach((p, index) => {
       $("shortlist-body").querySelector("#saved-details-" + index).addEventListener("click", () => {
@@ -554,13 +741,11 @@
         if (originalIndex < 0) return;
         state.saved.splice(originalIndex, 1);
         removedFromShortlist = { id: p.id, index: originalIndex };
-        // Earlier swipe snapshots should not accidentally resurrect deleted saved items.
         state.history = [];
         setControls();
         renderShortlist();
         $("shortlist-body").querySelector("#shortlist-undo-remove").focus({ preventScroll: true });
-        announce(p.name + " dibuang daripada simpanan. " + state.saved.length +
-          " produk masih disimpan. Anda boleh undur buang.");
+        announce(p.name + t("removeResult") + state.saved.length + t("remainingSaved"));
       });
     });
     if (removedFromShortlist) {
@@ -572,7 +757,7 @@
         setControls();
         renderShortlist();
         $("shortlist-title").focus({ preventScroll: true });
-        announce("Produk dipulihkan ke simpanan. " + state.saved.length + " produk disimpan.");
+        announce(t("restored") + state.saved.length + t("savedUnit") + ".");
       });
     }
     shortlistFooter.querySelector("#shortlist-continue").addEventListener("click", closeShortlist);
@@ -587,14 +772,14 @@
     } else {
       focusCurrentCard();
     }
-    announce("Kembali ke produk. " + state.saved.length + " produk disimpan.");
+    announce(t("backProducts") + state.saved.length + t("savedUnit") + ".");
   }
   function openShortlist() {
     if (!state.saved.length) return;
     renderShortlist();
     shortlistSheet.showModal();
     $("shortlist-title").focus({ preventScroll: true });
-    announce("Paparan simpanan. " + state.saved.length + " daripada " + savedLimit + " produk disimpan.");
+    announce(t("picksView") + state.saved.length + t("outOf") + savedLimit + t("savedUnit") + ".");
   }
   function renderCompare() {
     const items = savedProducts();
@@ -603,45 +788,52 @@
       render();
       return;
     }
-    compareView.innerHTML = '<div class="compare-heading"><button type="button" id="compare-back">← Kembali</button>' +
-      '<span>' + items.length + ' PILIHAN</span></div>' +
-      '<h1>Banding sebelum pilih.</h1><p>Leret jadual ke tepi untuk lihat semua pilihan yang disimpan.</p>' +
+    compareView.innerHTML = '<div class="compare-heading"><button type="button" id="compare-back">← ' +
+      t("compareBack") + '</button><span>' + items.length + ' ' + t("savedKicker") + '</span></div>' +
+      '<h1>' + t("compareHeading") + '</h1><p>' + t("compareHelp") + '</p>' +
       '<div class="compare-scroll"><div class="compare-grid">' +
       items.map(p => {
         const plan = shownPlan(p);
-        return '<article class="compare-item"><div class="compare-photo">' + photo(p, "compare-appliance", false) + '</div>' +
-          '<span class="compare-model">' + escape(p.id) + '</span><h2>' + escape(p.name) + '</h2>' +
-          '<div class="compare-metric"><small>' +
-          (isVariantC && selectedBudgetBand ? 'Kadar biasa · ' + escape(plan.name) : 'Kadar biasa dari') +
-          '</small><strong>' + money(plan.rate) + '/bln</strong></div>' +
-          '<div class="compare-metric"><small>Tempoh</small><strong>' + Number(p.months) + ' bulan</strong></div>' +
-          '<div class="compare-metric"><small>Jumlah anggaran*</small><strong>' +
+        return '<article class="compare-item"><div class="compare-photo">' + photo(p, "compare-appliance", false) +
+          '</div><span class="compare-model">' + escape(p.id) + '</span>' +
+          '<h2 lang="ms">' + escape(p.name) + '</h2>' +
+          '<div class="compare-metric"><small>' + t("monthlyRate") + '</small><strong>' +
+          money(plan.rate) + t("monthSuffix") + '</strong></div>' +
+          '<div class="compare-metric"><small>' + t("term") + '</small><strong>' +
+          Number(p.months) + t("months") + '</strong></div>' +
+          '<div class="compare-metric"><small>' + t("compareEstimated") + '</small><strong>' +
           money(plan.rate * Number(p.months)) + '</strong></div>' +
           (p.cash != null && Number.isFinite(Number(p.cash)) ?
-            '<div class="compare-metric"><small>Harga tunai rujukan</small><strong>' + money(p.cash) + '</strong></div>' : "") +
-          '<div class="compare-benefits"><small>Manfaat disenaraikan</small><p>' + escape(p.benefits || "Sahkan butiran pelan.") + '</p></div>' +
-          '<a href="../products/' + encodeURIComponent(p.id) + '/">Butiran produk ↗</a></article>';
+            '<div class="compare-metric"><small>' + t("cashReference") + '</small><strong>' +
+            money(p.cash) + '</strong></div>' : "") +
+          '<div class="compare-benefits"><small>' + t("listedBenefits") +
+            '</small><p lang="ms">' + escape(p.benefits || "") + '</p></div>' +
+          '<a href="../products/' + encodeURIComponent(p.id) + '/">' + t("viewDetails") + ' ↗</a></article>';
       }).join("") + '</div></div>' +
-      '<p class="compare-note">*Jumlah anggaran kadar biasa × tempoh; belum mengambil kira promosi/caj. Ini bukan penilaian kelayakan. Manfaat berbeza mengikut pelan.</p>' +
+      '<p class="compare-note">' + t("shortlistDisclaimer") + '</p>' +
       '<a class="compare-contact" href="' + escape(whatsappUrl(items)) +
-      '" target="_blank" rel="noopener noreferrer">Tanya Hakim tentang pilihan ini ↗</a>' +
-      '<button class="continue-after-compare" id="compare-continue" type="button">Teruskan leret →</button>';
+      '" target="_blank" rel="noopener noreferrer">' + t("askAboutThese") + ' ↗</a>' +
+      '<button class="continue-after-compare" id="compare-continue" type="button">' +
+      t("keepSwiping") + ' →</button>';
     bindImageErrors(compareView);
     const back = () => { state.comparing = false; render(); focusCurrentCard(); };
     $("compare-back").addEventListener("click", back);
     $("compare-continue").addEventListener("click", back);
-    announce("Paparan perbandingan untuk " + items.length + " produk.");
+    announce(t("compare") + ": " + items.length + t("savedUnit") + ".");
   }
   function renderEnd() {
     const items = savedProducts();
     completeView.innerHTML = '<div class="end-icon" aria-hidden="true">✓</div>' +
-      '<p class="end-kicker">SEMUA PILIHAN TELAH DILIHAT</p><h1 id="completion-title" tabindex="-1">Selesai meleret.</h1>' +
-      '<p>' + (items.length ? "Anda telah simpan " + items.length + " pilihan. Banding sebelum membuat keputusan." :
-        "Tiada produk disimpan. Anda boleh lihat sekali lagi atau semak katalog.") + '</p>' +
-      (items.length >= 2 ? '<button class="prompt-primary" type="button" id="end-compare">Banding produk ↗</button>' : "") +
-      (items.length ? '<button class="prompt-secondary" type="button" id="end-shortlist">Lihat simpanan (' + items.length + ')</button>' : "") +
-      '<button class="prompt-secondary" type="button" id="restart-deck">Lihat semula dari awal</button>' +
-      '<a class="text-link" href="../catalogue/">Katalog penuh ↗</a>';
+      '<p class="end-kicker">' + t("completionKicker") + '</p>' +
+      '<h1 id="completion-title" tabindex="-1">' + t("completionHeading") + '</h1>' +
+      '<p>' + (items.length ? t("completionSaved") + items.length + t("completionSavedEnd") :
+        t("completionEmpty")) + '</p>' +
+      (items.length >= 2 ? '<button class="prompt-primary" type="button" id="end-compare">' +
+        t("compare") + ' ↗</button>' : "") +
+      (items.length ? '<button class="prompt-secondary" type="button" id="end-shortlist">' +
+        t("seeSaved") + items.length + ')</button>' : "") +
+      '<button class="prompt-secondary" type="button" id="restart-deck">' + t("restart") + '</button>' +
+      '<a class="text-link" href="../catalogue/">' + t("fullCatalogue") + ' ↗</a>';
     $("end-compare")?.addEventListener("click", openShortlist);
     $("end-shortlist")?.addEventListener("click", openShortlist);
     $("restart-deck").addEventListener("click", () => {
@@ -656,7 +848,7 @@
       focusCurrentCard();
       announce(nextCardAnnouncement());
     });
-    announce("Selesai melihat " + deck.length + " produk.");
+    announce(t("doneAnnounce") + deck.length + t("savedUnit") + ".");
   }
 
   $("skip-button").addEventListener("click", () => commitDecision(false));
@@ -676,20 +868,112 @@
     else dialog.close();
   }));
   shortlistSheet.addEventListener("close", () => { removedFromShortlist = null; });
-  if (isVariantC) {
+  function renderBudgetOptions() {
+    if (!isVariantC || budgetGate.hidden) return;
     const options = $("budget-options");
     const bandLabel = band => band.min === band.max ? money(band.min) :
       money(band.min) + " – " + money(band.max);
     options.innerHTML = budgetBands.map((band, i) =>
       '<button type="button" data-budget-choice="' + i + '">' +
       '<span class="question-option-number" aria-hidden="true">0' + (i + 1) + '</span>' +
-      '<span class="budget-amount">' + bandLabel(band) + ' <small>/month</small>' +
-      '<span class="budget-option-caption">Listed regular monthly rates</span></span>' +
+      '<span class="budget-amount">' + bandLabel(band) + ' <small>' + t("monthlyShort") + '</small>' +
+      '<span class="budget-option-caption">' + t("listedRates") + '</span></span>' +
       '<span class="question-option-arrow" aria-hidden="true">↗</span></button>'
     ).join("") + '<button type="button" data-budget-choice="unsure">' +
       '<span class="question-option-number" aria-hidden="true">↗</span>' +
-      '<span>Not sure<span class="budget-option-caption">Browse all products</span></span>' +
+      '<span>' + t("notSure") + '<span class="budget-option-caption">' + t("browseAll") + '</span></span>' +
       '<span class="question-option-arrow" aria-hidden="true">→</span></button>';
+  }
+  function applyStaticTranslations() {
+    document.documentElement.lang = language;
+    document.documentElement.setAttribute?.("lang", language);
+    const inEnglish = language === "en";
+    const variantName = isVariantB ? (inEnglish ? "Category-first" : "Pilihan kategori") :
+      isVariantC ? (inEnglish ? "Budget-first" : "Pilihan bajet") : null;
+    document.title = (inEnglish ? "Help me choose KHIND RTO appliances" : "Bantu saya pilih peralatan KHIND RTO") +
+      (variantName ? " — " + variantName : "") + " | Hakim";
+    const description = document.querySelector('meta[name="description"]');
+    description?.setAttribute("content", inEnglish ?
+      "Compare KHIND RTO appliances, regular monthly rates and terms. Save up to three picks and ask independent agent Hakim." :
+      "Pilih peralatan KHIND RTO, banding kadar bulanan biasa dan tempoh. Simpan sehingga tiga pilihan dan tanya ejen bebas Hakim.");
+    const set = (id, value) => { const node = $(id); if (node) node.textContent = value; };
+    set("skip-content-link", t("help"));
+    set("home-label", t("home"));
+    set("agent-label", t("withHakim"));
+    set("saved-label", t("savedLabel"));
+    set("hint-skip", "← " + t("skip"));
+    set("hint-save", t("save") + " →");
+    set("swipe-instructions", t("shortcutHint"));
+    $("skip-button").innerHTML = '<span aria-hidden="true">✕</span> ' + t("skip");
+    set("footer-disclosure", t("footerDisclosure"));
+    set("details-heading-label", t("detailsHeading"));
+    set("shortlist-kicker", t("savedKicker"));
+    set("shortlist-title", t("yourPicks"));
+    $("undo-button").setAttribute("aria-label", t("undoAria"));
+    $("undo-button").querySelector("span:last-child").textContent = t("undo");
+    document.querySelector("[data-close-details]")?.setAttribute("aria-label", t("closeDetails"));
+    document.querySelector("[data-close-shortlist]")?.setAttribute("aria-label", t("closeShortlist"));
+    document.querySelector(".home-link")?.setAttribute("aria-label", t("goBack"));
+    $("progress-track").setAttribute("aria-label", t("progressLabel"));
+    if (isVariantB) {
+      set("gate-marker", t("categoryMarker"));
+      set("gate-eyebrow", t("categoryEyebrow"));
+      set("one-question-title", t("categoryQ"));
+      set("gate-explainer", t("categoryExplanation"));
+      set("gate-option-washing", t("washing"));
+      set("gate-option-fridge", t("refrigerator"));
+      set("gate-option-cooling", t("airconditioner"));
+      set("gate-option-all", t("showEverything"));
+      set("gate-disclosure", t("categoryDisclosure"));
+    }
+    if (isVariantC) {
+      set("gate-marker", t("budgetMarker"));
+      set("gate-eyebrow", t("budgetEyebrow"));
+      set("budget-question-title", t("budgetQ"));
+      set("gate-explainer", t("budgetExplanation"));
+      set("gate-disclosure", t("budgetDisclosure"));
+      renderBudgetOptions();
+    }
+    ["language-main", "language-details", "language-shortlist"].forEach(id => {
+      const button = $(id);
+      if (!button) return;
+      button.textContent = inEnglish ? "BM" : "EN";
+      button.setAttribute("lang", inEnglish ? "ms" : "en");
+      button.setAttribute("aria-label", t("switch"));
+      button.setAttribute("aria-pressed", "false");
+    });
+  }
+  function switchLanguage(buttonId) {
+    const previous = language;
+    language = language === "ms" ? "en" : "ms";
+    if (previous === language) return;
+    // Rebuild only localized views. Shopping state, deck order, history, preferences,
+    // saved/skipped decisions and native dialog open state remain untouched.
+    const detailsOpen = detailsSheet.open;
+    const shortlistOpen = shortlistSheet.open;
+    const shortlistScroll = shortlistOpen ? $("shortlist-body").scrollTop : 0;
+    applyStaticTranslations();
+    if (!(isVariantB && !categoryGate.hidden) && !(isVariantC && !budgetGate.hidden)) {
+      render();
+    }
+    if (shortlistOpen) {
+      renderShortlist();
+      $("shortlist-body").scrollTop = shortlistScroll;
+    }
+    if (detailsOpen && detailsProduct) {
+      openDetails(detailsProduct, detailsReturnToShortlist);
+    }
+    $(buttonId)?.focus({ preventScroll: true });
+    announce(t("languageChanged"));
+  }
+  ["language-main", "language-details", "language-shortlist"].forEach(id => {
+    $(id)?.addEventListener("click", () => switchLanguage(id));
+  });
+  applyStaticTranslations();
+
+  if (isVariantC) {
+    const options = $("budget-options");
+    renderBudgetOptions();
     options.addEventListener("click", event => {
       const button = event.target.closest("[data-budget-choice]");
       if (!button || budgetGate.hidden) return;

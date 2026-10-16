@@ -6,6 +6,10 @@ This is an independent KHIND RTO agent marketing site, NOT the official KHIND HQ
 
 Across all swipe routes, the first product deck does not open with a rescue prompt. After 3 skips in a row without opening details/saving, show at most one optional category rescue per browsing run only when unseen categories differ: “Which do you need?” → Laundry / Fridge / Aircond / Not sure, with “Skip this question.” Then immediately resume unviewed products with chosen category first, keeping every other unviewed product and original order within each group. Saved items, Undo snapshots and monthly reference amounts remain intact. Already chosen single-category paths do not repeat the question. No eligibility claims or data capture.
 
+## Language (EN / BM)
+
+Shared `swipe-shop.js` supports live English/Bahasa Melayu switching on every chooser and inside Details and the shortlist. The switch is purely presentational: it does not change saved, skipped, deck order, position, selected budget band or modal open/closed state. Keep dated catalogue facts unchanged, with language metadata on supplied Malay product text. Default HTML language: `ms`. On switch update `document.documentElement.lang`, title, description, accessible labels and status messages. Verify with `tests/swipe-i18n.test.cjs`.
+
 ## Pages
 - `/pilih-c/`: Budget-first experimental variant. Exactly one optional monthly-comfort question; broad bands are generated from current catalogue's dated regular rates, plus Not sure. Shared swipe controls, products and official images; rankings use the closest actual available plan. No eligibility/approval claims, personal data or tracking.
 - `/pilih-b/`: A/B variant — exactly one up-front category question, then the same swipe deck, with washing-machine, refrigerator, air conditioner or all-product filtering. No category question on control route. No analytics or visitor assignment enabled.

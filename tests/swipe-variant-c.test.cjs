@@ -85,14 +85,14 @@ function check(name, passed) {
   console.log("PASS " + name);
 }
 const gate = htmlC.split('<section id="budget-question-gate"')[1]?.split("</section>")[0] || "";
-check("C has exactly one preproduct question", gate.includes("What monthly amount feels comfortable?") &&
+check("C has exactly one preproduct question", gate.includes("Berapakah bajet bulanan yang selesa untuk anda?") &&
   (gate.match(/\?/g) || []).length === 1 && !gate.includes("<form"));
 check("C starts without a hardcoded price", !/RM\d/.test(gate));
-check("C preserves independent agent, no approval promise", gate.includes("not a loan eligibility or approval check") &&
-  htmlC.includes("not KHIND HQ"));
+check("C preserves independent agent, no approval promise", gate.includes("bukan semakan kelayakan atau kelulusan pinjaman") &&
+  htmlC.includes("bukan KHIND HQ"));
 check("C uses source catalogue and common swipe controls",
   htmlC.includes("../catalogue.js?v=cd12d-plan-promo") &&
-  htmlC.includes("../swipe-shop.js?v=4") &&
+  htmlC.includes("../swipe-shop.js?v=5") &&
   htmlC.includes('id="skip-button"') &&
   htmlC.includes('id="save-button"') &&
   htmlC.includes('id="undo-button"') &&
@@ -168,7 +168,7 @@ app.get("undo-button").click();
 check("C Undo restores saved counter", app.get("saved-count").textContent === "0");
 app.get("save-button").click();
 app.get("save-button").click();
-check("C keeps two-save compare / keep swiping / Ask Hakim", ["Banding produk", "Teruskan leret", "Tanya Hakim"]
+check("C keeps two-save compare / keep swiping / Ask Hakim", ["Bandingkan", "Teruskan lihat produk", "Tanya Hakim"]
   .every(s => app.get("decision-prompt").innerHTML.includes(s)));
 app.get("decision-prompt").querySelector("#compare-now").click();
 check("C opens factual saved shortlist", app.get("shortlist-sheet").open &&

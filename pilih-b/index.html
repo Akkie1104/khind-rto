@@ -11,20 +11,21 @@
   <link rel="canonical" href="https://khindrto.akizen.my/pilih-b/">
   <link rel="icon" href="../assets/hakim-mark.svg" type="image/svg+xml">
   <link rel="preload" href="../assets/manrope.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../swipe-shop.css?v=4">
+  <link rel="stylesheet" href="../swipe-shop.css?v=5">
   <link rel="stylesheet" href="../swipe-variant-b.css?v=1">
   <script src="../catalogue.js?v=cd12d-plan-promo" defer></script>
-  <script src="../swipe-shop.js?v=4" defer></script>
+  <script src="../swipe-shop.js?v=5" defer></script>
   <title>Leret & Pilih Peralatan KHIND RTO — Pilihan Kategori | Hakim</title>
 </head>
 <body class="awaiting-choice">
-  <a class="skip-link" href="#product-area">Terus ke produk</a>
+  <a class="skip-link" id="skip-content-link" href="#product-area">Bantu saya pilih</a>
   <header class="shop-header">
-    <a class="home-link" href="../" aria-label="Kembali ke laman utama">← <span>Utama</span></a>
-    <div class="shop-identity"><span class="identity-dot" aria-hidden="true"></span><strong>PILIH<span class="identity-highlight">.</span></strong><small>bersama Hakim</small></div>
-    <button id="saved-open" class="saved-indicator" type="button" aria-label="Lihat produk disimpan, 0 produk" disabled><span aria-hidden="true">♥</span> <span id="saved-count">0</span> <span class="saved-label">Simpan</span></button>
+    <div class="header-start"><a class="home-link" href="../" aria-label="Kembali ke laman utama">← <span id="home-label">Utama</span></a>
+      <button id="language-main" class="language-switch" type="button" aria-label="Switch to English" lang="en">EN</button></div>
+    <div class="shop-identity"><span class="identity-dot" aria-hidden="true"></span><strong>PILIH<span class="identity-highlight">.</span></strong><small id="agent-label">bersama Hakim</small></div>
+    <button id="saved-open" class="saved-indicator" type="button" aria-label="Lihat produk disimpan, 0 produk" disabled><span aria-hidden="true">♥</span> <span id="saved-count">0</span> <span class="saved-label" id="saved-label">Simpan</span></button>
   </header>
-  <div class="shop-progress" aria-label="Kemajuan pilihan">
+  <div class="shop-progress" aria-label="Kemajuan pilihan" id="progress-label">
     <div class="progress-label"><span id="deck-position">Pilihan 1</span><span id="deck-total">—</span></div>
     <div class="progress-track" role="progressbar" id="progress-track" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" aria-label="Produk telah dilihat"><div id="progress-fill"></div></div>
   </div>
@@ -32,18 +33,18 @@
     <section class="stage" id="swipe-stage" aria-label="Pilihan peralatan dan kad produk">
       <section id="one-question-gate" class="one-question-gate" aria-labelledby="one-question-title">
         <div class="question-content">
-          <div class="question-marker"><span class="question-marker-dot" aria-hidden="true"></span><span>FIND YOUR FIT</span><span class="question-marker-rule" aria-hidden="true"></span><span>01 / 01</span></div>
-          <p class="question-eyebrow">ONE TAP. STRAIGHT TO PRODUCTS.</p>
-          <h1 id="one-question-title">What are you looking for today?</h1>
-          <p class="question-explainer">Pick what interests you. Start swiping immediately.</p>
+          <div class="question-marker"><span class="question-marker-dot" aria-hidden="true"></span><span id="gate-marker">BANTU SAYA PILIH</span><span class="question-marker-rule" aria-hidden="true"></span><span>01 / 01</span></div>
+          <p class="question-eyebrow" id="gate-eyebrow">SATU PILIHAN. TERUS LIHAT PRODUK.</p>
+          <h1 id="one-question-title">Apa yang anda cari hari ini?</h1>
+          <p class="question-explainer" id="gate-explainer">Pilih kategori yang anda perlukan dan terus lihat produk.</p>
           <div class="question-options" role="group" aria-labelledby="one-question-title">
-            <button type="button" data-deck-choice="washing"><span class="question-option-number" aria-hidden="true">01</span><span>Washing machine</span><span class="question-option-arrow" aria-hidden="true">↗</span></button>
-            <button type="button" data-deck-choice="fridge"><span class="question-option-number" aria-hidden="true">02</span><span>Refrigerator</span><span class="question-option-arrow" aria-hidden="true">↗</span></button>
-            <button type="button" data-deck-choice="cooling"><span class="question-option-number" aria-hidden="true">03</span><span>Air conditioner</span><span class="question-option-arrow" aria-hidden="true">↗</span></button>
-            <button type="button" data-deck-choice="all"><span class="question-option-number" aria-hidden="true">04</span><span>Show me everything</span><span class="question-option-arrow" aria-hidden="true">↗</span></button>
+            <button type="button" data-deck-choice="washing"><span class="question-option-number" aria-hidden="true">01</span><span id="gate-option-washing">Mesin basuh</span><span class="question-option-arrow" aria-hidden="true">↗</span></button>
+            <button type="button" data-deck-choice="fridge"><span class="question-option-number" aria-hidden="true">02</span><span id="gate-option-fridge">Peti sejuk</span><span class="question-option-arrow" aria-hidden="true">↗</span></button>
+            <button type="button" data-deck-choice="cooling"><span class="question-option-number" aria-hidden="true">03</span><span id="gate-option-cooling">Penyaman udara</span><span class="question-option-arrow" aria-hidden="true">↗</span></button>
+            <button type="button" data-deck-choice="all"><span class="question-option-number" aria-hidden="true">04</span><span id="gate-option-all">Lihat semua</span><span class="question-option-arrow" aria-hidden="true">↗</span></button>
           </div>
         </div>
-        <p class="question-disclosure">Laman ejen bebas, bukan KHIND HQ. Kadar dan kelayakan tertakluk kepada pengesahan KHIND.</p>
+        <p class="question-disclosure" id="gate-disclosure">Laman ejen bebas, bukan KHIND HQ. Kadar dan kelayakan tertakluk kepada pengesahan KHIND.</p>
       </section>
       <div id="card-slot" class="card-slot" aria-live="off"></div>
       <section id="rescue-question" class="rescue-question" aria-labelledby="rescue-title" hidden></section>
@@ -53,24 +54,27 @@
     </section>
   </main>
   <footer class="shop-footer">
-    <div class="swipe-hint"><span>← Langkau</span><span id="swipe-instructions">Butang atau ← / → pada kad</span><span>Simpan →</span></div>
+    <div class="swipe-hint"><span id="hint-skip">← Langkau</span><span id="swipe-instructions">Butang atau ← / → pada kad</span><span id="hint-save">Simpan →</span></div>
     <div class="action-row">
-      <button type="button" id="undo-button" class="undo-button" aria-label="Undur tindakan terakhir" disabled><span aria-hidden="true">↶</span> <span>Undo</span></button>
+      <button type="button" id="undo-button" class="undo-button" aria-label="Undur tindakan terakhir" disabled><span aria-hidden="true">↶</span> <span>Undur</span></button>
       <button type="button" id="skip-button" class="choice-button skip-button"><span aria-hidden="true">✕</span> Langkau</button>
       <button type="button" id="save-button" class="choice-button save-button"><span aria-hidden="true">♥</span> Simpan</button>
     </div>
-    <p class="agent-disclosure">Laman ejen bebas, bukan KHIND HQ · Kadar & kelayakan disahkan KHIND.</p>
+    <p class="agent-disclosure" id="footer-disclosure">Laman ejen bebas, bukan KHIND HQ · Kadar & kelayakan disahkan KHIND.</p>
   </footer>
   <dialog id="details-sheet" class="bottom-sheet" aria-labelledby="details-title">
     <div class="sheet-handle" aria-hidden="true"></div>
-    <div class="sheet-head"><span>MAKLUMAT PRODUK</span><button class="sheet-close" type="button" data-close-details aria-label="Tutup butiran">✕</button></div>
+    <div class="sheet-head"><span id="details-heading-label">MAKLUMAT PRODUK</span><div class="sheet-actions">
+      <button id="language-details" class="language-switch" type="button" aria-label="Switch to English" lang="en">EN</button>
+      <button class="sheet-close" type="button" data-close-details aria-label="Tutup butiran">✕</button></div></div>
     <div id="details-body" class="sheet-body"></div>
   </dialog>
   <dialog id="shortlist-sheet" class="bottom-sheet shortlist-screen" aria-labelledby="shortlist-title" aria-describedby="shortlist-intro">
     <header class="shortlist-head">
-      <div><p class="shortlist-eyebrow">SAVED SELECTIONS <span id="shortlist-count">0 / 3</span></p>
-        <h2 id="shortlist-title" tabindex="-1">Pilihan disimpan</h2></div>
-      <button class="sheet-close" type="button" data-close-shortlist aria-label="Tutup simpanan">✕</button>
+      <div><p class="shortlist-eyebrow"><span id="shortlist-kicker">PILIHAN ANDA</span> <span id="shortlist-count">0 / 3</span></p>
+        <h2 id="shortlist-title" tabindex="-1">Pilihan anda</h2></div>
+      <div class="sheet-actions"><button id="language-shortlist" class="language-switch" type="button" aria-label="Switch to English" lang="en">EN</button>
+      <button class="sheet-close" type="button" data-close-shortlist aria-label="Tutup simpanan">✕</button></div>
     </header>
     <div id="shortlist-body" class="shortlist-body"></div>
     <footer id="shortlist-footer" class="shortlist-footer"></footer>

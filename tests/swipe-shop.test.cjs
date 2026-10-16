@@ -71,7 +71,7 @@ get("undo-button").click();
 check("Undo restores skipped card", get("deck-position").textContent === "Pilihan 2");
 get("save-button").click();
 check("second save offers all three actions", get("saved-count").textContent === "2" &&
-  ["Banding produk", "Teruskan leret", "Tanya Hakim"].every(text =>
+  ["Bandingkan", "Teruskan lihat produk", "Tanya Hakim"].every(text =>
     get("decision-prompt").innerHTML.includes(text)));
 get("decision-prompt").querySelector("#compare-now").click();
 check("Compare opens factual shortlist for exactly saved models", get("shortlist-sheet").open &&

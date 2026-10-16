@@ -23,8 +23,8 @@ for (const route of routes) {
     html.includes('role="progressbar"'));
   check(route + ": visible keyboard instruction and same shared assets",
     html.includes('id="swipe-instructions"') &&
-    html.includes("../swipe-shop.js?v=4") &&
-    html.includes("../swipe-shop.css?v=4"));
+    html.includes("../swipe-shop.js?v=5") &&
+    html.includes("../swipe-shop.css?v=5"));
 }
 check("WCAG 2.2 AA target minimum, 44 CSS px implementation",
   css.includes("min-height:2.75rem") &&
@@ -40,7 +40,7 @@ check("Reduced motion and high zoom / narrow height reflow",
   css.includes("body{height:auto;min-height:100dvh;overflow-x:hidden;overflow-y:auto}") &&
   css.includes(".product-card{overflow-y:auto;overflow-x:hidden"));
 check("Skip and Save distinguishable by text and icons",
-  script.includes("LANGKAU") && script.includes("SIMPAN ♥") &&
+  script.includes('t("skip").toUpperCase()') && script.includes('t("save").toUpperCase()') &&
   fs.readFileSync("pilih/index.html","utf8").includes("✕</span> Langkau") &&
   fs.readFileSync("pilih/index.html","utf8").includes("♥</span> Simpan"));
 check("No long-press or multi-touch requirement, swipe operates on pointerup",
