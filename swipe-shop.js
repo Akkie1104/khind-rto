@@ -85,9 +85,10 @@
       '<div class="product-photo">' +
       '<div class="photo-topline"><span>KOLEKSI KHIND RTO</span><span>' + escape(p.id) + '</span></div>' +
       photo(p, "hero-appliance", true) +
-      '<span class="photo-corner-mark" aria-hidden="true">01 / PILIHAN</span></div>' +
+      '<span class="photo-corner-mark" aria-hidden="true">FOTO PRODUK</span></div>' +
       '<div class="product-copy"><p class="product-overline">' + escape(p.category) + ' <span>· ' + escape(p.id) + '</span></p>' +
       '<h1>' + escape(p.name) + '</h1><p class="product-subtitle">' + escape(p.description || "") + '</p>' +
+      (p.stock ? '<p class="product-stock">' + escape(p.stock) + '</p>' : '') +
       '<div class="price-row"><div><span class="price-kicker">KADAR BULANAN BIASA DARI</span>' +
       '<p class="product-price">' + money(plan.rate) + '<small>/bulan</small></p></div>' +
       '<div class="price-duration"><strong>' + Number(p.months) + '</strong><span>bulan</span></div></div>' +
@@ -139,6 +140,7 @@
     }
     if (state.index >= deck.length) {
       renderEnd();
+      if (state.prompting) renderPrompt();
       return;
     }
     const p = deck[state.index];
