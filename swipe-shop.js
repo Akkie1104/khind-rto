@@ -303,6 +303,25 @@
   let detailsReturnToShortlist = false;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let animationToken = 0;
+  const telemetry = window.KHIND_TELEMETRY;
+  const emit = (name, fields = {}) => telemetry?.track?.(name, {
+    action_source: fields.action_source || "automatic",
+    saved_count: state.saved.length,
+    ...(fields.product_id ? { product_id: fields.product_id } : {}),
+    ...(Number.isInteger(fields.card_position) ? { card_position: fields.card_position } : {}),
+    ...(fields.question_type ? { question_type: fields.question_type } : {}),
+    ...(fields.answer_kind ? { answer_kind: fields.answer_kind } : {}),
+    ...(fields.filter_category ? { filter_category: fields.filter_category } : {})
+  });
+  let lastImpression = null;
+  function recordCardImpression() {
+    const p = deck[state.index];
+    if (!p || cardSlot.hidden || state.prompting || state.rescueOpen || state.comparing) return;
+    const key = state.index + ":" + p.id;
+    if (lastImpression === key) return;
+    lastImpression = key;
+    emit("card_impression", { product_id: p.id, card_position: state.index + 1 });
+  }
 
   const savedProducts = () => state.saved.map(id => deck.find(p => p.id === id)).filter(Boolean);
   function labelCategory(category) {
@@ -357,6 +376,9 @@
     }
     state.rescueOpen = false;
     state.skipStreak = 0;
+    emit("filter_answered", { action_source: "button", question_type: "rescue",
+      answer_kind: category === "unsure" ? "unsure" : "selected",
+      ...(category !== "unsure" ? { filter_category: category } : {}) });
     render();
     cardSlot.querySelector("#active-card")?.focus({ preventScroll: true });
     announce((category && category !== "unsure" ?
@@ -509,8 +531,9 @@
     cardSlot.querySelector("#details-button").addEventListener("click", openDetails);
     enableDrag(cardSlot.querySelector("#active-card"));
     if (state.prompting) renderPrompt();
+    else recordCardImpression();
   }
-  function commitDecision(save, fromCardKeyboard = false) {
+  function commitDecision(save, fromCardKeyboard = false, actionSource = fromCardKeyboard ? "keyboard" : "button") {
     if (state.busy || state.comparing || state.prompting || state.rescueOpen || state.index >= deck.length) return;
     if (save && state.saved.length >= savedLimit) {
       openShortlist();
@@ -529,12 +552,16 @@
         skipStreak: state.skipStreak, rescueUsed: state.rescueUsed, deck: [...deck]
       });
       if (save && !state.saved.includes(p.id)) state.saved.push(p.id);
+      emit(actionSource === "button" ? (save ? "card_save_button" : "card_skip_button") :
+        (save ? "card_swipe_right" : "card_swipe_left"),
+        { product_id: p.id, card_position: state.index + 1, action_source: actionSource });
       state.skipStreak = save ? 0 : state.skipStreak + 1;
       state.index++;
       state.busy = false;
       if (!save && state.skipStreak >= 3 && worthRescuing()) {
         state.rescueOpen = true;
         state.rescueUsed = true;
+        emit("filter_question_shown", { question_type: "rescue" });
       }
       if (state.saved.length === 2 && !state.prompted) {
         state.prompting = true;
@@ -571,6 +598,9 @@
     state.rescueOpen = false;
     state.prompting = false;
     state.comparing = false;
+    emit("card_undo", { action_source: "button", product_id: deck[state.index].id,
+      card_position: state.index + 1 });
+    lastImpression = null;
     render();
     focusCurrentCard();
     announce(t("undoResult") + deck[state.index].name + ". " +
@@ -614,7 +644,7 @@
       const active = gesture.active;
       gesture = null;
       reset();
-      if (active && Math.abs(dx) >= Math.min(105, card.clientWidth * .24)) commitDecision(dx > 0);
+      if (active && Math.abs(dx) >= Math.min(105, card.clientWidth * .24)) commitDecision(dx > 0, false, "gesture");
     });
     card.addEventListener("pointercancel", () => { gesture = null; reset(); });
     card.addEventListener("lostpointercapture", () => { if (gesture) { gesture = null; reset(); } });
@@ -638,6 +668,7 @@
       '" target="_blank" rel="noopener noreferrer">' + t("askAbout") + ' ↗</a></div>';
     decisionPrompt.querySelector("#compare-now").addEventListener("click", () => {
       state.prompting = false;
+      emit("compare_open", { action_source: "button" });
       render();
       openShortlist();
     });
@@ -649,10 +680,14 @@
     decisionPrompt.querySelector("#compare-now").focus({ preventScroll: true });
   }
   let detailsProduct = null;
-  function openDetails(item, fromShortlist = false) {
+  function openDetails(item, fromShortlist = false, fromTranslation = false) {
     const p = item && typeof item === "object" && item.id ? item : deck[state.index];
     if (!p || (state.rescueOpen && !fromShortlist)) return;
-    if (!fromShortlist) state.skipStreak = 0;
+    if (!fromShortlist && !fromTranslation) state.skipStreak = 0;
+    if (!fromTranslation) emit("product_details_open", {
+      product_id: p.id, card_position: deck.findIndex(entry => entry.id === p.id) + 1,
+      action_source: "button"
+    });
     detailsReturnToShortlist = !!fromShortlist;
     detailsProduct = p;
     const plans = plansFor(p);
@@ -776,6 +811,7 @@
   }
   function openShortlist() {
     if (!state.saved.length) return;
+    emit("shortlist_open", { action_source: "button" });
     renderShortlist();
     shortlistSheet.showModal();
     $("shortlist-title").focus({ preventScroll: true });
@@ -834,7 +870,10 @@
         t("seeSaved") + items.length + ')</button>' : "") +
       '<button class="prompt-secondary" type="button" id="restart-deck">' + t("restart") + '</button>' +
       '<a class="text-link" href="../catalogue/">' + t("fullCatalogue") + ' ↗</a>';
-    $("end-compare")?.addEventListener("click", openShortlist);
+    $("end-compare")?.addEventListener("click", () => {
+      emit("compare_open", { action_source: "button" });
+      openShortlist();
+    });
     $("end-shortlist")?.addEventListener("click", openShortlist);
     $("restart-deck").addEventListener("click", () => {
       state.index = 0;
@@ -855,6 +894,17 @@
   $("save-button").addEventListener("click", () => commitDecision(true));
   $("undo-button").addEventListener("click", undo);
   $("saved-open").addEventListener("click", openShortlist);
+  // Delegation also covers controls recreated by language changes and deck renders.
+  document.addEventListener("click", event => {
+    const link = event.target?.closest?.("a");
+    if (!link) return;
+    const href = link.getAttribute("href") || "";
+    if (/^https:\/\/wa\.me\/60174201247(?:\?|$)/.test(href)) {
+      emit("whatsapp_cta_click", { action_source: "link" });
+    } else if (/^\.\.\/catalogue\/(?:\?|$)/.test(href)) {
+      emit("catalogue_fallback_click", { action_source: "link" });
+    }
+  });
   document.querySelector("[data-close-details]").addEventListener("click", () => detailsSheet.close());
   document.querySelector("[data-close-shortlist]").addEventListener("click", closeShortlist);
   detailsSheet.addEventListener("close", () => {
@@ -961,7 +1011,7 @@
       $("shortlist-body").scrollTop = shortlistScroll;
     }
     if (detailsOpen && detailsProduct) {
-      openDetails(detailsProduct, detailsReturnToShortlist);
+      openDetails(detailsProduct, detailsReturnToShortlist, true);
     }
     $(buttonId)?.focus({ preventScroll: true });
     announce(t("languageChanged"));
@@ -974,6 +1024,7 @@
   if (isVariantC) {
     const options = $("budget-options");
     renderBudgetOptions();
+    emit("filter_question_shown", { question_type: "budget_entry" });
     options.addEventListener("click", event => {
       const button = event.target.closest("[data-budget-choice]");
       if (!button || budgetGate.hidden) return;
@@ -982,6 +1033,8 @@
       const selected = value === "unsure" ? null : budgetBands[Number(value)];
       if (value !== "unsure" && !selected) return;
       selectedBudgetBand = selected;
+      emit("filter_answered", { action_source: "button", question_type: "budget_entry",
+        answer_kind: selected ? "selected" : "unsure" }); // Never include budget amount/band.
       deck = buildBudgetDeck(selectedBudgetBand);
       budgetGate.hidden = true;
       document.body.classList.remove("awaiting-choice");
@@ -989,10 +1042,14 @@
       cardSlot.querySelector("#active-card")?.focus({ preventScroll: true });
     });
   } else if (isVariantB) {
+    emit("filter_question_shown", { question_type: "category_entry" });
     categoryGate.querySelectorAll("[data-deck-choice]").forEach(button => {
       button.addEventListener("click", () => {
         const choice = button.getAttribute("data-deck-choice");
         if (!choices.includes(choice) || categoryGate.hidden) return;
+        emit("filter_answered", { action_source: "button", question_type: "category_entry",
+          answer_kind: choice === "all" ? "unsure" : "selected",
+          filter_category: choice });
         deck = buildDeck(choice);
         categoryGate.hidden = true;
         document.body.classList.remove("awaiting-choice");
@@ -1003,4 +1060,6 @@
   } else {
     render();
   }
+  emit("guide_open");
+  window.addEventListener?.("pagehide", () => emit("guide_close", { action_source: "navigation" }));
 })();
