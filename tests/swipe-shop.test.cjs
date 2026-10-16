@@ -74,9 +74,10 @@ check("second save offers all three actions", get("saved-count").textContent ===
   ["Banding produk", "Teruskan leret", "Tanya Hakim"].every(text =>
     get("decision-prompt").innerHTML.includes(text)));
 get("decision-prompt").querySelector("#compare-now").click();
-check("Compare shows exact saved models", get("compare-view").innerHTML.includes("WM1248") &&
-  get("compare-view").innerHTML.includes("RFS600A"));
-get("compare-view").querySelector("#compare-back").click();
+check("Compare opens factual shortlist for exactly saved models", get("shortlist-sheet").open &&
+  get("shortlist-body").innerHTML.includes("WM1248") &&
+  get("shortlist-body").innerHTML.includes("RFS600A"));
+get("shortlist-footer").querySelector("#shortlist-continue").click();
 get("undo-button").click();
 check("Undo a saved card restores prior saved list", get("saved-count").textContent === "1" &&
   get("deck-position").textContent === "Pilihan 2");
@@ -86,7 +87,7 @@ check("Keep swiping returns to current deck", get("deck-position").textContent =
   get("saved-count").textContent === "2");
 get("saved-open").click();
 check("Saved list offers product-specific agent WhatsApp", get("shortlist-sheet").open &&
-  get("shortlist-body").innerHTML.includes("wa.me/60174201247") &&
+  get("shortlist-footer").innerHTML.includes("wa.me/60174201247") &&
   get("shortlist-body").innerHTML.includes("RFS600A"));
 get("shortlist-sheet").close();
 
