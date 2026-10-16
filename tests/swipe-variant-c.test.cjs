@@ -92,7 +92,7 @@ check("C preserves independent agent, no approval promise", gate.includes("not a
   htmlC.includes("not KHIND HQ"));
 check("C uses source catalogue and common swipe controls",
   htmlC.includes("../catalogue.js?v=cd12d-plan-promo") &&
-  htmlC.includes("../swipe-shop.js?v=3") &&
+  htmlC.includes("../swipe-shop.js?v=4") &&
   htmlC.includes('id="skip-button"') &&
   htmlC.includes('id="save-button"') &&
   htmlC.includes('id="undo-button"') &&
@@ -171,8 +171,9 @@ app.get("save-button").click();
 check("C keeps two-save compare / keep swiping / Ask Hakim", ["Banding produk", "Teruskan leret", "Tanya Hakim"]
   .every(s => app.get("decision-prompt").innerHTML.includes(s)));
 app.get("decision-prompt").querySelector("#compare-now").click();
-check("C comparison shows both saved products", app.get("compare-view").innerHTML.includes("WM1248") === false &&
-  app.get("compare-view").innerHTML.includes("compare-item"));
+check("C opens factual saved shortlist", app.get("shortlist-sheet").open &&
+  app.get("shortlist-body").innerHTML.includes("saved-facts") &&
+  app.get("shortlist-body").innerHTML.includes("Kadar bulanan biasa"));
 const recalculated = launch("budget-first", products => { products.find(p => p.id === "SI6029BP").plans[0].rate = 65; });
 check("bands recalculated when actual catalogue terms change",
   recalculated.get("budget-options").innerHTML.includes("RM65") &&

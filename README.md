@@ -46,6 +46,14 @@ The common swipe card now provides always-visible Skip, Save and Undo buttons, k
 
 See **[SWIPE-ACCESSIBILITY.md](SWIPE-ACCESSIBILITY.md)** for the full implementation checklist and manual checks still required before claiming conformance. The code tests do not replace screen-reader, zoom, real-device and contrast testing.
 
+## Saved shortlist (1–3 appliances)
+
+The three swipe routes use a dedicated full-height mobile shortlist when visitors tap the saved-count button or choose **Banding produk** after two saves. Up to three products can be saved. At three saved, Save becomes visibly full/disabled until one item is removed; Skip and other actions remain available.
+
+Every saved row displays seven **source-backed** fields from `catalogue.js`: model, product category, the existing description as capacity/major specification, the actual regular monthly plan amount selected by the existing A/B/C experience, contract term, the *recorded cash promotion state*, and the original stock note (or an explicit unknown-status message). Monthly amounts are described as catalogue reference rates with their recorded verification dates, **not live quote or approval**. Cash promotions are never presented as discounts on monthly RTO plans. No product is labeled “best.”
+
+Actions are **View details** (the chosen saved product, returning to shortlist after the details sheet closes), **Remove** (with an immediate Undo remove affordance), **Keep swiping**, and **Ask Hakim about these** (WhatsApp with the exact currently saved model IDs). Removal clears prior swipe-Undo snapshots to avoid resurrecting deleted products; Remove itself has its own Undo within the shortlist. The shortlist has no login, storage, analytics or personal-data form. See `tests/swipe-shortlist.test.cjs` for the 1/2/3-saved, model/date/promotion/availability and interaction checks.
+
 ## Operational checks
 
 - Verify current products, pricing, availability, campaign eligibility and payment terms with KHIND before promoting.
