@@ -25,6 +25,7 @@ jobs:
           node --check swipe-shop.js
           node tests/swipe-shop.test.cjs
           node tests/swipe-variant-b.test.cjs
+          node tests/swipe-variant-c.test.cjs
       - name: Assert essential storefront controls and privacy safeguards
         run: |
           node --input-type=module <<'NODE'
