@@ -19,13 +19,16 @@ The DNS provider already has a CNAME for `khindrto` that targets `Akkie1104.gith
 ## Files
 
 - `index.html`: Page, SEO metadata and customer journey.
-- `catalogue.js`: Product and price reference data.
+- `catalogue.js`: Authoritative structured product and price reference data used by the swipe shop.
+- `pilih/index.html`, `swipe-shop.js`, `swipe-shop.css`: Full-screen, mobile-first swipe shopping. Starts on a product card, with Skip/Save/Undo, details, comparison after two saves, and product-specific WhatsApp enquiry. No form or tracking.
 - `script.js`: Search, filters, product details and WhatsApp enquiries.
 - `retail-2026.css`: Current page styling.
 - `style.css`: Legacy styling retained for reference.
 - `assets/`: Icons, local font and required licences.
 
 Images for most products currently reference KHIND-associated external CDNs rather than local copies. If an image disappears from the original source, it may disappear here too. Review imagery separately before a production promotion.
+
+The homepage swipe CTA and catalogue invitation link to `/pilih/`. Individual product entries in the swipe deck require a supplied official product image, valid listed plans and a contract duration; bundles remain in the catalogue until their own official imagery is available. Existing product image URLs are used without editing the appliance.
 
 ## Operational checks
 

@@ -22,6 +22,8 @@ jobs:
           node --check motion-2026.js
           node --check storefront.js
           node --check shopping-guide.js
+          node --check swipe-shop.js
+          node tests/swipe-shop.test.cjs
       - name: Assert essential storefront controls and privacy safeguards
         run: |
           node --input-type=module <<'NODE'
@@ -30,8 +32,9 @@ jobs:
           const js=fs.readFileSync('script.js','utf8');
           const css=fs.readFileSync('retail-2026.css','utf8');
           const motion=fs.readFileSync('motion-2026.css','utf8');
-          const guide=fs.readFileSync('shopping-guide.js','utf8');
-          const guideCss=fs.readFileSync('shopping-guide.css','utf8');
+          const guide=fs.readFileSync('swipe-shop.js','utf8');
+          const guideCss=fs.readFileSync('swipe-shop.css','utf8');
+          const swipePage=fs.readFileSync('pilih/index.html','utf8');
           const photography=fs.readFileSync('photo-2026.css','utf8');
           const checks=[
             ['studio photo stylesheet loaded',html.includes('photo-2026.css?v=photo-2')],
@@ -41,23 +44,22 @@ jobs:
             ['official WM1248 source link',html.includes('https://www.khindrto.com.my/products/9kg-front-load-washer-wm1248')],
             ['official catalogue WM1248 photo retained',fs.readFileSync('catalogue.js','utf8').includes('WM1248_Front%20Left.jpg')],
             ['realistic light image mat',photography.includes('mix-blend-mode:multiply')],
-            ['opt-in guided chooser mounted',html.includes('id="guided-shop"')&&html.includes('data-guide-open')],
-            ['swipe scripts load locally',html.includes('shopping-guide.js?v=3')&&html.includes('shopping-guide.css?v=3')],
-            ['budget limits use the regular rate',guide.includes('rate(p)<=cap')],
-            ['no automatic first-visit pop-up',guide.includes('get("pilih")==="1"')],
-            ['no seven-choice questionnaire',!guide.includes('const steps=')&&!html.includes('Langkah 1 daripada 3')],
-            ['first screen opens a card directly',guide.includes('start(false)')&&guide.includes('function display()')],
-            ['category and budget filters optional',guide.includes('swipe-filter-category')&&guide.includes('swipe-filter-budget')],
-            ['no misleading over-budget matches',guide.includes('Tiada produk dalam had pilihan ini.')],
-            ['swipe touch and mouse drag',guide.includes('"pointerdown"')&&guide.includes('"pointerup"')],
-            ['swipe accessible buttons',guide.includes('data-swipe="skip"')&&guide.includes('data-swipe="save"')],
-            ['swipe keyboard and undo',guide.includes('ArrowLeft')&&guide.includes('ArrowRight')&&guide.includes('function undo()')],
-            ['shortlist limited to 3',guide.includes('s.saved.length>=3')],
-            ['swipe deck limited to 8',guide.includes('slice(0,8)')],
-            ['WhatsApp enquiry only for selected items',guide.includes('s.saved')&&guide.includes('wa.me/60174201247')],
-            ['reduced motion supported by swipe deck',guideCss.includes('swipe-card')&&guideCss.includes('prefers-reduced-motion:reduce')],
-            ['quiz stays accessible',guideCss.includes('prefers-reduced-motion:reduce')&&html.includes('aria-labelledby="guide-title"')],
-            ['catalogue invites guided selection',fs.readFileSync('catalogue/index.html','utf8').includes('../?pilih=1')],
+            ['dedicated full-screen swipe route',html.includes('href="pilih/"')&&fs.existsSync('pilih/index.html')],
+            ['source scripts load locally',swipePage.includes('../catalogue.js')&&swipePage.includes('../swipe-shop.js?v=1')&&swipePage.includes('../swipe-shop.css?v=1')],
+            ['product facts come from catalogue only',guide.includes('window.KHIND_PRODUCTS')&&guide.includes('p.image')&&guide.includes('p.plans')&&guide.includes('p.months')],
+            ['no quiz or onboarding before first card',swipePage.includes('id="card-slot"')&&!swipePage.includes('<form')&&!swipePage.includes('input type=')],
+            ['only supplied official image URLs',guide.includes('approvedImage(p.image)')&&guideCss.includes('object-fit:contain')],
+            ['touch, mouse and keyboard gestures',guide.includes('"pointerdown"')&&guide.includes('"pointerup"')&&guide.includes('"ArrowLeft"')&&guide.includes('"ArrowRight"')],
+            ['persistent Skip and Save buttons',swipePage.includes('id="skip-button"')&&swipePage.includes('id="save-button"')],
+            ['undo restores saved set and card',guide.includes('function undo()')&&guide.includes('saved: [...state.saved]')&&guide.includes('state.saved = previous.saved')],
+            ['two-save choice prompt',guide.includes('state.saved.length === 2')&&guide.includes('Banding produk')&&guide.includes('Teruskan leret')&&guide.includes('Tanya Hakim tentang ini')],
+            ['details as native bottom sheet',swipePage.includes('id="details-sheet"')&&guide.includes('detailsSheet.showModal()')],
+            ['comparison of saved products',guide.includes('function renderCompare()')&&guide.includes('savedProducts()')],
+            ['progress and saved count shown',swipePage.includes('id="progress-track"')&&swipePage.includes('id="saved-count"')],
+            ['WhatsApp uses agent and saved model IDs',guide.includes('wa.me/60174201247')&&guide.includes('items.map(p => p.id)')],
+            ['swipe reduced motion support',guideCss.includes('prefers-reduced-motion:reduce')],
+            ['no data persistence or analytics in guide',!guide.includes('localStorage')&&!guide.includes('sessionStorage')&&!guide.includes('fetch(')],
+            ['catalogue invites direct swipe',fs.readFileSync('catalogue/index.html','utf8').includes('../pilih/')],
             ['motion assets loaded',html.includes('motion-2026.css')&&html.includes('motion-2026.js')],
             ['reduced motion supported',motion.includes('prefers-reduced-motion:reduce')],
             ['no perpetual motion loop',!(/animation[^;\n]*\binfinite\b/.test(motion))],

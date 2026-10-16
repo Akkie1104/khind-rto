@@ -6,3 +6,14 @@
 .footer-link-group{display:flex;flex-wrap:wrap;justify-content:end;gap:.45rem .9rem}
 .footer-link-group a{font-size:.8rem;text-decoration:underline;text-underline-offset:.18rem}
 @media(max-width:43.75em){.footer-link-group{justify-content:start}}
+
+/* Standalone guided-shopping CTA; no legacy modal stylesheet required. */
+.guide-trigger{display:inline-flex;align-items:center;justify-content:center;min-height:3.15rem;padding:.75rem 1.2rem;font:850 .92rem/1.3 Manrope,system-ui,sans-serif;background:#f1ce35;color:#12170e;text-decoration:none;border:1px solid #f1ce35;border-radius:.6rem;transition:background-color .17s ease,transform .17s ease}
+.guide-trigger:hover{background:#ffe273;transform:translateY(-2px)}
+.guide-trigger:focus-visible{outline:3px solid #fff1a1;outline-offset:3px}
+.guide-intro{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1rem;background:linear-gradient(115deg,#202719,#332e17);border:1px solid #675a29;border-radius:.85rem;padding:1.15rem 1.35rem;margin:1.25rem 0}
+.guide-intro h2{color:#faf7de;font-size:clamp(1.1rem,1rem + .45vw,1.42rem);margin:.1rem 0 .4rem}
+.guide-intro p{color:#d4decf;font-size:.89rem;line-height:1.55;margin:0}
+.guide-intro .guide-label{color:#f5d34e;font-size:.74rem;letter-spacing:.075em;font-weight:850}
+@media(max-width:43rem){.guide-intro{grid-template-columns:1fr}.guide-intro .guide-trigger{width:100%}}
+@media(prefers-reduced-motion:reduce){.guide-trigger{transition:none}}
