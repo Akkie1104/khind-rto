@@ -671,8 +671,11 @@
     if (state.saved.length) openShortlist();
   });
   [detailsSheet, shortlistSheet].forEach(dialog => dialog.addEventListener("click", event => {
-    if (event.target === dialog) dialog.close();
+    if (event.target !== dialog) return;
+    if (dialog === shortlistSheet) closeShortlist();
+    else dialog.close();
   }));
+  shortlistSheet.addEventListener("close", () => { removedFromShortlist = null; });
   if (isVariantC) {
     const options = $("budget-options");
     const bandLabel = band => band.min === band.max ? money(band.min) :
