@@ -620,12 +620,14 @@
   }
   function renderPrompt() {
     decisionPrompt.innerHTML =
-      '<div class="prompt-card"><p class="prompt-kicker">2 PILIHAN DISIMPAN</p>' +
-      '<h2>' + (isVariantB ? 'Pilihan anda sudah sedia.' : 'Dah jumpa yang menarik?') + '</h2><p>Banding kedua-duanya dulu, atau teruskan lihat produk lain.</p>' +
-      '<button type="button" class="prompt-primary" id="compare-now">Banding produk <span aria-hidden="true">↗</span></button>' +
-      '<button type="button" class="prompt-secondary" id="keep-swiping">Teruskan leret</button>' +
+      '<div class="prompt-card"><p class="prompt-kicker">' + t("twoSaved") + '</p>' +
+      '<h2>' + (isVariantB ? t("twoSavedReady") : t("twoSavedQuestion")) + '</h2>' +
+      '<p>' + t("twoSavedDescription") + '</p>' +
+      '<button type="button" class="prompt-primary" id="compare-now">' + t("compare") +
+      ' <span aria-hidden="true">↗</span></button>' +
+      '<button type="button" class="prompt-secondary" id="keep-swiping">' + t("keepSwiping") + '</button>' +
       '<a class="prompt-whatsapp" href="' + escape(whatsappUrl(savedProducts())) +
-      '" target="_blank" rel="noopener noreferrer">Tanya Hakim tentang ini ↗</a></div>';
+      '" target="_blank" rel="noopener noreferrer">' + t("askAbout") + ' ↗</a></div>';
     decisionPrompt.querySelector("#compare-now").addEventListener("click", () => {
       state.prompting = false;
       render();
@@ -638,35 +640,38 @@
     });
     decisionPrompt.querySelector("#compare-now").focus({ preventScroll: true });
   }
+  let detailsProduct = null;
   function openDetails(item, fromShortlist = false) {
-    const p = item && typeof item === "object" && item.id ?
-      item : deck[state.index];
+    const p = item && typeof item === "object" && item.id ? item : deck[state.index];
     if (!p || (state.rescueOpen && !fromShortlist)) return;
-    // Reading the active card resets a skip streak. Opening a saved item is
-    // a separate interaction and cannot alter which card is active.
     if (!fromShortlist) state.skipStreak = 0;
     detailsReturnToShortlist = !!fromShortlist;
+    detailsProduct = p;
     const plans = plansFor(p);
+    const previousScroll = detailsSheet.open ? $("details-body").scrollTop : 0;
     $("details-body").innerHTML =
       '<div class="details-photo">' + photo(p, "details-appliance", false) + '</div>' +
       '<div class="details-summary"><span class="detail-model">' + escape(p.id) + '</span>' +
-      '<h2 id="details-title">' + escape(p.name) + '</h2><p>' + escape(p.description || "") + '</p></div>' +
-      '<h3>Pelan & bayaran biasa</h3><div class="plan-list">' +
+      '<h2 id="details-title" lang="ms">' + escape(p.name) + '</h2>' +
+      '<p lang="ms">' + escape(p.description || "") + '</p></div>' +
+      '<h3>' + t("normalPlans") + '</h3><div class="plan-list">' +
       plans.map(q => '<div class="plan-item"><span>' + escape(q.name) + '</span><strong>' +
-        money(q.rate) + ' <small>/bulan</small></strong><small>Anggaran ' +
-        money(q.rate * Number(p.months)) + ' / ' + Number(p.months) + ' bulan*</small></div>').join("") +
-      '</div>' +
+        money(q.rate) + ' <small>' + t("monthSuffix") + '</small></strong><small>' + t("estimated") +
+        money(q.rate * Number(p.months)) + ' / ' + Number(p.months) + t("months") +
+        '*</small></div>').join("") + '</div>' +
       (Number.isFinite(Number(p.cash)) && p.cash != null ?
-        '<p class="cash-reference">Harga tunai rujukan: <strong>' + money(p.cash) + '</strong></p>' : "") +
-      (p.benefits ? '<h3>Manfaat yang disenaraikan</h3><p>' + escape(p.benefits) + '</p>' : "") +
-      (p.stock ? '<p class="stock-note">' + escape(p.stock) + '</p>' : "") +
-      '<p class="details-caveat">*Anggaran kadar biasa × tempoh, tidak termasuk promosi atau caj tambahan. Harga, stok, manfaat, tempoh dan kelayakan perlu disahkan melalui KHIND. Banding jumlah RTO dengan harga tunai.</p>' +
+        '<p class="cash-reference">' + t("cashReference") + '<strong>' + money(p.cash) + '</strong></p>' : "") +
+      (p.benefits ? '<h3>' + t("listedBenefits") + '</h3><p lang="ms">' + escape(p.benefits) + '</p>' : "") +
+      (p.stock ? '<p class="stock-note" lang="ms">' + escape(p.stock) + '</p>' : "") +
+      '<p class="details-caveat">' + t("detailsDisclaimer") + '</p>' +
       '<div class="detail-links"><a href="../products/' + encodeURIComponent(p.id) +
-      '/">Halaman produk →</a>' +
+      '/">' + t("productPage") + ' →</a>' +
       (approvedSource(p.source) ? '<a href="' + escape(approvedSource(p.source)) +
-        '" target="_blank" rel="noopener noreferrer">Rujukan rasmi ↗</a>' : "") + '</div>';
+        '" target="_blank" rel="noopener noreferrer">' + t("officialReference") + ' ↗</a>' : "") +
+      '</div>';
     bindImageErrors($("details-body"));
-    detailsSheet.showModal();
+    if (!detailsSheet.open) detailsSheet.showModal();
+    else $("details-body").scrollTop = previousScroll;
   }
   function shortlistCard(p, index) {
     const plan = shownPlan(p);
