@@ -96,7 +96,7 @@ check("One card shows every requested field as a factual label",
    "Tempoh", "Promosi", "Ketersediaan"].every(key => html.includes("<dt>" + key + "</dt>")));
 check("Model, category, 9kg specification and checked regular amount come from catalogue",
   html.includes("WM1248") &&
-  html.includes("Laundry") &&
+  html.includes("Dobi") &&
   html.includes("9kg · Basuh") &&
   html.includes("RM85/bulan") &&
   html.includes("Standard · 48 bulan") &&
