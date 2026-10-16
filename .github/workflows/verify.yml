@@ -29,6 +29,7 @@ jobs:
           node tests/swipe-rescue.test.cjs
           node tests/swipe-accessibility.test.cjs
           node tests/swipe-shortlist.test.cjs
+          node tests/swipe-i18n.test.cjs
       - name: Assert essential storefront controls and privacy safeguards
         run: |
           node --input-type=module <<'NODE'
@@ -50,14 +51,14 @@ jobs:
             ['official catalogue WM1248 photo retained',fs.readFileSync('catalogue.js','utf8').includes('WM1248_Front%20Left.jpg')],
             ['realistic light image mat',photography.includes('mix-blend-mode:multiply')],
             ['dedicated full-screen swipe route',html.includes('href="pilih/"')&&fs.existsSync('pilih/index.html')],
-            ['source scripts load locally',swipePage.includes('../catalogue.js')&&swipePage.includes('../swipe-shop.js?v=4')&&swipePage.includes('../swipe-shop.css?v=4')],
+            ['source scripts load locally',swipePage.includes('../catalogue.js')&&swipePage.includes('../swipe-shop.js?v=5')&&swipePage.includes('../swipe-shop.css?v=5')],
             ['product facts come from catalogue only',guide.includes('window.KHIND_PRODUCTS')&&guide.includes('p.image')&&guide.includes('p.plans')&&guide.includes('p.months')],
             ['no quiz or onboarding before first card',swipePage.includes('id="card-slot"')&&!swipePage.includes('<form')&&!swipePage.includes('input type=')],
             ['only supplied official image URLs',guide.includes('approvedImage(p.image)')&&guideCss.includes('object-fit:contain')],
             ['touch, mouse and keyboard gestures',guide.includes('"pointerdown"')&&guide.includes('"pointerup"')&&guide.includes('"ArrowLeft"')&&guide.includes('"ArrowRight"')],
             ['persistent Skip and Save buttons',swipePage.includes('id="skip-button"')&&swipePage.includes('id="save-button"')],
             ['undo restores saved set and card',guide.includes('function undo()')&&guide.includes('saved: [...state.saved]')&&guide.includes('state.saved = previous.saved')],
-            ['two-save choice prompt',guide.includes('state.saved.length === 2')&&guide.includes('Banding produk')&&guide.includes('Teruskan leret')&&guide.includes('Tanya Hakim tentang ini')],
+            ['two-save choice prompt',guide.includes('state.saved.length === 2')&&guide.includes('t("compare")')&&guide.includes('t("keepSwiping")')&&guide.includes('t("askAbout")')],
             ['details as native bottom sheet',swipePage.includes('id="details-sheet"')&&guide.includes('detailsSheet.showModal()')],
             ['comparison of saved products',guide.includes('function renderCompare()')&&guide.includes('savedProducts()')],
             ['progress and saved count shown',swipePage.includes('id="progress-track"')&&swipePage.includes('id="saved-count"')],
