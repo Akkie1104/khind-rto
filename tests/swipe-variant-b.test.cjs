@@ -71,6 +71,7 @@ function launch(variant) {
   vm.runInContext(catalogue, context, { filename: "catalogue.js" });
   vm.runInContext(script, context, { filename: "swipe-shop.js" });
   const idOnCard = () => {
+    if (get("card-slot").hidden) return null;
     const match = get("card-slot").innerHTML.match(/class="photo-topline"><span>KOLEKSI KHIND RTO<\/span><span>([^<]+)<\/span>/);
     return match ? match[1] : null;
   };
