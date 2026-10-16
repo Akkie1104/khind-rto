@@ -40,6 +40,12 @@ The shared swipe deck (control `/pilih/` and experimental `/pilih-b/`, `/pilih-c
 
 This is a navigation preference, not creditworthiness, approval or loan eligibility logic. No analytics, form, local storage or external service is required. Behavior is checked in `tests/swipe-rescue.test.cjs` plus the A/B/C smoke tests.
 
+## Swipe accessibility (WCAG 2.2 AA)
+
+The common swipe card now provides always-visible Skip, Save and Undo buttons, keyboard Left/Right shortcuts on its focusable card, explicit focus restoration and polite state announcements. Focus rings, minimum 44 px interactive targets, keyboard guidance, reduced-motion behavior and scrolling at high zoom/short viewports are included in the shared CSS and JS. All three chooser routes load the same updated components.
+
+See **[SWIPE-ACCESSIBILITY.md](SWIPE-ACCESSIBILITY.md)** for the full implementation checklist and manual checks still required before claiming conformance. The code tests do not replace screen-reader, zoom, real-device and contrast testing.
+
 ## Operational checks
 
 - Verify current products, pricing, availability, campaign eligibility and payment terms with KHIND before promoting.
