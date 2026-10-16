@@ -197,3 +197,50 @@ button:focus-visible,a:focus-visible,.product-card:focus-visible{outline:3px sol
 .rescue-bypass{display:block;margin:.9rem auto 0;min-height:2.5rem;padding:.45rem 1rem;border:0;background:transparent;color:#e0e9d8;text-decoration:underline;text-underline-offset:4px;font-size:.77rem;font-weight:750}
 @media(max-height:43rem){.rescue-card{padding:.85rem}.rescue-explainer{margin:.35rem 0 .75rem}.rescue-options button{min-height:2.7rem}.rescue-bypass{margin-top:.35rem;min-height:2rem}}
 @media(max-width:370px){.rescue-options{gap:.43rem}.rescue-options button{min-height:3rem;padding:.62rem;font-size:.81rem}}
+
+/* WCAG 2.2 AA interaction improvements: visible focus, one-pointer targets, zoom reflow. */
+:where(a,button,[tabindex]):focus-visible,
+.rescue-card h2:focus,
+#completion-title:focus{
+  outline:3px solid #ffe17a;
+  outline-offset:3px;
+  box-shadow:0 0 0 1px #0c110d;
+}
+:where(a,button,[tabindex]):focus:not(:focus-visible){box-shadow:none}
+.home-link,.saved-indicator,.details-button,.sheet-close,.compare-heading button,
+.text-link,.detail-links a,.compare-contact,.compare-item a,
+.rescue-bypass,.shortlist-choices a,.skip-link:focus{
+  min-height:2.75rem;
+  min-width:2.75rem;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.home-link{justify-content:flex-start}
+.action-row{gap:max(.5rem,8px)}
+.action-row button{min-height:3rem}
+.rescue-options{gap:max(.5rem,8px)}
+.rescue-options button,.rescue-bypass{min-height:2.75rem}
+.sheet-close{width:2.75rem;height:2.75rem;min-width:2.75rem;flex-shrink:0}
+.photo-corner-mark{color:#526047}
+.product-card{overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:contain;scrollbar-width:thin}
+/* Distinguishable text and pictograms remain visible without reliance on color. */
+.skip-button{border-style:solid;border-width:2px}
+.save-button{border-style:solid;border-width:2px}
+.swipe-left,.swipe-right{text-transform:uppercase;font-weight:950}
+.swipe-hint span:nth-child(2){font-size:.66rem;color:#d8e5d0}
+.rescue-card h2:focus{outline:3px solid #ffe17a;outline-offset:3px}
+#completion-title:focus{outline:3px solid #ffe17a;outline-offset:4px}
+/* Short height / high zoom must scroll, not crop the card or hide controls. */
+@media(max-height:43rem){
+  body{height:auto;min-height:100dvh;overflow-x:hidden;overflow-y:auto}
+  .shop-main{display:block;flex:1 0 auto;min-height:0;padding-bottom:.65rem}
+  .stage,.card-slot{height:auto;min-height:0}
+  .product-card{height:auto;min-height:0;overflow-x:hidden;overflow-y:visible}
+  .product-photo{height:clamp(9.25rem,35dvh,15rem);min-height:9.25rem;flex:0 0 auto}
+  .shop-footer{flex-shrink:0;padding-bottom:max(.7rem,env(safe-area-inset-bottom))}
+  .action-row button{min-height:2.75rem}
+  .deck-complete,.rescue-question{min-height:20rem;height:auto}
+  .compare-view{height:auto;overflow:visible}
+  .rescue-options button,.rescue-bypass{min-height:2.75rem}
+}

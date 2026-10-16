@@ -156,9 +156,9 @@
     state.skipStreak = 0;
     render();
     cardSlot.querySelector("#active-card")?.focus({ preventScroll: true });
-    announce(category && category !== "unsure" ?
-      "Pilihan disusun ikut keperluan anda. Teruskan lihat produk." :
-      "Teruskan lihat produk.");
+    announce((category && category !== "unsure" ?
+      "Produk seterusnya mengutamakan kategori dipilih. " : "Susunan asal dikekalkan. ") +
+      nextCardAnnouncement());
   }
   function renderRescue() {
     rescuePanel.innerHTML =
@@ -184,7 +184,23 @@
       ". Boleh bantu semak kadar biasa, jumlah keseluruhan, tempoh, manfaat pelan, stok dan proses rasmi? Terima kasih.";
     return "https://wa.me/60174201247?text=" + encodeURIComponent(message);
   }
+  // A persistent, polite status region communicates outcomes without moving pointer focus.
   function announce(message) { $("live-message").textContent = message; }
+  function focusCurrentCard() {
+    if (!state.rescueOpen && !state.prompting && !state.comparing &&
+        state.index < deck.length) {
+      cardSlot.querySelector("#active-card")?.focus({ preventScroll: true });
+    }
+  }
+  function nextCardAnnouncement() {
+    if (state.rescueOpen) return "Pilih satu kategori atau langkau soalan untuk teruskan.";
+    if (state.prompting) return "Dua produk disimpan. Banding, teruskan, atau tanya Hakim.";
+    if (state.index >= deck.length) return "Semua produk telah dilihat.";
+    const p = deck[state.index], plan = shownPlan(p);
+    return "Seterusnya, " + (state.index + 1) + " daripada " + deck.length +
+      ": " + p.name + ", " + money(plan.rate) + " sebulan, " +
+      Number(p.months) + " bulan.";
+  }
   function photo(p, className, eager) {
     const src = approvedImage(p.image);
     return src ? '<img class="' + className + '" src="' + escape(src) +
@@ -197,7 +213,8 @@
     const plan = shownPlan(p);
     const total = plan.rate * Number(p.months);
     return '<article id="active-card" class="product-card" tabindex="0" aria-label="' +
-      escape(p.name) + '. Anak panah kiri untuk langkau, kanan untuk simpan.">' +
+      escape(p.name) + '. Anak panah kiri untuk langkau, kanan untuk simpan."' +
+      ' aria-describedby="swipe-instructions" aria-keyshortcuts="ArrowLeft ArrowRight">' +
       '<div class="swipe-overlay swipe-left" aria-hidden="true">LANGKAU</div>' +
       '<div class="swipe-overlay swipe-right" aria-hidden="true">SIMPAN ♥</div>' +
       '<div class="product-photo">' +
@@ -220,6 +237,11 @@
     const disabled = state.busy || state.comparing || state.prompting || state.rescueOpen || ended;
     $("skip-button").disabled = disabled;
     $("save-button").disabled = disabled;
+    const current = deck[state.index];
+    $("skip-button").setAttribute("aria-label", current ?
+      "Langkau produk: " + current.name : "Langkau produk");
+    $("save-button").setAttribute("aria-label", current ?
+      "Simpan produk: " + current.name : "Simpan produk");
     $("undo-button").disabled = state.busy || !state.history.length;
     $("saved-open").disabled = !state.saved.length;
     $("saved-count").textContent = String(state.saved.length);
@@ -229,6 +251,8 @@
     $("progress-fill").style.width = (deck.length ? 100 * state.index / deck.length : 0) + "%";
     $("progress-track").setAttribute("aria-valuemax", String(Math.max(1, deck.length)));
     $("progress-track").setAttribute("aria-valuenow", String(state.index));
+    $("progress-track").setAttribute("aria-valuetext",
+      state.index + " daripada " + deck.length + " produk telah dilihat");
   }
   function bindImageErrors(container) {
     container.querySelectorAll("img").forEach(img => {
@@ -243,6 +267,8 @@
   function render() {
     setControls();
     cardSlot.hidden = state.comparing || state.rescueOpen || state.index >= deck.length || !deck.length;
+    // Non-modal overlays must not leave underlying card/Details in the tab order.
+    cardSlot.inert = state.comparing || state.prompting || state.rescueOpen;
     if (rescuePanel) rescuePanel.hidden = !state.rescueOpen;
     completeView.hidden = state.comparing || !!deck.length && state.index < deck.length;
     compareView.hidden = !state.comparing;
@@ -274,7 +300,7 @@
     enableDrag(cardSlot.querySelector("#active-card"));
     if (state.prompting) renderPrompt();
   }
-  function commitDecision(save) {
+  function commitDecision(save, fromCardKeyboard = false) {
     if (state.busy || state.comparing || state.prompting || state.rescueOpen || state.index >= deck.length) return;
     state.busy = true;
     setControls();
@@ -300,9 +326,19 @@
         state.prompted = true;
       }
       render();
-      announce(state.rescueOpen ? "Tiga produk dilangkau. Satu soalan pilihan dipaparkan." :
-        (save ? "Disimpan: " : "Dilangkau: ") + p.name + ". " +
-        state.saved.length + " produk disimpan.");
+      announce((save ? "Disimpan: " : "Dilangkau: ") + p.name + ". " +
+        state.saved.length + " produk disimpan. " + nextCardAnnouncement());
+      // The focused card was replaced by innerHTML; move focus to its successor.
+      // Button actions leave focus on their persistent button unless it became disabled.
+      if (fromCardKeyboard) {
+        if (state.index >= deck.length && !state.rescueOpen && !state.prompting) {
+          completeView.querySelector("#completion-title")?.focus({ preventScroll: true });
+        } else {
+          focusCurrentCard();
+        }
+      } else if (state.index >= deck.length && !state.rescueOpen && !state.prompting) {
+        completeView.querySelector("#completion-title")?.focus({ preventScroll: true });
+      }
     };
     if (reduceMotion.matches || !card) { apply(); return; }
     card.classList.add(save ? "exit-right" : "exit-left");
@@ -321,7 +357,9 @@
     state.prompting = false;
     state.comparing = false;
     render();
-    announce("Tindakan dibatalkan. Kembali ke " + deck[state.index].name + ".");
+    focusCurrentCard();
+    announce("Tindakan dibatalkan. Kembali ke " + deck[state.index].name + ". " +
+      nextCardAnnouncement());
   }
   function enableDrag(card) {
     let gesture = null;
@@ -333,7 +371,8 @@
       card.classList.remove("dragging");
     };
     card.addEventListener("pointerdown", event => {
-      if (state.busy || state.prompting || event.button !== 0 ||
+      if (state.busy || state.prompting || state.rescueOpen ||
+          event.button !== 0 || event.isPrimary === false ||
           event.target.closest("button, a")) return;
       gesture = { id: event.pointerId, x: event.clientX, y: event.clientY, dx: 0, active: false };
     });
@@ -368,7 +407,7 @@
       if (event.target !== card) return;
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         event.preventDefault();
-        commitDecision(event.key === "ArrowRight");
+        commitDecision(event.key === "ArrowRight", true);
       }
     });
   }
@@ -388,7 +427,9 @@
     decisionPrompt.querySelector("#keep-swiping").addEventListener("click", () => {
       state.prompting = false;
       render();
+      focusCurrentCard();
     });
+    decisionPrompt.querySelector("#compare-now").focus({ preventScroll: true });
   }
   function openDetails() {
     const p = deck[state.index];
@@ -473,7 +514,7 @@
       '" target="_blank" rel="noopener noreferrer">Tanya Hakim tentang pilihan ini ↗</a>' +
       '<button class="continue-after-compare" id="compare-continue" type="button">Teruskan leret →</button>';
     bindImageErrors(compareView);
-    const back = () => { state.comparing = false; render(); };
+    const back = () => { state.comparing = false; render(); focusCurrentCard(); };
     $("compare-back").addEventListener("click", back);
     $("compare-continue").addEventListener("click", back);
     announce("Paparan perbandingan untuk " + items.length + " produk.");
@@ -481,7 +522,7 @@
   function renderEnd() {
     const items = savedProducts();
     completeView.innerHTML = '<div class="end-icon" aria-hidden="true">✓</div>' +
-      '<p class="end-kicker">SEMUA PILIHAN TELAH DILIHAT</p><h1>Selesai meleret.</h1>' +
+      '<p class="end-kicker">SEMUA PILIHAN TELAH DILIHAT</p><h1 id="completion-title" tabindex="-1">Selesai meleret.</h1>' +
       '<p>' + (items.length ? "Anda telah simpan " + items.length + " pilihan. Banding sebelum membuat keputusan." :
         "Tiada produk disimpan. Anda boleh lihat sekali lagi atau semak katalog.") + '</p>' +
       (items.length >= 2 ? '<button class="prompt-primary" type="button" id="end-compare">Banding produk ↗</button>' : "") +
@@ -499,6 +540,8 @@
       state.prompting = false;
       state.prompted = state.saved.length >= 2;
       render();
+      focusCurrentCard();
+      announce(nextCardAnnouncement());
     });
     announce("Selesai melihat " + deck.length + " produk.");
   }

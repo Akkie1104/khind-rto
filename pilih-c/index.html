@@ -11,11 +11,11 @@
   <link rel="canonical" href="https://khindrto.akizen.my/pilih-c/">
   <link rel="icon" href="../assets/hakim-mark.svg" type="image/svg+xml">
   <link rel="preload" href="../assets/manrope.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../swipe-shop.css?v=2">
+  <link rel="stylesheet" href="../swipe-shop.css?v=3">
   <link rel="stylesheet" href="../swipe-variant-b.css?v=1">
   <link rel="stylesheet" href="../swipe-variant-c.css?v=1">
   <script src="../catalogue.js?v=cd12d-plan-promo" defer></script>
-  <script src="../swipe-shop.js?v=2" defer></script>
+  <script src="../swipe-shop.js?v=3" defer></script>
   <title>Leret & Pilih KHIND RTO — Pilihan Bajet | Hakim</title>
 </head>
 <body class="awaiting-choice">
@@ -29,7 +29,7 @@
     <div class="progress-label"><span id="deck-position">Pilihan 1</span><span id="deck-total">—</span></div>
     <div class="progress-track" role="progressbar" id="progress-track" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" aria-label="Produk telah dilihat"><div id="progress-fill"></div></div>
   </div>
-  <main id="product-area" class="shop-main">
+  <main id="product-area" class="shop-main" tabindex="-1">
     <section class="stage" id="swipe-stage" aria-label="Pilihan peralatan dan kad produk">
       <section id="budget-question-gate" class="one-question-gate" aria-labelledby="budget-question-title">
         <div class="question-content">
@@ -51,7 +51,7 @@
     </section>
   </main>
   <footer class="shop-footer">
-    <div class="swipe-hint"><span>← Langkau</span><span>Leret kad atau guna butang</span><span>Simpan →</span></div>
+    <div class="swipe-hint"><span>← Langkau</span><span id="swipe-instructions">Butang atau ← / → pada kad</span><span>Simpan →</span></div>
     <div class="action-row">
       <button type="button" id="undo-button" class="undo-button" aria-label="Undur tindakan terakhir" disabled><span aria-hidden="true">↶</span> <span>Undo</span></button>
       <button type="button" id="skip-button" class="choice-button skip-button"><span aria-hidden="true">✕</span> Langkau</button>
