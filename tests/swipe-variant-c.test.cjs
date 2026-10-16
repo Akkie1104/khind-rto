@@ -74,6 +74,7 @@ function launch(variant, modifyCatalogue) {
       const product = window.KHIND_PRODUCTS.find(p => p.id === id);
       results.push({ id, html: currentCard(), product });
       get("skip-button").click();
+      if (!get("rescue-question").hidden) get("rescue-question").querySelector("#rescue-skip").click();
     }
     return results;
   };
@@ -91,7 +92,7 @@ check("C preserves independent agent, no approval promise", gate.includes("not a
   htmlC.includes("not KHIND HQ"));
 check("C uses source catalogue and common swipe controls",
   htmlC.includes("../catalogue.js?v=cd12d-plan-promo") &&
-  htmlC.includes("../swipe-shop.js?v=1") &&
+  htmlC.includes("../swipe-shop.js?v=2") &&
   htmlC.includes('id="skip-button"') &&
   htmlC.includes('id="save-button"') &&
   htmlC.includes('id="undo-button"') &&
