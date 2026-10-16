@@ -88,8 +88,8 @@ const gate = htmlC.split('<section id="budget-question-gate"')[1]?.split("</sect
 check("C has exactly one preproduct question", gate.includes("Berapakah bajet bulanan yang selesa untuk anda?") &&
   (gate.match(/\?/g) || []).length === 1 && !gate.includes("<form"));
 check("C starts without a hardcoded price", !/RM\d/.test(gate));
-check("C preserves independent agent, no approval promise", gate.includes("not a loan eligibility or approval check") &&
-  htmlC.includes("not KHIND HQ"));
+check("C preserves independent agent, no approval promise", gate.includes("bukan semakan kelayakan atau kelulusan pinjaman") &&
+  htmlC.includes("bukan KHIND HQ"));
 check("C uses source catalogue and common swipe controls",
   htmlC.includes("../catalogue.js?v=cd12d-plan-promo") &&
   htmlC.includes("../swipe-shop.js?v=5") &&
