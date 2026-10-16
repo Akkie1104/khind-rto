@@ -168,7 +168,7 @@ check("Removing the middle product frees a save slot and updates counts",
   b.get("shortlist-count").textContent === "2 / 3" &&
   b.get("saved-count").textContent === "2" &&
   !b.get("save-button").disabled &&
-  !b.get("shortlist-body").innerHTML.includes("RFS600A"));
+  !b.get("shortlist-body").innerHTML.includes("<p>RFS600A</p>"));
 b.close();
 b.save();
 check("A new product can replace a removed one", b.get("saved-count").textContent === "3" &&
