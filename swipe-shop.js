@@ -112,9 +112,13 @@
   }
   let deck = isVariantB || isVariantC ? [] : buildDeck("all");
 
-  const state = { index: 0, saved: [], history: [], prompting: false, prompted: false, comparing: false, busy: false };
+  // A single contextual rescue per browsing run. A category question has value only
+  // when multiple categories still exist among products not yet shown.
+  const state = { index: 0, saved: [], history: [], prompting: false, prompted: false,
+    comparing: false, busy: false, skipStreak: 0, rescueOpen: false, rescueUsed: false };
   const cardSlot = $("card-slot");
   const decisionPrompt = $("decision-prompt");
+  const rescuePanel = $("rescue-question");
   const completeView = $("deck-complete");
   const compareView = $("compare-view");
   const detailsSheet = $("details-sheet");
@@ -123,6 +127,57 @@
   let animationToken = 0;
 
   const savedProducts = () => state.saved.map(id => deck.find(p => p.id === id)).filter(Boolean);
+  function rescueCategory(p) {
+    if (p.category === "fridge") return "fridge";
+    if (p.category === "cooling") return "aircond";
+    if (p.category === "laundry" || p.category === "garment") return "laundry";
+    return null;
+  }
+  function worthRescuing() {
+    // Do not repeat an already-specified category (e.g. variant B Laundry).
+    if (state.rescueUsed || state.prompting || state.comparing ||
+        state.index >= deck.length || !rescuePanel) return false;
+    const remainingCategories = new Set(deck.slice(state.index).map(rescueCategory).filter(Boolean));
+    return remainingCategories.size >= 2;
+  }
+  function answerRescue(category) {
+    if (!state.rescueOpen) return;
+    if (category && category !== "unsure") {
+      // Stable partition: never replay skipped cards or lose other products.
+      // For budget-first decks, the existing price order is preserved within each group.
+      const seen = deck.slice(0, state.index);
+      const unseen = deck.slice(state.index);
+      deck = seen.concat(
+        unseen.filter(p => rescueCategory(p) === category),
+        unseen.filter(p => rescueCategory(p) !== category)
+      );
+    }
+    state.rescueOpen = false;
+    state.skipStreak = 0;
+    render();
+    cardSlot.querySelector("#active-card")?.focus({ preventScroll: true });
+    announce(category && category !== "unsure" ?
+      "Pilihan disusun ikut keperluan anda. Teruskan lihat produk." :
+      "Teruskan lihat produk.");
+  }
+  function renderRescue() {
+    rescuePanel.innerHTML =
+      '<div class="rescue-card"><p class="rescue-eyebrow">BANTU KAMI CARI YANG SESUAI</p>' +
+      '<h2 id="rescue-title" tabindex="-1">Which do you need?</h2>' +
+      '<p class="rescue-explainer">Pilih satu untuk lihat produk yang lebih relevan dahulu.</p>' +
+      '<div class="rescue-options">' +
+      '<button type="button" id="rescue-laundry">Laundry <span aria-hidden="true">↗</span></button>' +
+      '<button type="button" id="rescue-fridge">Fridge <span aria-hidden="true">↗</span></button>' +
+      '<button type="button" id="rescue-aircond">Aircond <span aria-hidden="true">↗</span></button>' +
+      '<button type="button" id="rescue-unsure">Not sure <span aria-hidden="true">→</span></button>' +
+      '</div><button type="button" id="rescue-skip" class="rescue-bypass">Skip this question.</button>' +
+      '</div>';
+    ["laundry", "fridge", "aircond", "unsure"].forEach(choice => {
+      rescuePanel.querySelector("#rescue-" + choice).addEventListener("click", () => answerRescue(choice));
+    });
+    rescuePanel.querySelector("#rescue-skip").addEventListener("click", () => answerRescue("unsure"));
+    rescuePanel.querySelector("#rescue-title").focus({ preventScroll: true });
+  }
   function whatsappUrl(items) {
     const ids = items.map(p => p.id).join(", ");
     const message = "Salam Hakim, saya berminat dengan produk KHIND RTO berikut: " + ids +
@@ -162,7 +217,7 @@
   }
   function setControls() {
     const ended = state.index >= deck.length || !deck.length;
-    const disabled = state.busy || state.comparing || state.prompting || ended;
+    const disabled = state.busy || state.comparing || state.prompting || state.rescueOpen || ended;
     $("skip-button").disabled = disabled;
     $("save-button").disabled = disabled;
     $("undo-button").disabled = state.busy || !state.history.length;
@@ -187,12 +242,17 @@
   }
   function render() {
     setControls();
-    cardSlot.hidden = state.comparing || state.index >= deck.length || !deck.length;
+    cardSlot.hidden = state.comparing || state.rescueOpen || state.index >= deck.length || !deck.length;
+    if (rescuePanel) rescuePanel.hidden = !state.rescueOpen;
     completeView.hidden = state.comparing || !!deck.length && state.index < deck.length;
     compareView.hidden = !state.comparing;
     decisionPrompt.hidden = !state.prompting || state.comparing;
     if (state.comparing) {
       renderCompare();
+      return;
+    }
+    if (state.rescueOpen) {
+      renderRescue();
       return;
     }
     if (!deck.length) {
@@ -215,7 +275,7 @@
     if (state.prompting) renderPrompt();
   }
   function commitDecision(save) {
-    if (state.busy || state.comparing || state.prompting || state.index >= deck.length) return;
+    if (state.busy || state.comparing || state.prompting || state.rescueOpen || state.index >= deck.length) return;
     state.busy = true;
     setControls();
     const p = deck[state.index];
@@ -223,16 +283,25 @@
     const token = ++animationToken;
     const apply = () => {
       if (token !== animationToken) return;
-      state.history.push({ index: state.index, saved: [...state.saved], prompted: state.prompted });
+      state.history.push({
+        index: state.index, saved: [...state.saved], prompted: state.prompted,
+        skipStreak: state.skipStreak, rescueUsed: state.rescueUsed, deck: [...deck]
+      });
       if (save && !state.saved.includes(p.id)) state.saved.push(p.id);
+      state.skipStreak = save ? 0 : state.skipStreak + 1;
       state.index++;
       state.busy = false;
+      if (!save && state.skipStreak >= 3 && worthRescuing()) {
+        state.rescueOpen = true;
+        state.rescueUsed = true;
+      }
       if (state.saved.length === 2 && !state.prompted) {
         state.prompting = true;
         state.prompted = true;
       }
       render();
-      announce((save ? "Disimpan: " : "Dilangkau: ") + p.name + ". " +
+      announce(state.rescueOpen ? "Tiga produk dilangkau. Satu soalan pilihan dipaparkan." :
+        (save ? "Disimpan: " : "Dilangkau: ") + p.name + ". " +
         state.saved.length + " produk disimpan.");
     };
     if (reduceMotion.matches || !card) { apply(); return; }
@@ -242,9 +311,13 @@
   function undo() {
     if (state.busy || !state.history.length) return;
     const previous = state.history.pop();
+    deck = previous.deck;
     state.index = previous.index;
     state.saved = previous.saved;
     state.prompted = previous.prompted;
+    state.skipStreak = previous.skipStreak;
+    state.rescueUsed = previous.rescueUsed;
+    state.rescueOpen = false;
     state.prompting = false;
     state.comparing = false;
     render();
@@ -319,7 +392,9 @@
   }
   function openDetails() {
     const p = deck[state.index];
-    if (!p) return;
+    if (!p || state.rescueOpen) return;
+    // Reading details counts as engagement; skips need to be consecutive with no details.
+    state.skipStreak = 0;
     const plans = plansFor(p);
     $("details-body").innerHTML =
       '<div class="details-photo">' + photo(p, "details-appliance", false) + '</div>' +
@@ -418,6 +493,9 @@
     $("restart-deck").addEventListener("click", () => {
       state.index = 0;
       state.history = [];
+      state.skipStreak = 0;
+      state.rescueOpen = false;
+      state.rescueUsed = false;
       state.prompting = false;
       state.prompted = state.saved.length >= 2;
       render();
