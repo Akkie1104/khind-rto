@@ -45,7 +45,7 @@ check("Skip and Save distinguishable by text and icons",
   fs.readFileSync("pilih/index.html","utf8").includes("♥</span> Simpan"));
 check("No long-press or multi-touch requirement, swipe operates on pointerup",
   script.includes('card.addEventListener("pointerup"') &&
-  script.includes("commitDecision(dx > 0)") &&
+  script.includes('commitDecision(dx > 0, false, "gesture")') &&
   script.includes("event.isPrimary === false") &&
   script.includes('$("skip-button").addEventListener("click"') &&
   script.includes('$("save-button").addEventListener("click"'));
