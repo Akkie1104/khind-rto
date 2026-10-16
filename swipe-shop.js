@@ -251,6 +251,8 @@
     $("progress-fill").style.width = (deck.length ? 100 * state.index / deck.length : 0) + "%";
     $("progress-track").setAttribute("aria-valuemax", String(Math.max(1, deck.length)));
     $("progress-track").setAttribute("aria-valuenow", String(state.index));
+    $("progress-track").setAttribute("aria-valuetext",
+      state.index + " daripada " + deck.length + " produk telah dilihat");
   }
   function bindImageErrors(container) {
     container.querySelectorAll("img").forEach(img => {
