@@ -28,6 +28,7 @@ class Element {
   }
   querySelectorAll() { return []; }
   setAttribute(name, value) { this.attributes[name] = value; }
+  focus() { this.focused = true; }
   showModal() { this.open = true; }
   close() { this.open = false; }
   click() { if (this.listeners.click) this.listeners.click({ target: this }); }
@@ -89,7 +90,10 @@ check("Saved list offers product-specific agent WhatsApp", get("shortlist-sheet"
   get("shortlist-body").innerHTML.includes("RFS600A"));
 get("shortlist-sheet").close();
 
-for (let i = 0; i < 30 && get("deck-position").textContent !== "Selesai"; i++) get("skip-button").click();
+for (let i = 0; i < 30 && get("deck-position").textContent !== "Selesai"; i++) {
+  if (!get("rescue-question").hidden) get("rescue-question").querySelector("#rescue-skip").click();
+  get("skip-button").click();
+}
 check("full deck can be traversed without account or form", get("deck-position").textContent === "Selesai" &&
   get("deck-complete").innerHTML.includes("Selesai meleret"));
 get("undo-button").click();

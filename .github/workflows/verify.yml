@@ -26,6 +26,7 @@ jobs:
           node tests/swipe-shop.test.cjs
           node tests/swipe-variant-b.test.cjs
           node tests/swipe-variant-c.test.cjs
+          node tests/swipe-rescue.test.cjs
       - name: Assert essential storefront controls and privacy safeguards
         run: |
           node --input-type=module <<'NODE'
@@ -47,7 +48,7 @@ jobs:
             ['official catalogue WM1248 photo retained',fs.readFileSync('catalogue.js','utf8').includes('WM1248_Front%20Left.jpg')],
             ['realistic light image mat',photography.includes('mix-blend-mode:multiply')],
             ['dedicated full-screen swipe route',html.includes('href="pilih/"')&&fs.existsSync('pilih/index.html')],
-            ['source scripts load locally',swipePage.includes('../catalogue.js')&&swipePage.includes('../swipe-shop.js?v=1')&&swipePage.includes('../swipe-shop.css?v=1')],
+            ['source scripts load locally',swipePage.includes('../catalogue.js')&&swipePage.includes('../swipe-shop.js?v=2')&&swipePage.includes('../swipe-shop.css?v=2')],
             ['product facts come from catalogue only',guide.includes('window.KHIND_PRODUCTS')&&guide.includes('p.image')&&guide.includes('p.plans')&&guide.includes('p.months')],
             ['no quiz or onboarding before first card',swipePage.includes('id="card-slot"')&&!swipePage.includes('<form')&&!swipePage.includes('input type=')],
             ['only supplied official image URLs',guide.includes('approvedImage(p.image)')&&guideCss.includes('object-fit:contain')],
