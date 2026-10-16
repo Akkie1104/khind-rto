@@ -677,51 +677,56 @@
     const plan = shownPlan(p);
     const date = String(p.verifiedDate || "");
     const checked = /^\d{4}-\d{2}-\d{2}$/.test(date) ?
-      "Disemak " + date : "Tarikh pengesahan tidak dinyatakan";
+      t("checked") + date : t("dateMissing");
+    const category = {
+      laundry: t("laundry"), fridge: t("fridge"), cooling: t("aircond"),
+      garment: language === "ms" ? "Penjagaan pakaian" : "Garment care",
+      bundle: language === "ms" ? "Kombo" : "Bundle"
+    };
     const facts = [
-      ["Model", p.id],
-      ["Kategori", categoryLabel[p.category] || String(p.category || "Tidak dinyatakan")],
-      ["Kapasiti / spesifikasi", p.description || "Tidak dinyatakan dalam data"],
-      ["Kadar bulanan biasa", monthlyReference(p)],
-      ["Tempoh", String(p.months) + " bulan"],
-      ["Promosi", factualPromotion(p)],
-      ["Ketersediaan", factualAvailability(p)]
+      [t("model"), p.id, false],
+      [t("category"), category[p.category] || String(p.category || t("unsupplied")), false],
+      [t("majorSpec"), p.description || t("unsupplied"), !!p.description],
+      [t("monthlyRate"), monthlyReference(p), false],
+      [t("term"), String(p.months) + t("months"), false],
+      [t("promotion"), factualPromotion(p), false],
+      [t("availability"), factualAvailability(p), !!(p.stock && p.stock.trim())]
     ];
     return '<article class="saved-product" aria-labelledby="saved-product-title-' + index + '">' +
       '<div class="saved-product-top"><div class="saved-photo">' + photo(p, "shortlist-appliance", false) +
-      '</div><div class="saved-product-intro"><span class="saved-order">PILIHAN 0' +
-      (index + 1) + '</span><h3 id="saved-product-title-' + index + '">' + escape(p.name) +
+      '</div><div class="saved-product-intro"><span class="saved-order">' + t("savedChoice") +
+      (index + 1) + '</span><h3 lang="ms" id="saved-product-title-' + index + '">' + escape(p.name) +
       '</h3><p>' + escape(p.id) + '</p><strong>' + escape(monthlyReference(p)) +
-      '</strong><small>' + escape(plan.name) + ' · ' + Number(p.months) + ' bulan · ' +
+      '</strong><small>' + escape(plan.name) + ' · ' + Number(p.months) + t("months") + ' · ' +
       escape(checked) + '</small></div></div>' +
-      '<dl class="saved-facts">' + facts.map(([label, value]) =>
-        '<div class="saved-fact"><dt>' + escape(label) + '</dt><dd>' + escape(value) +
-        '</dd></div>').join("") + '</dl>' +
+      '<dl class="saved-facts">' + facts.map(([label, value, sourceMalay]) =>
+        '<div class="saved-fact"><dt>' + escape(label) + '</dt><dd' +
+        (sourceMalay ? ' lang="ms"' : "") + '>' + escape(value) + '</dd></div>').join("") + '</dl>' +
       '<div class="saved-actions"><button id="saved-details-' + index +
-      '" type="button" class="saved-view">View details <span aria-hidden="true">↗</span></button>' +
+      '" type="button" class="saved-view">' + t("viewDetails") +
+      ' <span aria-hidden="true">↗</span></button>' +
       '<button id="saved-remove-' + index +
-      '" type="button" class="saved-remove">Remove <span aria-hidden="true">×</span></button></div>' +
-      '</article>';
+      '" type="button" class="saved-remove">' + t("remove") +
+      ' <span aria-hidden="true">×</span></button></div></article>';
   }
   function renderShortlist() {
     const items = savedProducts().slice(0, savedLimit);
     $("shortlist-count").textContent = items.length + " / " + savedLimit;
     $("shortlist-body").innerHTML =
-      '<p id="shortlist-intro" class="shortlist-intro">Banding fakta yang tersenarai sahaja. Kami tidak membuat penarafan automatik.</p>' +
+      '<p id="shortlist-intro" class="shortlist-intro">' + t("notRanked") + '</p>' +
       (removedFromShortlist ? '<button type="button" id="shortlist-undo-remove" class="shortlist-undo-remove">' +
-        '↶ Undo remove: ' + escape(removedFromShortlist.id) + '</button>' : "") +
+        '↶ ' + t("undoRemove") + escape(removedFromShortlist.id) + '</button>' : "") +
       (items.length ? '<div class="shortlist-cards">' + items.map(shortlistCard).join("") +
-        '</div>' : '<div class="shortlist-empty"><h3>Tiada produk disimpan.</h3>' +
-        '<p>Teruskan meleret untuk mencari pilihan anda.</p></div>') +
-      '<p class="shortlist-disclosure">Kadar ialah kadar bulanan biasa daripada data rujukan bertarikh, bukan sebut harga langsung. ' +
-      'Promosi harga tunai tidak bermaksud diskaun pelan RTO. Stok, promosi, harga dan terma perlu disahkan dengan KHIND.</p>';
+        '</div>' : '<div class="shortlist-empty"><h3>' + t("emptyPicks") + '</h3>' +
+        '<p>' + t("emptyPicksBody") + '</p></div>') +
+      '<p class="shortlist-disclosure">' + t("shortlistDisclaimer") + '</p>';
     shortlistFooter.innerHTML = '<button class="shortlist-keep" id="shortlist-continue" type="button">' +
-      'Keep swiping <span aria-hidden="true">→</span></button>' +
+      t("keepSwiping") + ' <span aria-hidden="true">→</span></button>' +
       (items.length ? '<a class="shortlist-contact" id="shortlist-contact" href="' +
         escape(whatsappUrl(items)) + '" target="_blank" rel="noopener noreferrer">' +
-        'Ask Hakim about these <span aria-hidden="true">↗</span></a>' :
+        t("askAboutThese") + ' <span aria-hidden="true">↗</span></a>' :
         '<span class="shortlist-contact shortlist-contact-disabled" aria-disabled="true">' +
-        'Ask Hakim about these</span>');
+        t("askAboutThese") + '</span>');
     bindImageErrors($("shortlist-body"));
     items.forEach((p, index) => {
       $("shortlist-body").querySelector("#saved-details-" + index).addEventListener("click", () => {
@@ -733,13 +738,11 @@
         if (originalIndex < 0) return;
         state.saved.splice(originalIndex, 1);
         removedFromShortlist = { id: p.id, index: originalIndex };
-        // Earlier swipe snapshots should not accidentally resurrect deleted saved items.
         state.history = [];
         setControls();
         renderShortlist();
         $("shortlist-body").querySelector("#shortlist-undo-remove").focus({ preventScroll: true });
-        announce(p.name + " dibuang daripada simpanan. " + state.saved.length +
-          " produk masih disimpan. Anda boleh undur buang.");
+        announce(p.name + t("removeResult") + state.saved.length + t("remainingSaved"));
       });
     });
     if (removedFromShortlist) {
@@ -751,7 +754,7 @@
         setControls();
         renderShortlist();
         $("shortlist-title").focus({ preventScroll: true });
-        announce("Produk dipulihkan ke simpanan. " + state.saved.length + " produk disimpan.");
+        announce(t("restored") + state.saved.length + t("savedUnit") + ".");
       });
     }
     shortlistFooter.querySelector("#shortlist-continue").addEventListener("click", closeShortlist);
