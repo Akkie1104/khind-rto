@@ -305,8 +305,13 @@
   let animationToken = 0;
 
   const savedProducts = () => state.saved.map(id => deck.find(p => p.id === id)).filter(Boolean);
-  const categoryLabel = { laundry: "Laundry", fridge: "Fridge",
-    cooling: "Aircond", garment: "Penjagaan pakaian", bundle: "Kombo" };
+  function labelCategory(category) {
+    return ({
+      laundry: t("laundry"), fridge: t("fridge"), cooling: t("aircond"),
+      garment: language === "ms" ? "Penjagaan pakaian" : "Garment care",
+      bundle: language === "ms" ? "Kombo" : "Bundle"
+    })[category] || String(category || t("unsupplied"));
+  }
   function factualPromotion(p) {
     // cashPromo is a recorded CASH price only. Never imply a monthly RTO discount.
     const regular = Number(p.cash), promo = Number(p.cashPromo);
@@ -422,7 +427,7 @@
       '<div class="photo-topline"><span>' + t("collection") + '</span><span>' + escape(p.id) + '</span></div>' +
       photo(p, "hero-appliance", true) +
       '<span class="photo-corner-mark" aria-hidden="true">' + t("photo") + '</span></div>' +
-      '<div class="product-copy"><p class="product-overline">' + escape(p.category) + ' <span>· ' + escape(p.id) + '</span></p>' +
+      '<div class="product-copy"><p class="product-overline">' + escape(labelCategory(p.category)) + ' <span>· ' + escape(p.id) + '</span></p>' +
       '<h1 lang="ms">' + escape(p.name) + '</h1><p class="product-subtitle" lang="ms">' + escape(p.description || "") + '</p>' +
       (p.stock ? '<p class="product-stock" lang="ms">' + escape(p.stock) + '</p>' : '') +
       '<div class="price-row"><div><span class="price-kicker">' +
@@ -681,14 +686,9 @@
     const date = String(p.verifiedDate || "");
     const checked = /^\d{4}-\d{2}-\d{2}$/.test(date) ?
       t("checked") + date : t("dateMissing");
-    const category = {
-      laundry: t("laundry"), fridge: t("fridge"), cooling: t("aircond"),
-      garment: language === "ms" ? "Penjagaan pakaian" : "Garment care",
-      bundle: language === "ms" ? "Kombo" : "Bundle"
-    };
     const facts = [
       [t("model"), p.id, false],
-      [t("category"), category[p.category] || String(p.category || t("unsupplied")), false],
+      [t("category"), labelCategory(p.category), false],
       [t("majorSpec"), p.description || t("unsupplied"), !!p.description],
       [t("monthlyRate"), monthlyReference(p), false],
       [t("term"), String(p.months) + t("months"), false],
@@ -904,6 +904,7 @@
     set("hint-skip", "← " + t("skip"));
     set("hint-save", t("save") + " →");
     set("swipe-instructions", t("shortcutHint"));
+    $("skip-button").innerHTML = '<span aria-hidden="true">✕</span> ' + t("skip");
     set("footer-disclosure", t("footerDisclosure"));
     set("details-heading-label", t("detailsHeading"));
     set("shortlist-kicker", t("savedKicker"));
