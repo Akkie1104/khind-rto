@@ -1021,6 +1021,7 @@
   });
   applyStaticTranslations();
 
+  emit("guide_open");
   if (isVariantC) {
     const options = $("budget-options");
     renderBudgetOptions();
@@ -1060,6 +1061,5 @@
   } else {
     render();
   }
-  emit("guide_open");
   window.addEventListener?.("pagehide", () => emit("guide_close", { action_source: "navigation" }));
 })();
