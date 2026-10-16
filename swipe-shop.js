@@ -119,10 +119,10 @@
     unsupplied: ["Tidak dinyatakan dalam data", "Not supplied in product data"],
     promoCash: ["Promosi harga tunai direkodkan (", "Recorded cash-price promotion ("],
     promoCheck: ["); status semasa perlu disahkan.", "); current status must be confirmed."],
-    noPromotion: ["Tiada promosi disahkan dalam data.", "No promotion confirmed in the data."],
-    unknownStock: ["Status stok semasa tidak dinyatakan. Sahkan dengan KHIND.",
+    noPromotion: [t("noPromotion"), "No promotion confirmed in the data."],
+    unknownStock: [t("unknownStock"),
       "Current stock status not provided. Confirm with KHIND."],
-    rateToConfirm: ["Kadar perlu disahkan", "Rate requires confirmation"],
+    rateToConfirm: [t("rateToConfirm"), "Rate requires confirmation"],
     notRanked: ["Banding fakta yang tersenarai sahaja. Kami tidak membuat penarafan automatik.",
       "Compare listed facts only. Products are not ranked automatically."],
     undoRemove: ["Undur buang: ", "Undo remove: "],
@@ -312,7 +312,7 @@
     const regular = Number(p.cash), promo = Number(p.cashPromo);
     if (p.cashPromo != null && Number.isFinite(regular) && regular > 0 &&
         Number.isFinite(promo) && promo > 0 && promo < regular) {
-      return "Promosi harga tunai direkodkan (" + money(promo) + "); status semasa perlu disahkan.";
+      return t("promoCash") + money(promo) + t("promoCheck");
     }
     return "Tiada promosi disahkan dalam data.";
   }
@@ -323,7 +323,7 @@
   function monthlyReference(p) {
     const date = String(p.verifiedDate || "");
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return "Kadar perlu disahkan";
-    return money(shownPlan(p).rate) + "/bulan";
+    return money(shownPlan(p).rate) + t("monthSuffix");
   }
   function rescueCategory(p) {
     if (p.category === "fridge") return "fridge";
@@ -355,20 +355,20 @@
     render();
     cardSlot.querySelector("#active-card")?.focus({ preventScroll: true });
     announce((category && category !== "unsure" ?
-      "Produk seterusnya mengutamakan kategori dipilih. " : "Susunan asal dikekalkan. ") +
+      t("rescueChosen") : t("rescueUnchanged")) +
       nextCardAnnouncement());
   }
   function renderRescue() {
     rescuePanel.innerHTML =
-      '<div class="rescue-card"><p class="rescue-eyebrow">BANTU KAMI CARI YANG SESUAI</p>' +
-      '<h2 id="rescue-title" tabindex="-1">Which do you need?</h2>' +
-      '<p class="rescue-explainer">Pilih satu untuk lihat produk yang lebih relevan dahulu.</p>' +
+      '<div class="rescue-card"><p class="rescue-eyebrow">' + t("rescueKicker") + '</p>' +
+      '<h2 id="rescue-title" tabindex="-1">' + t("askRescue") + '</h2>' +
+      '<p class="rescue-explainer">' + t("rescueInfo") + '</p>' +
       '<div class="rescue-options">' +
-      '<button type="button" id="rescue-laundry">Laundry <span aria-hidden="true">↗</span></button>' +
-      '<button type="button" id="rescue-fridge">Fridge <span aria-hidden="true">↗</span></button>' +
-      '<button type="button" id="rescue-aircond">Aircond <span aria-hidden="true">↗</span></button>' +
-      '<button type="button" id="rescue-unsure">Not sure <span aria-hidden="true">→</span></button>' +
-      '</div><button type="button" id="rescue-skip" class="rescue-bypass">Skip this question.</button>' +
+      '<button type="button" id="rescue-laundry">' + t("laundry") + ' <span aria-hidden="true">↗</span></button>' +
+      '<button type="button" id="rescue-fridge">' + t("fridge") + ' <span aria-hidden="true">↗</span></button>' +
+      '<button type="button" id="rescue-aircond">' + t("aircond") + ' <span aria-hidden="true">↗</span></button>' +
+      '<button type="button" id="rescue-unsure">' + t("notSure") + ' <span aria-hidden="true">→</span></button>' +
+      '</div><button type="button" id="rescue-skip" class="rescue-bypass">' + t("skipQuestion") + '</button>' +
       '</div>';
     ["laundry", "fridge", "aircond", "unsure"].forEach(choice => {
       rescuePanel.querySelector("#rescue-" + choice).addEventListener("click", () => answerRescue(choice));
@@ -391,13 +391,13 @@
     }
   }
   function nextCardAnnouncement() {
-    if (state.rescueOpen) return "Pilih satu kategori atau langkau soalan untuk teruskan.";
-    if (state.prompting) return "Dua produk disimpan. Banding, teruskan, atau tanya Hakim.";
-    if (state.index >= deck.length) return "Semua produk telah dilihat.";
+    if (state.rescueOpen) return t("rescuePending");
+    if (state.prompting) return t("promptSaved");
+    if (state.index >= deck.length) return t("allSeen");
     const p = deck[state.index], plan = shownPlan(p);
-    return "Seterusnya, " + (state.index + 1) + " daripada " + deck.length +
-      ": " + p.name + ", " + money(plan.rate) + " sebulan, " +
-      Number(p.months) + " bulan.";
+    return t("nextCard") + (state.index + 1) + t("of") + deck.length +
+      ": " + p.name + ", " + money(plan.rate) + t("ratePerMonth") +
+      Number(p.months) + t("months") + ".";
   }
   function photo(p, className, eager) {
     const src = approvedImage(p.image);
@@ -405,29 +405,29 @@
       '" alt="' + escape(p.name + " " + p.id) +
       '" loading="' + (eager ? "eager" : "lazy") +
       '" decoding="async" referrerpolicy="no-referrer">' :
-      '<span class="no-photo">Imej rasmi tidak tersedia.</span>';
+      '<span class="no-photo">' + t("unavailable") + '</span>';
   }
   function productCard(p) {
     const plan = shownPlan(p);
     const total = plan.rate * Number(p.months);
     return '<article id="active-card" class="product-card" tabindex="0" aria-label="' +
-      escape(p.name) + '. Anak panah kiri untuk langkau, kanan untuk simpan."' +
+      escape(p.name) + t("arrowHint") + '"' +
       ' aria-describedby="swipe-instructions" aria-keyshortcuts="ArrowLeft ArrowRight">' +
-      '<div class="swipe-overlay swipe-left" aria-hidden="true">LANGKAU</div>' +
-      '<div class="swipe-overlay swipe-right" aria-hidden="true">SIMPAN ♥</div>' +
+      '<div class="swipe-overlay swipe-left" aria-hidden="true">' + t("skip").toUpperCase() + '</div>' +
+      '<div class="swipe-overlay swipe-right" aria-hidden="true">' + t("save").toUpperCase() + ' ♥</div>' +
       '<div class="product-photo">' +
-      '<div class="photo-topline"><span>KOLEKSI KHIND RTO</span><span>' + escape(p.id) + '</span></div>' +
+      '<div class="photo-topline"><span>' + t("collection") + '</span><span>' + escape(p.id) + '</span></div>' +
       photo(p, "hero-appliance", true) +
-      '<span class="photo-corner-mark" aria-hidden="true">FOTO PRODUK</span></div>' +
+      '<span class="photo-corner-mark" aria-hidden="true">' + t("photo") + '</span></div>' +
       '<div class="product-copy"><p class="product-overline">' + escape(p.category) + ' <span>· ' + escape(p.id) + '</span></p>' +
-      '<h1>' + escape(p.name) + '</h1><p class="product-subtitle">' + escape(p.description || "") + '</p>' +
-      (p.stock ? '<p class="product-stock">' + escape(p.stock) + '</p>' : '') +
+      '<h1 lang="ms">' + escape(p.name) + '</h1><p class="product-subtitle" lang="ms">' + escape(p.description || "") + '</p>' +
+      (p.stock ? '<p class="product-stock" lang="ms">' + escape(p.stock) + '</p>' : '') +
       '<div class="price-row"><div><span class="price-kicker">' +
-      (isVariantC && selectedBudgetBand ? 'KADAR BULANAN BIASA · ' + escape(plan.name) : 'KADAR BULANAN BIASA DARI') + '</span>' +
-      '<p class="product-price">' + money(plan.rate) + '<small>/bulan</small></p></div>' +
-      '<div class="price-duration"><strong>' + Number(p.months) + '</strong><span>bulan</span></div></div>' +
-      '<div class="product-extras"><span>Anggaran jumlah dari <strong>' + money(total) +
-      '</strong>*</span><button type="button" id="details-button" class="details-button">Details <span aria-hidden="true">↗</span></button></div>' +
+      (isVariantC && selectedBudgetBand ? t("normalSelected") + escape(plan.name) : t("normalFrom")) + '</span>' +
+      '<p class="product-price">' + money(plan.rate) + '<small>' + t("monthSuffix") + '</small></p></div>' +
+      '<div class="price-duration"><strong>' + Number(p.months) + '</strong><span>' + t("months").trim() + '</span></div></div>' +
+      '<div class="product-extras"><span>' + t("estimateFrom") + '<strong>' + money(total) +
+      '</strong>*</span><button type="button" id="details-button" class="details-button">' + t("viewDetails") + ' <span aria-hidden="true">↗</span></button></div>' +
       '</div></article>';
   }
   function setControls() {
@@ -436,32 +436,32 @@
     $("skip-button").disabled = disabled;
     $("save-button").disabled = disabled || state.saved.length >= savedLimit;
     $("save-button").innerHTML = state.saved.length >= savedLimit ?
-      '<span aria-hidden="true">♥</span> Penuh (3)' :
-      '<span aria-hidden="true">♥</span> Simpan';
+      '<span aria-hidden="true">♥</span> ' + t("full") :
+      '<span aria-hidden="true">♥</span> ' + t("save");
     const current = deck[state.index];
     $("skip-button").setAttribute("aria-label", current ?
-      "Langkau produk: " + current.name : "Langkau produk");
+      t("skipItemAria") + current.name : t("skip"));
     $("save-button").setAttribute("aria-label", state.saved.length >= savedLimit ?
-      "Had simpanan 3 produk. Buka simpanan dan buang satu untuk simpan produk lain." :
-      current ? "Simpan produk: " + current.name : "Simpan produk");
+      t("saveMax") :
+      current ? t("saveItemAria") + current.name : t("save"));
     $("undo-button").disabled = state.busy || !state.history.length;
     $("saved-open").disabled = !state.saved.length;
     $("saved-count").textContent = String(state.saved.length);
-    $("saved-open").setAttribute("aria-label", "Lihat produk disimpan, " + state.saved.length + " produk");
-    $("deck-position").textContent = ended ? "Selesai" : "Pilihan " + (state.index + 1);
-    $("deck-total").textContent = state.index + " / " + deck.length + " dilihat";
+    $("saved-open").setAttribute("aria-label", t("savedAria") + state.saved.length + t("savedUnit"));
+    $("deck-position").textContent = ended ? t("finished") : t("choice") + (state.index + 1);
+    $("deck-total").textContent = state.index + " / " + deck.length + t("viewed");
     $("progress-fill").style.width = (deck.length ? 100 * state.index / deck.length : 0) + "%";
     $("progress-track").setAttribute("aria-valuemax", String(Math.max(1, deck.length)));
     $("progress-track").setAttribute("aria-valuenow", String(state.index));
     $("progress-track").setAttribute("aria-valuetext",
-      state.index + " daripada " + deck.length + " produk telah dilihat");
+      state.index + t("of") + deck.length + t("viewedAlt"));
   }
   function bindImageErrors(container) {
     container.querySelectorAll("img").forEach(img => {
       img.addEventListener("error", () => {
         const holder = document.createElement("span");
         holder.className = "no-photo";
-        holder.textContent = "Imej rasmi tidak dapat dimuatkan.";
+        holder.textContent = t("unavailableLoad");
         img.replaceWith(holder);
       }, { once: true });
     });
@@ -484,10 +484,10 @@
       return;
     }
     if (!deck.length) {
-      completeView.innerHTML = '<div class="end-icon" aria-hidden="true">!</div><h1>Produk belum tersedia</h1>' +
-        '<p>Katalog belum mempunyai imej dan kadar sah yang boleh dipaparkan.</p>' +
-        '<a class="text-link" href="../catalogue/">Lihat katalog penuh →</a>';
-      announce("Tiada produk tersedia.");
+      completeView.innerHTML = '<div class="end-icon" aria-hidden="true">!</div><h1>' + t("noProducts") + '</h1>' +
+        '<p>' + t("noProductsBody") + '</p>' +
+        '<a class="text-link" href="../catalogue/">' + t("fullCatalogue") + ' →</a>';
+      announce(t("noProducts"));
       return;
     }
     if (state.index >= deck.length) {
@@ -506,7 +506,7 @@
     if (state.busy || state.comparing || state.prompting || state.rescueOpen || state.index >= deck.length) return;
     if (save && state.saved.length >= savedLimit) {
       openShortlist();
-      announce("Simpanan penuh. Anda boleh simpan sehingga tiga produk. Buang satu sebelum menyimpan lagi.");
+      announce(t("saveMax"));
       return;
     }
     state.busy = true;
@@ -533,8 +533,8 @@
         state.prompted = true;
       }
       render();
-      announce((save ? "Disimpan: " : "Dilangkau: ") + p.name + ". " +
-        state.saved.length + " produk disimpan. " + nextCardAnnouncement());
+      announce((save ? t("savedResult") : t("skippedResult")) + p.name + ". " +
+        state.saved.length + t("productsSaved") + nextCardAnnouncement());
       // The focused card was replaced by innerHTML; move focus to its successor.
       // Button actions leave focus on their persistent button unless it became disabled.
       if (fromCardKeyboard) {
@@ -565,7 +565,7 @@
     state.comparing = false;
     render();
     focusCurrentCard();
-    announce("Tindakan dibatalkan. Kembali ke " + deck[state.index].name + ". " +
+    announce(t("undoResult") + deck[state.index].name + ". " +
       nextCardAnnouncement());
   }
   function enableDrag(card) {
