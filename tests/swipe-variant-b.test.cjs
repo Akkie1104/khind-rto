@@ -90,9 +90,9 @@ verify("variant asks exactly one question", gateHtml.includes("What are you look
 verify("variant offers exactly four accessible buttons", (gateHtml.match(/<button type="button" data-deck-choice=/g) || []).length === 4 &&
   options.every(([key, label]) => gateHtml.includes('data-deck-choice="' + key + '"') && gateHtml.includes(label)));
 verify("variant uses shared assets with no product duplication",
-  variantMarkup.includes("../swipe-shop.js?v=1") &&
+  variantMarkup.includes("../swipe-shop.js?v=2") &&
   variantMarkup.includes("../catalogue.js?v=cd12d-plan-promo") &&
-  variantMarkup.includes("../swipe-shop.css?v=1"));
+  variantMarkup.includes("../swipe-shop.css?v=2"));
 verify("question fits short mobile viewports", css.includes("@media(max-height:620px)") &&
   css.includes("@media(max-width:370px)"));
 
@@ -111,6 +111,7 @@ for (const [key, label, expected] of options) {
   while (app.idOnCard() && guard++ < 35) {
     actual.push(app.idOnCard());
     app.get("skip-button").click();
+    if (!app.get("rescue-question").hidden) app.get("rescue-question").querySelector("#rescue-skip").click();
   }
   verify(label + ": correct category, no dryer-only cards",
     expected ? actual.join(",") === expected.join(",") :
