@@ -38,7 +38,7 @@ function get(id) {
   if (!elements.has(id)) elements.set(id, new Element(id));
   return elements.get(id);
 }
-const document = { getElementById: get, querySelector: get };
+const document = { getElementById: get, querySelector: get, documentElement: { getAttribute() { return null; } } };
 const window = {
   matchMedia: () => ({ matches: true }),
   setTimeout: callback => callback()

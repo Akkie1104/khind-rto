@@ -1,0 +1,30 @@
+/* Experiment B: only the initial category gate is different.
+   All product cards, sheets and interactions inherit swipe-shop.css. */
+.awaiting-choice .shop-progress,
+.awaiting-choice .shop-footer{display:none}
+.awaiting-choice .shop-main{padding-bottom:max(1rem,env(safe-area-inset-bottom))}
+.awaiting-choice .shop-header .saved-indicator{visibility:hidden}
+.awaiting-choice .stage{display:flex;align-items:center;justify-content:center}
+.one-question-gate{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;gap:1.2rem;padding:clamp(.85rem,4vw,1.5rem) .25rem;overflow-y:auto;overscroll-behavior:contain}
+.question-content{width:100%;border:1px solid #4f5d40;border-radius:1.2rem;padding:clamp(1.05rem,4.6vw,1.6rem);background:radial-gradient(circle at 90% 0%,#3c4225 0,#243023 28%,#172118 78%);box-shadow:0 18px 55px #0004;position:relative;overflow:hidden}
+.question-content::after{content:"";position:absolute;width:10rem;height:10rem;top:-6rem;right:-6rem;border:1px solid #a28e3c64;border-radius:50%;pointer-events:none}
+.question-marker{display:flex;align-items:center;gap:.5rem;color:#d9e1cd;font-size:.65rem;font-weight:850;letter-spacing:.1em}
+.question-marker-dot{width:.42rem;height:.42rem;border-radius:50%;background:#f3ce43;box-shadow:0 0 .6rem #f3ce43a8}
+.question-marker-rule{flex:1;height:1px;background:#56614d;max-width:6rem;margin-left:auto}
+.question-eyebrow{font-size:.64rem;letter-spacing:.14em;font-weight:900;color:var(--yellow);margin:2rem 0 .45rem}
+.question-content h1{max-width:18ch;font-size:clamp(1.7rem,7.1vw,2.35rem);line-height:1.12;letter-spacing:-.06em;margin:0;color:var(--white);font-weight:900}
+.question-explainer{color:#c3d0bc;font-size:.79rem;line-height:1.5;margin:.7rem 0 1.55rem}
+.question-options{display:grid;gap:.68rem}
+.question-options button{min-height:3.75rem;width:100%;border-radius:.73rem;display:grid;grid-template-columns:2rem minmax(0,1fr) 1.8rem;align-items:center;gap:.65rem;text-align:left;padding:.8rem .95rem;background:#253226;color:#f3f6ea;border:1px solid #526348;font-size:.93rem;font-weight:850;transition:transform .16s ease,border-color .16s ease,background-color .16s ease}
+.question-options button:hover{border-color:var(--yellow);background:#313d2b;transform:translateY(-1px)}
+.question-options button:active{transform:scale(.99)}
+.question-options button:last-child{background:var(--yellow);color:#192016;border-color:var(--yellow)}
+.question-options button:last-child:hover{background:#ffe58c}
+.question-option-number{font-size:.65rem;font-weight:900;color:#d6d59b}
+.question-options button:last-child .question-option-number{color:#45512a}
+.question-option-arrow{justify-self:end;display:grid;place-items:center;width:1.75rem;height:1.75rem;border:1px solid #647057;border-radius:50%;font-size:1rem}
+.question-options button:last-child .question-option-arrow{border-color:#7a7b46}
+.question-disclosure{color:#aebba6;font-size:.66rem;line-height:1.65;text-align:center;margin:0;padding:0 .6rem}
+@media(max-width:370px){.question-content{padding:1rem}.question-eyebrow{margin-top:1.4rem}.question-explainer{margin-bottom:1.1rem}.question-options button{min-height:3.5rem}}
+@media(max-height:620px){.one-question-gate{justify-content:flex-start}.question-eyebrow{margin-top:.9rem}.question-options{gap:.45rem}.question-options button{min-height:3.1rem}.question-explainer{margin-bottom:.9rem}}
+@media(prefers-reduced-motion:reduce){.question-options button{transition:none}}
