@@ -1,4 +1,4 @@
-/* Home Handover Folio â€” shared visual system. Product copy and prices remain source-led. */
+/* Home Handover Folio — shared visual system. Product copy and prices remain source-led. */
 @font-face{font-family:Manrope;src:url("assets/manrope.woff2") format("woff2");font-style:normal;font-weight:200 800;font-display:swap}
 :root{--folio-paper:#f4f0e4;--folio-paper-light:#fbf8ef;--folio-ink:#17231b;--folio-muted:#465247;--folio-line:#60675d;--folio-yellow:#f3d31f;--folio-rust:#a54d32;--folio-body:Manrope,system-ui,sans-serif;--folio-serif:Georgia,serif;--folio-page:78rem;--folio-gutter:clamp(1rem,4vw,3.5rem);--folio-radius:.8rem;--folio-focus:#006f50}
 html{scroll-behavior:smooth;scroll-padding-top:5.5rem}
@@ -250,4 +250,3 @@ body.folio-shop{background:var(--folio-paper);color:var(--folio-ink)}
 
 /* Keep the FAQ panel on the same content edge as the contact band and footer. */
 .folio-home .faq-section{margin-left:0;margin-right:0}
-

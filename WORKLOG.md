@@ -1,6 +1,6 @@
 # KHIND RTO worklog
 
-## 2026-10-20 â€” Mobile catalogue navigation and asset refresh
+## 2026-10-20 — Mobile catalogue navigation and asset refresh
 
 - System/environment: KHIND RTO static storefront; GitHub Pages production target, no staging identified.
 - Type: deployment.
@@ -12,7 +12,7 @@
 - Result: pushed to `main`; public catalogue served the updated `folio-9` stylesheet after cache-busted reload. MobileViewer rendered the catalogue at 360, 390, 430 and 450 CSS pixels. No pricing or commercial terms were changed.
 - Follow-up: confirm product rates, promotion eligibility, plan terms, benefits, stock and regional availability with KHIND before promotion.
 
-## 2026-10-20 â€” Local responsive contrast review
+## 2026-10-20 — Local responsive contrast review
 
 - System/environment: KHIND RTO storefront, local `projects/khind-rto` checkout; production remains GitHub Pages at `a2cdc6d0d4e6928e506ae4b45fd149a4ecbec747`.
 - Type: local QA and uncommitted UI correction; no deployment performed.
@@ -21,7 +21,7 @@
 - Evidence limit: saved screenshots exist in the task visualization folder, but the 320px catalogue capture predates the deployed narrow-navigation reflow and needs refreshing. Emulated widths and MobileViewer are not physical-device or accessibility certification.
 - Open work: complete the remaining page-by-page visual/keyboard review and refresh the catalogue screenshot. Keep current commercial claims flagged for KHIND confirmation; no product data or copy was changed.
 
-## 2026-10-20 â€” Publish folio contrast fixes
+## 2026-10-20 — Publish folio contrast fixes
 
 - System/environment: KHIND RTO GitHub Pages production, `Akkie1104/khind-rto` `main`; no staging environment identified.
 - Type: production deployment, explicitly approved by Akizen in this task.
@@ -31,7 +31,7 @@
 - Rollback: revert `42193868e2157fe919b2fdd8dfda004c3e04f95e` to return to the prior deployed commit.
 - Follow-up: refresh the stale 320px catalogue screenshot; continue route-by-route keyboard and runtime reduced-motion checks. Product rates, WM1248 promotion discrepancy, eligibility, plan terms, benefits, availability, and stock remain subject to KHIND confirmation.
 
-### 2026-10-20 â€” Continued responsive and interaction review
+### 2026-10-20 — Continued responsive and interaction review
 - Rechecked current live homepage and current local source. main and origin/main are at 2bf1d0a; the earlier approved deployment remains live. No source edits or publication were made in this continuation.
 - Viewed local 320/360 homepage and catalogue layouts and the WM1248 detail at narrow widths. MobileViewer previews of the public homepage and WM1248 page rendered at 360/390/430/450px; visible navigation and product summaries fit. Captures were reviewed in-browser but not saved as files.
 - Verified catalogue search (WM1248 ? 1 result), regular-rate budget filtering (= RM80 ? 3 products), category-first selection, detail open/close, save/undo, and Enter-key FAQ expansion.
@@ -45,14 +45,14 @@
 - The browser reports `prefers-reduced-motion: reduce` as `false`; this session did not emulate the reduced-motion setting, so runtime verification remains open. No storefront code change or publication was made.
 - Remaining: finish route-by-route visual/keyboard review, run a reduced-motion emulation check, save a WM1248 detail capture, and obtain KHIND confirmation for time-sensitive commercial claims.
 
-### 2026-10-20 â€” Local FAQ contrast correction
+### 2026-10-20 — Local FAQ contrast correction
 - Rechecked the live FAQ and measured the expanded answer at 1.29:1 against the folio paper background. The legacy FAQ selector had higher specificity than the folio override.
 - Corrected the local selector and advanced the shared folio stylesheet cache key to `folio-12` in 35 HTML pages. The local rendered answer now measures 7.20:1; keyboard Enter opens/closes the disclosure and focus remains visible.
 - Existing suite: 10/10 passed. JavaScript syntax and `git diff --check` passed. Kept the change local; no push or deployment.
 - Fresh live interaction checks returned one WM1248 search result and three items for the RM80 regular-rate budget filter. The local exact-width fixture rechecked chooser and WM1248 detail at 320, 360, 390, and 430 CSS px without horizontal page overflow.
 - Remaining: full route keyboard/visual review, runtime reduced-motion emulation, saved WM1248 screenshot, and KHIND confirmation of time-sensitive commercial details.
 
-## 2026-10-20 â€” FAQ contrast release
+## 2026-10-20 — FAQ contrast release
 
 - System/environment: KHIND RTO GitHub Pages production, `Akkie1104/khind-rto` `main`; no staging identified.
 - Type: production deployment, explicitly approved by Akizen in this task.
@@ -63,7 +63,7 @@
 - Rollback: revert `f7f28cca68685019456a0bda150b1d80f7429bcd` to restore the prior deployment.
 - Evidence limits/open work: MobileViewer daily preview quota prevented a fresh post-release preview; runtime reduced-motion emulation, broader route-by-route keyboard checks, saved WM1248 detail capture and KHIND confirmation of time-sensitive commercial claims remain open. GitHub status checks were unavailable through the connector at verification time.
 
-## 2026-10-20 â€” Local route, responsive, and interaction review
+## 2026-10-20 — Local route, responsive, and interaction review
 
 - **Environment:** local preview at `http://127.0.0.1:8766/`; GitHub Pages production was inspected read-only. No site-source changes were made; review notes were updated locally. Nothing was deployed or published.
 - **Live route evidence:** from the live catalogue inventory, all 23 product detail URLs loaded a title and primary heading. Home, catalogue, combos, promotions, RTO guide, FAQ, enquiry, privacy, and the three chooser routes also loaded their primary heading.
@@ -75,9 +75,9 @@
 - **Visual review:** inspected the local desktop homepage, FAQ layout, and WM1248 detail at narrow widths. The browser screenshots were not exported to files; saving representative screenshots remains open.
 - **Owner review:** all four folio design choices are approved. KHIND still needs to confirm volatile product rates, campaign eligibility, plan terms/benefits, and stock. No message or enquiry was sent.
 
-## 2026-10-20 â€” Follow-up keyboard review
+## 2026-10-20 — Follow-up keyboard review
 
-- Reviewed the local WM1248 detail page and `/pilih/` chooser in the browser. The brand link, â€œUtama,â€ chooser card, and â€œLihat butiranâ€ showed visible keyboard focus; Enter opened the details sheet.
+- Reviewed the local WM1248 detail page and `/pilih/` chooser in the browser. The brand link, “Utama,” chooser card, and “Lihat butiran” showed visible keyboard focus; Enter opened the details sheet.
 - The details sheet appeared to overlap its product imagery and text in the desktop-width capture. Recheck at exact mobile widths and investigate before calling visual review complete.
 - The browser exposed no viewport or reduced-motion emulation capability. No site source was changed, no screenshot files were saved, and nothing was deployed or pushed.
 
@@ -105,7 +105,6 @@
 ## 2026-10-20 - Homepage FAQ and footer alignment
 
 - Reproduced the user screenshot on the public homepage at desktop width. The FAQ block was centered within the page while the contact band began at the content rail, creating mismatched edges and a wide right-side paper gap.
-- Aligned the FAQ section with the existing contact/footer content edge in khind-folio.css. Preserved FAQ copy, links, visual treatment, and controls. Bumped the folio stylesheet cache key on all 36 HTML routes so the updated stylesheet is served.
+- Aligned the FAQ section with the existing contact/footer content edge in `khind-folio.css`. Preserved FAQ copy, links, visual treatment, and controls. Bumped the folio stylesheet cache key on all 35 HTML routes so the updated stylesheet is served.
 - Local browser preview confirmed the FAQ and contact band now share matching left and right edges. Existing suite: 10/10; JavaScript syntax checks passed. Exact-width mobile re-capture remains limited by the available browser viewport.
-- User authorized a GitHub Pages push. Prepared the change on top of current remote main (`a1b89d4`) in an isolated worktree; original divergent checkout and all its uncommitted work remain untouched.
-
+- User authorized a GitHub Pages push. Prepared the change on top of current remote `main` (`a1b89d4`) in an isolated worktree; original divergent checkout and all its uncommitted work remain untouched.
