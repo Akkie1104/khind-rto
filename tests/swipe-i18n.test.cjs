@@ -62,7 +62,7 @@ for (const route of ["pilih", "pilih-b", "pilih-c"]) {
   check(route + ": language selector available outside and inside modal dialogs",
     ["language-main","language-details","language-shortlist"].every(id => h.includes('id="' + id + '"')));
   check(route + ": refreshed shared assets",
-    h.includes("../swipe-shop.js?v=6") && h.includes("../swipe-shop.css?v=6"));
+    h.includes("../swipe-shop.js?v=7") && h.includes("../swipe-shop.css?v=6"));
 }
 
 const a = launch(null);
@@ -84,6 +84,7 @@ check("A: language tag/title/description metadata switch to English",
   a.doc.documentElement.lang === "en" && a.doc.title.includes("Help me choose") &&
   a.get('meta[name="description"]').getAttribute("content").startsWith("Compare KHIND") &&
   a.get("language-main").textContent === "BM");
+check("A: progress region accessible name switches to English", a.get("progress-label").getAttribute("aria-label") === "Pick progress");
 check("A: current product, position and saved list preserved",
   a.current() === "ACSON-1.0" && a.get("deck-position").textContent === "Pick 3" &&
   a.get("saved-count").textContent === "1" && a.get("skip-button").getAttribute("aria-label").includes("Skip"));

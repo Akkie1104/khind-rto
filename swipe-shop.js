@@ -53,6 +53,7 @@
     detailsHeading: ["MAKLUMAT PRODUK", "PRODUCT DETAILS"],
     closeDetails: ["Tutup butiran", "Close details"],
     closeShortlist: ["Tutup simpanan", "Close shortlist"],
+    progressSection: ["Kemajuan pilihan", "Pick progress"],
     progressLabel: ["Produk telah dilihat", "Products viewed"],
     stageLabel: ["Pilihan peralatan dan kad produk", "Appliance chooser and product card"],
     unavailable: ["Imej rasmi tidak tersedia.", "Official image unavailable."],
@@ -964,6 +965,7 @@
     document.querySelector("[data-close-details]")?.setAttribute("aria-label", t("closeDetails"));
     document.querySelector("[data-close-shortlist]")?.setAttribute("aria-label", t("closeShortlist"));
     document.querySelector(".home-link")?.setAttribute("aria-label", t("goBack"));
+    $("progress-label").setAttribute("aria-label", t("progressSection"));
     $("progress-track").setAttribute("aria-label", t("progressLabel"));
     if (isVariantB) {
       set("gate-marker", t("categoryMarker"));

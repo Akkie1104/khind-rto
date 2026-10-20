@@ -78,7 +78,7 @@ for (const variant of ["pilih", "pilih-b", "pilih-c"]) {
   check("rescue container is embedded and hidden at load in " + variant,
     html.includes('id="rescue-question"') &&
     html.includes('aria-labelledby="rescue-title" hidden') &&
-    html.includes("swipe-shop.js?v=6") &&
+    html.includes("swipe-shop.js?v=7") &&
     html.includes("swipe-shop.css?v=6"));
 }
 check("compact rescue includes reduced height and motion-safe styles",

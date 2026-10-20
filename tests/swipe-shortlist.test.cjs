@@ -75,7 +75,7 @@ for (const route of ["pilih", "pilih-b", "pilih-c"]) {
     page.includes('id="shortlist-title" tabindex="-1"') &&
     page.includes('id="shortlist-body"') &&
     page.includes('id="shortlist-footer"') &&
-    page.includes("../swipe-shop.js?v=6"));
+    page.includes("../swipe-shop.js?v=7"));
 }
 check("Shortlist mobile styling supports 1–3, 44 px targets, reduced motion",
   css.includes(".shortlist-screen[open]") &&
