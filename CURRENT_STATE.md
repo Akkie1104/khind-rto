@@ -1,3 +1,11 @@
+## Homepage edge alignment — 2026-10-20
+
+- **VERIFIED published:** GitHub Pages `main` code commit [`d82e4425a2c38e656281e23f151b243c23411e9f`](https://github.com/Akkie1104/khind-rto/commit/d82e4425a2c38e656281e23f151b243c23411e9f); the custom-domain homepage loaded after deployment. The Pages deployment run #37 and storefront validation run #57 both succeeded.
+- **Change:** the homepage FAQ now uses the full content width so its right edge aligns with the contact band and footer. The homepage Folio stylesheet reference is cache-busted at `folio-15`. No product, price, promotion, or customer-facing copy changed.
+- **Responsive evidence:** the browser preview checked 320, 360, 390, 430, and 1532 CSS px. FAQ, contact band, and footer right edges matched at every width, and horizontal overflow was false.
+- **Rollback position:** previous `main` commit [`1cca9e8e62cebe908ab52f56a94f985d4bfd1281`](https://github.com/Akkie1104/khind-rto/commit/1cca9e8e62cebe908ab52f56a94f985d4bfd1281).
+- **Scope:** no staging environment was identified. This release includes only `khind-folio.css` and homepage `index.html`; unrelated local working-tree changes were not included.
+
 # KHIND RTO deployment state
 
 ## Local route and interaction review — 2026-10-20

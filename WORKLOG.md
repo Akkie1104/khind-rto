@@ -1,3 +1,14 @@
+## 2026-10-20 — Homepage FAQ edge alignment
+
+- System/environment: KHIND RTO static storefront; production GitHub Pages at `https://khindrto.akizen.my/`, repository `Akkie1104/khind-rto`, branch `main`; no staging identified.
+- Type: production deployment, authorized by the user's prior instruction to push to GitHub Pages.
+- Finding: the FAQ section's inherited `.shell` gutter left its right edge short of the contact band and footer, leaving a conspicuous blank strip.
+- Change: set the homepage FAQ section to full available width and removed its inherited max-width/gutters; bumped only the homepage stylesheet reference from `folio-14` to `folio-15`. No customer copy or product data changed.
+- Commit: [`d82e4425a2c38e656281e23f151b243c23411e9f`](https://github.com/Akkie1104/khind-rto/commit/d82e4425a2c38e656281e23f151b243c23411e9f), based on `1cca9e8e62cebe908ab52f56a94f985d4bfd1281`.
+- Validation: fixed-width browser preview at 320, 360, 390, 430, and 1532 CSS px measured matching FAQ/contact/footer right edges and no horizontal overflow. GitHub Pages deployment run #37 and storefront validation run #57 completed successfully. The public homepage loaded after publication.
+- Rollback: revert the code commit to `1cca9e8e62cebe908ab52f56a94f985d4bfd1281`.
+- Scope: only `index.html` and `khind-folio.css` were in the code release; unrelated local checkout changes were left untouched.
+
 # KHIND RTO worklog
 
 ## 2026-10-20 — Mobile catalogue navigation and asset refresh
