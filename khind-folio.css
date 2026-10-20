@@ -249,4 +249,4 @@ body.folio-shop{background:var(--folio-paper);color:var(--folio-ink)}
 @media(prefers-reduced-motion:reduce){.folio-shop #progress-fill{transition:none}}
 
 /* Align the FAQ panel with the full-width contact band and footer. */
-.folio-home .faq-section{width:100%;max-width:none;margin-left:0;margin-right:0}
+.folio-home .faq-section,.folio-home .contact-section{width:100%;max-width:none;margin-left:0;margin-right:0}
