@@ -50,7 +50,7 @@ jobs:
           const guideCss = fs.readFileSync('swipe-shop.css', 'utf8');
           const swipePage = fs.readFileSync('pilih/index.html', 'utf8');
           const checks = [
-            ['homepage uses the approved folio design', html.includes('class="folio-home"') && html.includes('khind-folio.css?v=folio-6')],
+            ['homepage uses the approved folio design', html.includes('class="folio-home"') && /khind-folio\.css\?v=folio-\d+/.test(html)],
             ['warm paper and yellow index palette are defined', folio.includes('--folio-paper:#f4f0e4') && folio.includes('--folio-yellow:#f3d31f')],
             ['yellow index-paper texture is present', folio.includes('index-paper-grain.png')],
             ['WM1248 cutout and product caption are present', html.includes('assets/plates/wm1248-product-photo.png') && html.includes('folio-product-caption') && html.includes('WM1248')],

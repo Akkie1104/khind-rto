@@ -10,7 +10,7 @@ body.agent-body{margin:0;background:var(--folio-paper);color:var(--folio-ink);fo
 .agent-head-inner{min-height:4.5rem;display:flex;align-items:center;gap:clamp(.8rem,2vw,2rem)}
 .agent-logo{display:flex;align-items:baseline;gap:.65rem;color:var(--folio-ink);text-decoration:none;white-space:nowrap}
 .agent-logo b{font-size:1.55rem;letter-spacing:-.07em;font-weight:850}
-.agent-logo span{font-size:.76rem;font-weight:700;letter-spacing:.02em}
+.agent-logo span{font-size:.76rem;font-weight:700;letter-spacing:.02em;color:var(--folio-muted)}
 .agent-nav{display:flex;align-items:center;justify-content:flex-end;gap:clamp(.55rem,1.7vw,1.4rem);margin-left:auto}
 .agent-nav a{color:var(--folio-ink);font-size:.8rem;font-weight:650;text-underline-offset:.25rem}
 .agent-nav a:hover,.agent-nav a[aria-current=page]{text-decoration:underline;text-decoration-thickness:2px}
@@ -224,6 +224,7 @@ body.folio-shop{background:var(--folio-paper);color:var(--folio-ink)}
 .folio-shop .skip-button{border:1px solid var(--folio-ink);background:transparent;color:var(--folio-ink)}
 .folio-shop .save-button{border:1px solid var(--folio-ink);background:var(--folio-yellow);color:var(--folio-ink);box-shadow:none}
 .folio-shop .agent-disclosure{color:var(--folio-muted)}
+.folio-shop .question-disclosure{color:var(--folio-muted)}
 .folio-shop .bottom-sheet{background:var(--folio-paper);color:var(--folio-ink);border-color:var(--folio-line)}
 .folio-shop .sheet-head,.folio-shop .shortlist-head{background:var(--folio-paper);border-color:var(--folio-line);color:var(--folio-ink)}
 .folio-shop .sheet-close{border-color:var(--folio-line);background:transparent;color:var(--folio-ink)}
