@@ -20,3 +20,13 @@
 - Validation: rendered WM1248 detail in the local exact-width fixture at 320, 360, 390 and 430 CSS pixels; visually confirmed the corrected tagline at 320, 360 and desktop width. Existing Node suite passed 10/10; `git diff --check` passed.
 - Evidence limit: saved screenshots exist in the task visualization folder, but the 320px catalogue capture predates the deployed narrow-navigation reflow and needs refreshing. Emulated widths and MobileViewer are not physical-device or accessibility certification.
 - Open work: complete the remaining page-by-page visual/keyboard review and refresh the catalogue screenshot. Keep current commercial claims flagged for KHIND confirmation; no product data or copy was changed.
+
+## 2026-10-20 — Publish folio contrast fixes
+
+- System/environment: KHIND RTO GitHub Pages production, `Akkie1104/khind-rto` `main`; no staging environment identified.
+- Type: production deployment, explicitly approved by Akizen in this task.
+- Change: set the shared logo tagline and chooser disclosure to the approved folio muted-ink color; advance all 35 folio stylesheet references to `folio-11`. Updated the workflow assertion to accept versioned folio cache keys.
+- Commit: `42193868e2157fe919b2fdd8dfda004c3e04f95e`, based on deployed `5f757a6533458c5efed3d550330f37ee19dc4b3f`.
+- Validation: existing Node regression suite, JavaScript syntax checks, and `git diff --check` passed. Storefront workflow run #45 and Pages deployment run #25 completed successfully. Public homepage and chooser loaded after the push.
+- Rollback: revert `42193868e2157fe919b2fdd8dfda004c3e04f95e` to return to the prior deployed commit.
+- Follow-up: refresh the stale 320px catalogue screenshot; continue route-by-route keyboard and runtime reduced-motion checks. Product rates, WM1248 promotion discrepancy, eligibility, plan terms, benefits, availability, and stock remain subject to KHIND confirmation.
