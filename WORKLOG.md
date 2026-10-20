@@ -92,3 +92,12 @@
 - Review captures remain in `.impeccable/review/`; the temporary capture receiver was stopped and its helper script removed. The browser's attempted viewport override did not apply, so direct 320 CSS px viewport verification was not completed in this continuation. Reduced-motion emulation remains unverified.
 - Owner confirmation is still required for promotion eligibility and rounding, rate/plan terms, benefits, and stock. No WhatsApp or KHIND enquiry was sent.
 - Publication status at this log entry: approved by the user; push and public verification are the remaining release steps.
+
+
+## 2026-10-20 - GitHub Pages release verified
+
+- Published the approved local fix to `Akkie1104/khind-rto` `main` as commit `e54e9619695b4851385cdb754fdfb32b619b7400`.
+- Actions validation run `39384123309` and Pages deployment run `39384122994` both succeeded.
+- Verified public `https://khindrto.akizen.my/pilih/` loads `swipe-shop.css?v=6` and `khind-folio.css?v=folio-13`. Opened the live WM1248 Details sheet and confirmed the image is contained and the payment, cash-reference, benefits, and caveat text is visible.
+- MobileViewer can reach the public site, but the daily preview limit prevented a new device capture. The browser viewport override did not apply during the local follow-up, so exact-width runtime capture remains open; prior responsive fixture checks covered 320/360/390/430 CSS px. Reduced-motion emulation also remains open.
+- No commercial copy or product data changed. Confirm rates, promotion rounding/eligibility, plan terms/benefits, and stock with KHIND before presenting them as verified.

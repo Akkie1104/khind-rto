@@ -91,3 +91,13 @@ Overall status: Published on the customer domain; responsive and accessibility r
 - Review captures are saved under `.impeccable/review/`. The temporary capture receiver has been stopped and its helper file removed.
 - Exact-width review fixtures previously covered 320, 360, 390, and 430 CSS px. The browser viewport override did not change the active browser's actual inner width on this continuation, so that direct runtime check remains unverified here. Runtime reduced-motion emulation also remains open.
 - Confirm current rates, promotion eligibility and rounding, plan duration and benefits, and stock with KHIND before representing them as confirmed. These items remain visibly caveated and no related copy or data was changed.
+
+
+## 2026-10-20 - GitHub Pages release verification
+
+- GitHub main advanced to `e54e9619695b4851385cdb754fdfb32b619b7400` for the approved folio details-sheet fixes and cache-key updates.
+- GitHub Actions validation run `39384123309` and Pages deployment run `39384122994` completed successfully for that commit.
+- Public `/pilih/` verified: it loads `swipe-shop.css?v=6` and `khind-folio.css?v=folio-13`. The live Details sheet keeps the WM1248 image inside its photo frame and shows its plan, price reference, benefits, and caveat text.
+- MobileViewer loaded the public site, but its daily preview limit blocked a fresh device render. The earlier 320/360/390/430 CSS-pixel fixture review remains useful; an exact viewport override did not apply in this continuation.
+- Runtime reduced-motion emulation remains unverified. The existing code includes reduced-motion handling.
+- No product data, prices, or commercial claims changed. KHIND confirmation remains open for rates, promotion eligibility and rounding, plan duration and benefits, and stock. Keep those claims caveated until confirmed.
