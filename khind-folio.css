@@ -248,5 +248,5 @@ body.folio-shop{background:var(--folio-paper);color:var(--folio-ink)}
 .folio-shop .swipe-left{color:#a13228}.folio-shop .swipe-right{color:#14613b}
 @media(prefers-reduced-motion:reduce){.folio-shop #progress-fill{transition:none}}
 
-/* Keep the FAQ panel on the same content edge as the contact band and footer. */
-.folio-home .faq-section{margin-left:0;margin-right:0}
+/* Align the FAQ panel with the full-width contact band and footer. */
+.folio-home .faq-section{width:100%;max-width:none;margin-left:0;margin-right:0}
