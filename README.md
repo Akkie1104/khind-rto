@@ -81,6 +81,7 @@ Product names, model IDs, capacities and other catalogue facts are never transla
 - Confirm applicable written approval for independently produced advertisements; registered agent status does not automatically settle every advertising-permission requirement.
 - Do not accept NRIC photos, credit-card details or payments through this static website.
 - Keep `akizen.my` hosted independently in the `Akkie1104/akizen` repository.
+- See [CURRENT_STATE.md](CURRENT_STATE.md) for deployment status and [WORKLOG.md](WORKLOG.md) for dated operational evidence.
 
 
 ## Family-first UX direction (15 October 2026)
