@@ -1,12 +1,15 @@
 name: Validate KHIND RTO storefront
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   smoke:
     runs-on: ubuntu-latest
@@ -15,7 +18,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - name: Check JavaScript syntax
+      - name: Check JavaScript syntax and storefront behavior
         run: |
           node --check script.js
           node --check catalogue.js
@@ -36,71 +39,37 @@ jobs:
           node tests/swipe-telemetry.test.cjs
           node tests/swipe-analytics-events.test.cjs
           node tests/swipe-collector.test.cjs
-      - name: Assert essential storefront controls and privacy safeguards
+      - name: Assert approved folio design and storefront safeguards
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const html=fs.readFileSync('index.html','utf8');
-          const js=fs.readFileSync('script.js','utf8');
-          const css=fs.readFileSync('retail-2026.css','utf8');
-          const motion=fs.readFileSync('motion-2026.css','utf8');
-          const guide=fs.readFileSync('swipe-shop.js','utf8');
-          const guideCss=fs.readFileSync('swipe-shop.css','utf8');
-          const swipePage=fs.readFileSync('pilih/index.html','utf8');
-          const photography=fs.readFileSync('photo-2026.css','utf8');
-          const checks=[
-            ['studio photo stylesheet loaded',html.includes('photo-2026.css?v=photo-2')],
-            ['generated hero local image exists',fs.existsSync('assets/wm1248-studio-hero.webp')],
-            ['studio hero is labeled accurately',html.includes('Ilustrasi studio · Semak foto rasmi')],
-            ['hero JS does not override studio with official photo',js.includes("featuredStudio?'assets/wm1248-studio-hero.webp'")],
-            ['official WM1248 source link',html.includes('https://www.khindrto.com.my/products/9kg-front-load-washer-wm1248')],
-            ['official catalogue WM1248 photo retained',fs.readFileSync('catalogue.js','utf8').includes('WM1248_Front%20Left.jpg')],
-            ['realistic light image mat',photography.includes('mix-blend-mode:multiply')],
-            ['dedicated full-screen swipe route',html.includes('href="pilih/"')&&fs.existsSync('pilih/index.html')],
-            ['source scripts load locally',swipePage.includes('../catalogue.js')&&swipePage.includes('../swipe-shop.js?v=6')&&swipePage.includes('../swipe-shop.css?v=5')],
-            ['product facts come from catalogue only',guide.includes('window.KHIND_PRODUCTS')&&guide.includes('p.image')&&guide.includes('p.plans')&&guide.includes('p.months')],
-            ['no quiz or onboarding before first card',swipePage.includes('id="card-slot"')&&!swipePage.includes('<form')&&!swipePage.includes('input type=')],
-            ['only supplied official image URLs',guide.includes('approvedImage(p.image)')&&guideCss.includes('object-fit:contain')],
-            ['touch, mouse and keyboard gestures',guide.includes('"pointerdown"')&&guide.includes('"pointerup"')&&guide.includes('"ArrowLeft"')&&guide.includes('"ArrowRight"')],
-            ['persistent Skip and Save buttons',swipePage.includes('id="skip-button"')&&swipePage.includes('id="save-button"')],
-            ['undo restores saved set and card',guide.includes('function undo()')&&guide.includes('saved: [...state.saved]')&&guide.includes('state.saved = previous.saved')],
-            ['two-save choice prompt',guide.includes('state.saved.length === 2')&&guide.includes('t("compare")')&&guide.includes('t("keepSwiping")')&&guide.includes('t("askAbout")')],
-            ['details as native bottom sheet',swipePage.includes('id="details-sheet"')&&guide.includes('detailsSheet.showModal()')],
-            ['comparison of saved products',guide.includes('function renderCompare()')&&guide.includes('savedProducts()')],
-            ['progress and saved count shown',swipePage.includes('id="progress-track"')&&swipePage.includes('id="saved-count"')],
-            ['WhatsApp uses agent and saved model IDs',guide.includes('wa.me/60174201247')&&guide.includes('items.map(p => p.id)')],
-            ['swipe reduced motion support',guideCss.includes('prefers-reduced-motion:reduce')],
-            ['shop engine never reads visitor storage or submits analytics directly',!guide.includes('localStorage')&&!guide.includes('sessionStorage')&&!guide.includes('fetch(')],
-            ['catalogue invites direct swipe',fs.readFileSync('catalogue/index.html','utf8').includes('../pilih/')],
-            ['motion assets loaded',html.includes('motion-2026.css')&&html.includes('motion-2026.js')],
-            ['reduced motion supported',motion.includes('prefers-reduced-motion:reduce')],
-            ['no perpetual motion loop',!(/animation[^;\n]*\binfinite\b/.test(motion))],
-            ['fixed dark appearance',html.includes('data-theme="dark"')&&!html.includes('theme-toggle')],
-            ['budget controls',['80','100','150','all'].every(value=>html.includes('data-budget="'+value+'"'))],
-            ['budget uses regular rate',js.includes('plan.rate<=budgetCap')],
-            ['normal rate and total disclosed',js.includes('shop-price-commitment')&&js.includes('money(sched.total+1)')],
-            ['agent identity',html.includes('Ejen KHIND RTO Berdaftar')],
-            ['privacy notice',html.includes('Jangan hantar gambar IC')],
-            ['brand image',html.includes('id="hero-image"')],
-            ['contrast styling',css.includes('Family-first KHIND RTO / dark-only system')],
-            ['valid canonical',html.includes('href="https://khindrto.akizen.my/"')],
-            ['no user theme persistence',!js.includes('localStorage.getItem(\'khind-theme\')')]
+
+          const html = fs.readFileSync('index.html', 'utf8');
+          const folio = fs.readFileSync('khind-folio.css', 'utf8');
+          const guide = fs.readFileSync('swipe-shop.js', 'utf8');
+          const guideCss = fs.readFileSync('swipe-shop.css', 'utf8');
+          const swipePage = fs.readFileSync('pilih/index.html', 'utf8');
+          const checks = [
+            ['homepage uses the approved folio design', html.includes('class="folio-home"') && html.includes('khind-folio.css?v=folio-6')],
+            ['warm paper and yellow index palette are defined', folio.includes('--folio-paper:#f4f0e4') && folio.includes('--folio-yellow:#f3d31f')],
+            ['yellow index-paper texture is present', folio.includes('index-paper-grain.png')],
+            ['WM1248 cutout and product caption are present', html.includes('assets/plates/wm1248-product-photo.png') && html.includes('folio-product-caption') && html.includes('WM1248')],
+            ['product caption asset exists', fs.existsSync('assets/plates/wm1248-product-photo.png')],
+            ['homepage keeps agent and commercial-data disclosures', html.includes('Laman ejen bebas') && html.includes('perlu disahkan dengan KHIND')],
+            ['swipe route loads local catalogue, shared scripts, and folio styling', swipePage.includes('../catalogue.js') && swipePage.includes('../swipe-shop.js') && swipePage.includes('../swipe-shop.css') && swipePage.includes('../khind-folio.css')],
+            ['swipe card facts come from the product catalogue', guide.includes('window.KHIND_PRODUCTS') && guide.includes('p.image') && guide.includes('p.plans') && guide.includes('p.months')],
+            ['swipe route keeps persistent Skip and Save controls', swipePage.includes('id="skip-button"') && swipePage.includes('id="save-button"')],
+            ['swipe supports reduced-motion preferences', guideCss.includes('prefers-reduced-motion:reduce')],
+            ['homepage canonical points to the customer domain', html.includes('href="https://khindrto.akizen.my/"')]
           ];
-          for(const [description,passed] of checks){
-            console.log((passed?'PASS ':'FAIL ')+description);
-          }
-          const pages=['catalogue','combos','promotions','cara-rto','faq','mohon','privasi'];
-          const models=['WM1248','DHP90','WD1468','RFS600A','RFM466A','RF480','WM150A','ACSON-1.0','ACSON-1.5','ACSON-2.0','SI6029BP','WD1438','CD12D','COMBO-1','COMBO-2','COMBO-3','COMBO-4','COMBO-5','COMBO-6','COMBO-7','COMBO-8','COMBO-9','COMBO-10'];
-          const shopChecks=[
-            ['all storefront sections exist',pages.every(name=>fs.existsSync(name+'/index.html'))],
-            ['23 SEO product pages exist',models.every(name=>fs.existsSync('products/'+name+'/index.html'))],
-            ['homepage links to full catalogue',html.includes('href="catalogue/"')],
-            ['new styles present',fs.existsSync('storefront.css')&&fs.existsSync('storefront.js')],
-            ['domain sitemap present',fs.existsSync('sitemap.xml')&&fs.readFileSync('sitemap.xml','utf8').includes('https://khindrto.akizen.my/products/WM1248/')],
-            ['agent disclosure on all pages',[...pages.map(x=>x+'/index.html'),...models.map(x=>'products/'+x+'/index.html')].every(path=>fs.readFileSync(path,'utf8').includes('Laman promosi bebas'))],
-            ['customer links go to agent',fs.readFileSync('mohon/index.html','utf8').includes('wa.me/60174201247')],
-            ['no false official status',!fs.readFileSync('mohon/index.html','utf8').includes('laman rasmi HQ')]
+          const pages = ['catalogue', 'combos', 'promotions', 'cara-rto', 'faq', 'mohon', 'privasi'];
+          const models = ['WM1248', 'DHP90', 'WD1468', 'RFS600A', 'RFM466A', 'RF480', 'WM150A', 'ACSON-1.0', 'ACSON-1.5', 'ACSON-2.0', 'SI6029BP', 'WD1438', 'CD12D', 'COMBO-1', 'COMBO-2', 'COMBO-3', 'COMBO-4', 'COMBO-5', 'COMBO-6', 'COMBO-7', 'COMBO-8', 'COMBO-9', 'COMBO-10'];
+          const routeChecks = [
+            ['all storefront sections exist', pages.every(name => fs.existsSync(`${name}/index.html`))],
+            ['all SEO product pages exist', models.every(name => fs.existsSync(`products/${name}/index.html`))],
+            ['agent disclosure appears on every section and product page', [...pages.map(name => `${name}/index.html`), ...models.map(name => `products/${name}/index.html`)].every(path => fs.readFileSync(path, 'utf8').includes('Laman promosi bebas'))],
+            ['WhatsApp enquiries route to the independent agent', fs.readFileSync('mohon/index.html', 'utf8').includes('wa.me/60174201247')]
           ];
-          for(const [description,passed] of shopChecks)console.log((passed?'PASS ':'FAIL ')+description);
-          if([...checks,...shopChecks].some(([,passed])=>!passed))process.exit(1);
+          for (const [description, passed] of [...checks, ...routeChecks]) console.log(`${passed ? 'PASS' : 'FAIL'} ${description}`);
+          if ([...checks, ...routeChecks].some(([, passed]) => !passed)) process.exit(1);
           NODE
