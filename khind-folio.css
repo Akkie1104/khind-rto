@@ -83,7 +83,7 @@ body.agent-body{margin:0;background:var(--folio-paper);color:var(--folio-ink);fo
 .agent-steps article:before{display:block;margin-bottom:.4rem;color:var(--folio-muted);font-weight:850;letter-spacing:.06em}
 .agent-faq details{border-bottom:1px solid var(--folio-line)}
 .agent-faq summary{min-height:3.2rem;padding:.9rem 2rem .9rem 0;color:var(--folio-ink);font-weight:750;cursor:pointer}
-.agent-faq p{max-width:65ch;padding:0 0 .9rem;color:var(--folio-muted);font-size:.93rem}
+.agent-faq details p{max-width:65ch;padding:0 0 .9rem;color:var(--folio-muted);font-size:.93rem}
 .agent-foot{margin-top:3rem;padding:2.5rem 0;border-top:1px solid var(--folio-line);background:var(--folio-ink);color:var(--folio-paper)}
 .agent-foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2rem}
 .agent-foot p,.agent-foot a{color:#e8e2d3;font-size:.84rem}
