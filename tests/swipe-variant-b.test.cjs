@@ -92,7 +92,7 @@ verify("variant offers exactly four accessible buttons", (gateHtml.match(/<butto
 verify("variant uses shared assets with no product duplication",
   variantMarkup.includes("../swipe-shop.js?v=6") &&
   variantMarkup.includes("../catalogue.js?v=cd12d-plan-promo") &&
-  variantMarkup.includes("../swipe-shop.css?v=5"));
+  variantMarkup.includes("../swipe-shop.css?v=6"));
 verify("question fits short mobile viewports", css.includes("@media(max-height:620px)") &&
   css.includes("@media(max-width:370px)"));
 

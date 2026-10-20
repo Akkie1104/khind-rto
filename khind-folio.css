@@ -229,6 +229,13 @@ body.folio-shop{background:var(--folio-paper);color:var(--folio-ink)}
 .folio-shop .sheet-head,.folio-shop .shortlist-head{background:var(--folio-paper);border-color:var(--folio-line);color:var(--folio-ink)}
 .folio-shop .sheet-close{border-color:var(--folio-line);background:transparent;color:var(--folio-ink)}
 .folio-shop .sheet-body,.folio-shop .shortlist-body{color:var(--folio-ink)}
+.folio-shop .details-summary p,.folio-shop .sheet-body>p{color:var(--folio-muted)}
+.folio-shop .plan-item{border-color:var(--folio-line);background:var(--folio-paper-light);color:var(--folio-ink)}
+.folio-shop .plan-item strong{color:var(--folio-ink)}
+.folio-shop .plan-item>small{color:var(--folio-muted)}
+.folio-shop .cash-reference{border-left-color:var(--folio-rust);background:var(--folio-paper-light);color:var(--folio-rust)}
+.folio-shop .details-caveat{color:var(--folio-muted)!important}
+.folio-shop .stock-note{border-color:var(--folio-rust);background:#f7e8dc;color:var(--folio-ink)!important}
 .folio-shop .shortlist-intro,.folio-shop .shortlist-disclosure,.folio-shop .shortlist-row p,.folio-shop .shortlist-empty p{color:var(--folio-muted)}
 .folio-shop .shortlist-row{border-color:var(--folio-line)}
 .folio-shop .shortlist-row span{color:var(--folio-rust)}

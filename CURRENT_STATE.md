@@ -1,5 +1,24 @@
 # KHIND RTO deployment state
 
+## Local route and interaction review — 2026-10-20
+
+- **Production remains unchanged.** The live site currently serves the approved folio design. This review made no site-source edits and no deployment.
+- **Live route check:** the eight standard content routes, `/pilih/`, `/pilih-b/`, `/pilih-c/`, and all 23 product detail URLs loaded a page title and primary heading from `https://khindrto.akizen.my/`.
+- **Local responsive check:** all 11 main routes (including `/pilih/`, `/pilih-b/`, and `/pilih-c/`) and all 23 product detail pages loaded in the 320, 360, 390, and 430 CSS px frames. No page document exceeded its viewport. Promotions measured exactly 320 px of scroll width in the 320 px frame.
+- **Interactions:** WM1248 search returned one match; the regular-rate RM80 filter returned three. FAQ disclosure toggled with Enter. The category chooser opened the selected product deck and details sheet; Escape closed the sheet. The swipe chooser saved with Right Arrow and Undo restored the previous product and cleared the saved count.
+- **Budget chooser keyboard check:** Enter on the first band opened the 13-item deck; the initial card showed SI6029BP at RM75/month for 24 months with its stock note.
+- **Checks:** existing Node suite passed (10 tests); `node --check` passed for `script.js` and `swipe-shop.js`; `git diff --check` passed.
+- **Reduced motion:** CSS and swipe JavaScript contain reduced-motion handling. The current browser session exposes no emulation capability, so runtime emulation was not verified.
+- **Visual evidence:** WM1248 mobile and desktop page layouts were inspected in the browser. Screenshot captures are not saved as local image files yet.
+- **Still open:** save representative mobile and desktop screenshots; complete wider keyboard/accessibility review; confirm promotion eligibility, rates, terms, benefits, and stock with KHIND before treating them as current. The four folio design choices (caption, paper ground, index texture, WM1248 cutout) are approved.
+
+### Follow-up keyboard and visual review — 2026-10-20
+
+- WM1248 detail page: keyboard focus reached the brand link and next reached “Utama”; both showed a visible focus outline.
+- Swipe chooser: Tab moved from the skip-content link to the language switch, card, and “Lihat butiran” control. The details sheet opened with Enter.
+- **Open visual finding:** the chooser details sheet appeared to overlap product imagery and text in the desktop-width browser capture. Confirm at the exact mobile widths and correct locally if reproducible before closing visual review.
+- Browser capability check exposed no viewport or reduced-motion emulation API. The fixture still renders the WM1248 page in 320/360/390/430 CSS px frames, but screenshots from this follow-up were inspected in-browser and not saved as files.
+
 ## Latest verification — 2026-10-20
 
 - GitHub Actions storefront validation run #48 and GitHub Pages deployment run #28 completed successfully for `f7f28cca68685019456a0bda150b1d80f7429bcd`.
@@ -60,3 +79,15 @@ Overall status: Published on the customer domain; responsive and accessibility r
 - Existing tests passed (10/10); `node --check script.js` and `git diff --check` passed. No publication occurred; the public FAQ still serves `folio-11` and retains the contrast issue until an approved release.
 - Fresh live checks also confirmed the folio homepage is still current, catalogue search for WM1248 returns 1 item, and the regular-rate RM80 filter returns 3. The local 320/360/390/430 fixture shows the category-first chooser fits its measured page widths; the WM1248 detail is visible at all four widths without page overflow.
 - This browser session cannot emulate `prefers-reduced-motion`; source media rules are present, but runtime behavior is still unverified. Saved screenshot deliverable, route-by-route keyboard review, and commercial owner checks remain open.
+
+
+## 2026-10-20 - Approved responsive follow-up
+
+- The user approved all four folio presentation choices and then directly approved pushing the KHIND RTO changes to GitHub Pages.
+- Fixed the chooser Details sheet image bounds and clipping in `swipe-shop.css`; added readable paper, muted-ink, rust, and stock-note treatments in `khind-folio.css`.
+- Bumped `swipe-shop.css` to cache key `v=6` on all four chooser routes and `khind-folio.css` to `folio-13` on all 35 referencing pages. Updated four corresponding existing test assertions. No product prices or commercial claims were changed.
+- Local browser inspection of `/pilih/` confirmed the WM1248 image stays inside its photo frame; the plan, reference-price, benefits, and caveat text remain visible in the Details sheet.
+- Existing test suite passes (10/10). `node --check script.js`, `node --check swipe-shop.js`, and `git diff --check` pass.
+- Review captures are saved under `.impeccable/review/`. The temporary capture receiver has been stopped and its helper file removed.
+- Exact-width review fixtures previously covered 320, 360, 390, and 430 CSS px. The browser viewport override did not change the active browser's actual inner width on this continuation, so that direct runtime check remains unverified here. Runtime reduced-motion emulation also remains open.
+- Confirm current rates, promotion eligibility and rounding, plan duration and benefits, and stock with KHIND before representing them as confirmed. These items remain visibly caveated and no related copy or data was changed.

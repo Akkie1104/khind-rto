@@ -124,8 +124,8 @@ button:focus-visible,a:focus-visible,.product-card:focus-visible{outline:3px sol
 .sheet-head h2{font-size:1.1rem;letter-spacing:-.03em;margin:0}
 .sheet-close{width:2.5rem;height:2.5rem;border:1px solid #5d715a;border-radius:50%;background:#273429;color:#f8f8ed}
 .sheet-body{padding:.9rem 1.05rem max(1.3rem,env(safe-area-inset-bottom));line-height:1.53}
-.details-photo{display:grid;place-items:center;height:clamp(10rem,25dvh,15rem);border-radius:.85rem;background:#f1f3ed;padding:.75rem}
-.details-appliance{height:100%;width:100%;object-fit:contain}
+.details-photo{display:grid;place-items:center;height:clamp(10rem,25dvh,15rem);border-radius:.85rem;background:#f1f3ed;padding:.75rem;overflow:hidden}
+.details-appliance{display:block;height:100%;width:100%;max-height:100%;max-width:100%;min-height:0;min-width:0;object-fit:contain}
 .details-summary{margin:1rem 0}
 .detail-model{color:var(--yellow);font-size:.69rem;font-weight:850;letter-spacing:.09em}
 .details-summary h2{font-size:1.45rem;letter-spacing:-.05em;line-height:1.19;margin:.25rem 0}

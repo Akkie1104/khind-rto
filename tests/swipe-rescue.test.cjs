@@ -79,7 +79,7 @@ for (const variant of ["pilih", "pilih-b", "pilih-c"]) {
     html.includes('id="rescue-question"') &&
     html.includes('aria-labelledby="rescue-title" hidden') &&
     html.includes("swipe-shop.js?v=6") &&
-    html.includes("swipe-shop.css?v=5"));
+    html.includes("swipe-shop.css?v=6"));
 }
 check("compact rescue includes reduced height and motion-safe styles",
   css.includes(".rescue-options{display:grid;grid-template-columns:repeat(2") &&
