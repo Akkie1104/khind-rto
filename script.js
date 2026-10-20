@@ -131,6 +131,7 @@ function schedule(p,plan){
 }
 const heroImage=document.querySelector('#hero-image');
 const heroProduct=byId.WM1248||products[0]||null;
+const folioHome=document.body.classList.contains('folio-home');
 function showHeroFallback(){
   if(!heroImage||heroImage.dataset.failed)return;
   heroImage.dataset.failed='1';
@@ -141,10 +142,13 @@ function showHeroFallback(){
   heroImage.after(fallback);
 }
 if(heroImage&&heroProduct){
-  const featuredStudio=heroProduct.id==='WM1248';
-  heroImage.src=featuredStudio?'assets/wm1248-studio-hero.webp':heroProduct.image||'';
-  heroImage.alt=featuredStudio?'Ilustrasi studio mesin basuh KHIND WM1248 9kg; rujuk foto rasmi untuk butiran tepat':heroProduct.name+' '+heroProduct.id;
-  heroImage.closest('.hero-product-image').dataset.model=heroProduct.id;
+  if(!folioHome){
+    const featuredStudio=heroProduct.id==='WM1248';
+    heroImage.src=featuredStudio?'assets/wm1248-studio-hero.webp':heroProduct.image||'';
+    heroImage.alt=featuredStudio?'Ilustrasi studio mesin basuh KHIND WM1248 9kg; rujuk foto rasmi untuk butiran tepat':heroProduct.name+' '+heroProduct.id;
+  }
+  const heroPanel=heroImage.closest('.hero-product-image');
+  if(heroPanel)heroPanel.dataset.model=heroProduct.id;
   if(!heroProduct.image)showHeroFallback();
   else heroImage.addEventListener('error',showHeroFallback,{once:true});
 }else if(heroImage){
@@ -425,7 +429,8 @@ function openDetail(p){
 }
 
 render();
-document.querySelector('#browse-laundry').addEventListener('click',()=>{
+const browseLaundry=document.querySelector('#browse-laundry');
+if(browseLaundry)browseLaundry.addEventListener('click',()=>{
   searchInput.value='';
   syncClearSearch();
   document.querySelector('[data-category="laundry"]').click();
