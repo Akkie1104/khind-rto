@@ -38,6 +38,8 @@ function normalizeProduct(product){
   const monthsRaw=positiveNumber(product.months);
   const months=monthsRaw===null?null:Math.trunc(monthsRaw);
   if(plans.length&&(!months||months<1))return null;
+  const stock=String(product.stock??'').trim();
+  const stockEn=String(product.stockEn??'').trim();
   return {
     ...product,
     id,
@@ -51,7 +53,8 @@ function normalizeProduct(product){
     image:safeHttpsUrl(product.image,ALLOWED_IMAGE_HOSTS),
     source:safeHttpsUrl(product.source,ALLOWED_SOURCE_HOSTS),
     benefits:String(product.benefits??''),
-    stock:String(product.stock??''),
+    stock:stock||'Status stok dan ETA tidak dinyatakan dalam rujukan. Sahkan dengan KHIND.',
+    stockEn:stockEn||(stock?'':'Stock status and ETA are not stated in the reference. Confirm with KHIND.'),
     keywords:Array.isArray(product.keywords)?product.keywords.map(value=>String(value)):[],
     campaignSource:String(product.campaignSource??''),
     yearEndPromo:product.yearEndPromo!==false,
@@ -76,6 +79,7 @@ const cashCampaign = active('2026-10-01','2026-10-31');
 const dryerCampaign = yearEndCampaign;
 const enquiry = text => 'https://wa.me/60174201247?text=' + encodeURIComponent('Salam Hakim, '+text+' Mohon sahkan stok, kelayakan promosi, jumlah awal dan syarat penuh.');
 const cashPrice = p => cashCampaign && p.cashPromo ? p.cashPromo : p.cash;
+const benefitsForPlan = (p,plan) => p.planBenefits?.[plan?.name] || p.benefits || 'Manfaat untuk pelan ini perlu disahkan dengan KHIND.';
 const byId = Object.fromEntries(products.map(p=>[p.id,p]));
 const categoryLabels={
   laundry:'Basuh & kering',
@@ -112,22 +116,28 @@ const bundleParts = {
   'COMBO-10':['WM150A','RFS600A']
 };
 function schedule(p,plan){
- let first=plan.rate,discount=false,end='',promoLabel='';
- if(yearEndCampaign&&p.yearEndPromo){
+ let first=plan.rate,discount=false,end='',promoLabel='',promoMonths=Math.min(p.months,Number(p.promoMonths)||6);
+ const recordedPromo=Number(p.promoMonths)>0&&Number(p.promoPercent)>0&&Boolean(p.promoVerifiedDate);
+ if(recordedPromo){
+   discount=true;
+   first=plan.rate*(1-Number(p.promoPercent)/100);
+   end=String(p.promoEndDate||'');
+   promoLabel='Rujukan KHIND · jika layak · '+Number(p.promoPercent)+'% · '+promoMonths+' BULAN PERTAMA';
+ }else if(yearEndCampaign&&p.yearEndPromo){
    discount=true;
    end='31 Disember 2026';
    if(p.id==='DHP90'){
      first=30;
-     promoLabel='65% OFF · 6 BULAN PERTAMA';
+     promoLabel='Jika layak · 65% OFF · '+promoMonths+' BULAN PERTAMA';
    }else if(p.category==='bundle'){
      first=65;
-     promoLabel='RM65 · 6 BULAN PERTAMA';
+     promoLabel='Jika layak · RM65 · '+promoMonths+' BULAN PERTAMA';
    }else{
      first=plan.rate/2;
-     promoLabel='50% OFF · 6 BULAN PERTAMA';
+     promoLabel='Jika layak · 50% OFF · '+promoMonths+' BULAN PERTAMA';
    }
  }
- return {first,discount,end,promoLabel,total:discount?first*6+plan.rate*(p.months-6):plan.rate*p.months};
+ return {first,discount,end,promoLabel,promoMonths,total:discount?first*promoMonths+plan.rate*(p.months-promoMonths):plan.rate*p.months};
 }
 const heroImage=document.querySelector('#hero-image');
 const heroProduct=byId.WM1248||products[0]||null;
@@ -162,7 +172,7 @@ if(heroProduct&&heroProduct.plans.length){
  if(terms)terms.textContent=preview.discount?'6 bulan pertama; tertakluk kelayakan promosi.':'Kadar rujukan; sahkan terma akhir.';
 }
 const banner=document.querySelector('#campaign');
-if(yearEndCampaign) banner.innerHTML='<b>Promosi 1 Okt – 31 Dis 2026</b><span>Produk individu terpilih: 50% untuk 6 bulan pertama · Kombo: RM65 untuk 6 bulan pertama · DHP90: dari RM30 untuk 6 bulan pertama.<small>Kadar biasa bersambung selepas tempoh promosi. Tertakluk kelayakan, stok dan pengesahan KHIND.</small></span>';
+if(yearEndCampaign) banner.innerHTML='<b>Kempen lain yang direkodkan: 1 Okt – 31 Dis 2026</b><span>Produk individu terpilih: 50% sehingga 6 bulan pertama · Kombo: RM65 untuk 6 bulan pertama · DHP90: dari RM30 untuk 6 bulan pertama.<br>Rujukan rasmi RF480 diperiksa 22 Okt 2026: 50% untuk 3 bulan pertama; tarikh tamat dan kelayakan tidak dinyatakan.<small>Kadar biasa bersambung selepas tempoh promosi. Sahkan tawaran, pembundaran, dan pra-tempahan RF480 dengan KHIND.</small></span>';
 let category='all';
 const grid=document.querySelector('#products');
 const categoryStory=document.querySelector('#category-story');
@@ -198,16 +208,16 @@ function promoEligible(p){
 }
 function rtoCardSummary(p,plan,sched){
  const multi=p.plans.length>1;
- const firstLabel=sched.discount?'6 bulan pertama':'Kadar bulanan biasa';
- const next=sched.discount?'Selepas promosi: '+(multi?'dari ':'')+money(plan.rate)+'/bulan':(multi?'Pilihan pelan lain tersedia.':'Kadar ini sepanjang tempoh kontrak.');
- const total=p.sourceConflict?'Perlu pengesahan':money(sched.total+1);
+ const firstLabel=sched.discount?sched.promoMonths+' bulan pertama jika layak':'Kadar bulanan biasa';
+ const next=sched.discount?'Selepas '+sched.promoMonths+' bulan promosi: '+(multi?'dari ':'')+money(plan.rate)+'/bulan':(multi?'Pilihan pelan lain tersedia.':'Kadar ini sepanjang tempoh kontrak.');
+ const total=p.sourceConflict?'Perlu pengesahan':money(sched.total);
  return '<div class="shop-price" aria-label="Ringkasan RTO">'+
  '<span class="shop-price-label">'+firstLabel+'</span>'+
  '<div class="shop-price-main"><strong>'+money(sched.first)+'</strong><span>/bulan</span></div>'+
  '<span class="shop-price-next">'+next+'</span>'+
  '<div class="shop-price-commitment"><span>Tempoh pelan</span><strong>'+p.months+' bulan</strong></div>'+
  '<div class="shop-price-commitment"><span>Anggaran jumlah RTO*</span><strong>'+total+'</strong></div>'+
- '<p class="pricing-foot">*Termasuk anggaran fi pemprosesan RM1. Caj tambahan & bayaran pertama perlu pengesahan KHIND.</p>'+
+  '<p class="pricing-foot">*Anggaran jumlah tidak termasuk fi pemprosesan atau caj tambahan yang belum disahkan. Promosi dan bayaran pertama tertakluk kelayakan serta pengesahan KHIND.'+(p.promoPercent?' Kadar promosi ialah pengiraan matematik berdasarkan peratus diskaun; sahkan pembundaran dan kadar akhir dengan KHIND.':'')+'</p>'+
  '</div>';
 }
 let budgetCap=null;
@@ -258,7 +268,7 @@ function render(){
    const decisions=decisionPoints(p).slice(0,3).map(x=>'<li>'+escapeHTML(x)+'</li>').join('');
    const categoryResult=term?'<p class="result-category">'+escapeHTML(categoryLabels[p.category]||'Produk')+'</p>':'';
    const promo=promoEligible(p)&&sched?'<span class="promo-tag">'+escapeHTML(sched.promoLabel)+'</span>':'';
-   const benefit=!cash&&p.benefits?'<p class="card-benefits"><b>Waranti & manfaat pelan</b>'+escapeHTML(p.benefits)+'</p>':'';
+   const benefit=!cash&&(p.planBenefits||p.benefits)?'<p class="card-benefits"><b>Manfaat pelan</b>'+escapeHTML(p.planBenefits?'Manfaat berbeza mengikut pelan. Semak butiran sebelum memohon.':p.benefits)+'</p>':'';
    const conflict=p.sourceConflict?'<p class="verification-flag">Tempoh pelan perlu disahkan dengan KHIND sebelum membuat keputusan.</p>':'';
    let pricing='',action='Lihat pelan & butiran',buttonAttr='data-product="'+p.id+'"';
    if(cash){
@@ -273,6 +283,7 @@ function render(){
          action='Semak harga penuh';
        }
      }else{
+       const cashPromoRecorded=cashCampaign&&p.cashPromo&&p.cashPromo<p.cash;
        pricing='<div class="price-block cash-price"><span class="shop-price-label">Bayaran penuh</span><div><span class="price">'+money(amount)+'</span>'+(cashCampaign&&p.cashPromo&&p.cashPromo<p.cash?'<span class="cash-original">'+money(p.cash)+'</span>':'')+'</div><p class="price-note">'+(cashCampaign&&p.cashPromo&&p.cashPromo<p.cash?'Promosi hingga 31 Okt 2026':'Harga rujukan · sahkan harga akhir')+'</p></div>';
      }
    }else if(sched){
@@ -356,10 +367,10 @@ function comparisonHtml(p,planIndex){
   const plan=p.plans[planIndex]||p.plans[0];
   const sched=schedule(p,plan);
   const cashAmount=cashPrice(p);
-  const monthly=sched.discount
-    ?money(sched.first)+'/bln (1–6), kemudian '+money(plan.rate)+'/bln'
+ const monthly=sched.discount
+    ?money(sched.first)+'/bln (1-'+sched.promoMonths+'), kemudian '+money(plan.rate)+'/bln'
     :money(plan.rate)+'/bln';
-  return '<section class="payment-comparison" aria-labelledby="compare-title"><h3 id="compare-title">Bandingkan jumlah sebelum memilih</h3><p>Jumlah RTO boleh lebih tinggi daripada pembelian tunai. Manfaat waranti, KHIND Care Plan, servis dan perlindungan bergantung pada model dan pelan. Harga tunai mungkin lebih sesuai jika anda tidak memerlukan bayaran berperingkat atau manfaat tambahan.</p><div class="compare-grid"><div class="compare-head"><span></span><b>Bayaran penuh</b><b>RTO</b></div><div><span>Cara bayar</span><strong>Sekali</strong><strong>'+monthly+'</strong></div><div><span>Jumlah</span><strong>'+money(cashAmount)+'</strong><strong>'+(p.sourceConflict?'Perlu pengesahan':money(sched.total+1))+'</strong></div><div><span>Servis / perlindungan</span><strong>Manfaat RTO tidak semestinya disertakan</strong><strong>Mengikut manfaat pelan</strong></div><div><span>Pemilikan</span><strong>Selepas bayaran penuh</strong><strong>Selepas semua bayaran RTO selesai</strong></div></div></section>';
+  return '<section class="payment-comparison" aria-labelledby="compare-title"><h3 id="compare-title">Bandingkan jumlah sebelum memilih</h3><p>Jumlah RTO boleh lebih tinggi daripada pembelian tunai. Manfaat waranti, KHIND Care Plan, servis dan perlindungan bergantung pada model dan pelan. Harga tunai mungkin lebih sesuai jika anda tidak memerlukan bayaran berperingkat atau manfaat tambahan.</p><div class="compare-grid"><div class="compare-head"><span></span><b>Bayaran penuh</b><b>RTO</b></div><div><span>Cara bayar</span><strong>Sekali</strong><strong>'+monthly+'</strong></div><div><span>Jumlah</span><strong>'+money(cashAmount)+'</strong><strong>'+(p.sourceConflict?'Perlu pengesahan':money(sched.total))+'</strong></div><div><span>Servis / perlindungan</span><strong>Manfaat RTO tidak semestinya disertakan</strong><strong>Mengikut manfaat pelan</strong></div><div><span>Pemilikan</span><strong>Selepas bayaran penuh</strong><strong>Selepas semua bayaran RTO selesai</strong></div></div></section>';
 }
 function setDetailMode(p,mode,planIndex=0){
   document.querySelectorAll('[data-detail-payment]').forEach(button=>{
@@ -402,21 +413,22 @@ function setDetailMode(p,mode,planIndex=0){
   }
   const plan=p.plans[selected],sched=schedule(p,plan);
   const message=p.sourceConflict
-    ? 'saya berminat dengan '+p.name+'. Pelan '+plan.name+': '+(sched.discount?money(sched.first)+' untuk 6 bulan pertama, kemudian ':'')+money(plan.rate)+'/bulan. Saya faham tempoh dan jumlah akhir perlu disahkan dengan KHIND.'
-    : 'saya berminat dengan '+p.name+'. Pelan '+plan.name+': '+(sched.discount?money(sched.first)+' × 6 bulan, kemudian ':'')+money(plan.rate)+' × '+(sched.discount?p.months-6:p.months)+' bulan. Jumlah sewaan '+money(sched.total)+' + fi RM1.';
+    ? 'saya berminat dengan '+p.name+'. Pelan '+plan.name+': '+(sched.discount?money(sched.first)+' untuk '+sched.promoMonths+' bulan pertama, kemudian ':'')+money(plan.rate)+'/bulan. Saya faham tempoh dan jumlah akhir perlu disahkan dengan KHIND.'
+    : 'saya berminat dengan '+p.name+'. Pelan '+plan.name+': '+(sched.discount?money(sched.first)+' × '+sched.promoMonths+' bulan, kemudian ':'')+money(plan.rate)+' × '+(sched.discount?p.months-sched.promoMonths:p.months)+' bulan. Jumlah sewaan '+money(sched.total)+'; fi atau caj tambahan perlu disahkan oleh KHIND.';
   const paymentRows=sched.discount
-    ? '<div><dt>Bulan 1–6</dt><dd>'+money(sched.first)+' / bulan</dd></div><div><dt>Selepas promosi</dt><dd>'+money(plan.rate)+' / bulan</dd></div>'
+    ? '<div><dt>Bulan 1-'+sched.promoMonths+'</dt><dd>'+money(sched.first)+' / bulan</dd></div><div><dt>Selepas promosi</dt><dd>'+money(plan.rate)+' / bulan</dd></div>'
     : '<div><dt>Kadar bulanan</dt><dd>'+money(plan.rate)+' / bulan</dd></div>';
   const totalRows=p.sourceConflict
     ? '<div><dt>Jumlah komitmen</dt><dd>Perlu pengesahan tempoh</dd></div>'
-    : '<div><dt>Tempoh</dt><dd>'+p.months+' bulan</dd></div><div><dt>Jumlah sewaan</dt><dd>'+money(sched.total)+'</dd></div><div><dt>Fi pemprosesan</dt><dd>RM1</dd></div><div class="total"><dt>Jumlah anggaran</dt><dd>'+money(sched.total+1)+'</dd></div>';
-  detail.innerHTML='<div class="breakdown"><dl>'+paymentRows+totalRows+'</dl></div><div class="plan-benefits"><h3>Manfaat pelan yang dipilih</h3><p>'+escapeHTML(p.benefits)+'</p></div>'+comparisonHtml(p,selected)+sourceConflictHtml(p)+'<p class="fine">'+(sched.discount?'Promosi hingga '+sched.end+'. ':'')+'Anggaran tidak termasuk caj kerja tambahan, caj lewat atau penamatan awal. Jumlah bayaran pertama dan kelayakan promosi perlu disahkan oleh KHIND.</p>'+(p.category==='cooling'?'<p><b>Trade-in aircond:</b> 1 Oktober–31 Disember 2026 untuk unit Sejuk Syiok terpilih di Semenanjung Malaysia. Trade-in 1 unit menerima RM150 Touch ’n Go eWallet; 2 unit menerima RM300, tertakluk terma kempen.</p>':'')+'<a class="button dark modal-cta" href="'+enquiry(message)+'" target="_blank" rel="noopener noreferrer">Tanya tentang pilihan ini di WhatsApp ↗</a><p class="fine">Jangan hantar gambar IC atau butiran kad dalam chat. Gunakan pautan rasmi KHIND untuk dokumen dan pembayaran.</p>';
+    : '<div><dt>Tempoh</dt><dd>'+p.months+' bulan</dd></div><div><dt>Jumlah sewaan</dt><dd>'+money(sched.total)+'</dd></div><div class="total"><dt>Jumlah anggaran</dt><dd>'+money(sched.total)+'</dd></div>';
+  const promotionNote=sched.discount?(sched.end?'Promosi hingga '+sched.end+'. ':p.promoVerifiedDate?'Rujukan rasmi tidak menyatakan tarikh tamat atau kelayakan; sahkan tawaran dengan KHIND. ':'Promosi dan kelayakan tertakluk pengesahan KHIND. '):'';
+  detail.innerHTML='<div class="breakdown"><dl>'+paymentRows+totalRows+'</dl></div><div class="plan-benefits"><h3>Manfaat pelan yang dipilih</h3><p>'+escapeHTML(benefitsForPlan(p,selected))+'</p></div>'+comparisonHtml(p,selected)+sourceConflictHtml(p)+'<p class="fine">'+promotionNote+'Anggaran tidak termasuk caj kerja tambahan, caj lewat atau penamatan awal. Jumlah bayaran pertama dan kelayakan promosi perlu disahkan oleh KHIND.</p>'+(p.category==='cooling'?'<p><b>Trade-in aircond:</b> 1 Oktober–31 Disember 2026 untuk unit Sejuk Syiok terpilih di Semenanjung Malaysia. Trade-in 1 unit menerima RM150 Touch ’n Go eWallet; 2 unit menerima RM300, tertakluk terma kempen.</p>':'')+'<a class="button dark modal-cta" href="'+enquiry(message)+'" target="_blank" rel="noopener noreferrer">Tanya tentang pilihan ini di WhatsApp ↗</a><p class="fine">Jangan hantar gambar IC atau butiran kad dalam chat. Gunakan pautan rasmi KHIND untuk dokumen dan pembayaran.</p>';
 }
 function openDetail(p){
   lastProductId=p.id;
   const globalMode=document.querySelector('#payment').value;
   const decisions=decisionPoints(p).slice(0,3).map(x=>'<li>'+escapeHTML(x)+'</li>').join('');
-  document.querySelector('#detail-content').innerHTML='<p class="eyebrow">'+escapeHTML(p.id)+'</p><h2 id="detail-title">'+escapeHTML(p.name)+'</h2><p>'+escapeHTML(p.description)+'</p><ul class="decision-points modal-decisions" aria-label="Maklumat ringkas">'+decisions+'</ul><fieldset class="payment-method"><legend>Cara pembayaran</legend><div class="segmented"><button type="button" data-detail-payment="rto" aria-pressed="false">RTO</button><button type="button" data-detail-payment="cash" aria-pressed="false">Bayaran penuh</button></div></fieldset><div id="detail-plan-choice"></div><div id="plan-detail"></div><p class="stock">'+escapeHTML(p.stock)+'</p><p class="verification-meta">Data kempen: '+escapeHTML(p.campaignSource)+' · disemak '+escapeHTML(p.verifiedDate)+'.</p>'+(p.source?'<a class="source" href="'+p.source+'" target="_blank" rel="noopener noreferrer">Spesifikasi produk rasmi ↗</a>':'');
+  document.querySelector('#detail-content').innerHTML='<p class="eyebrow">'+escapeHTML(p.id)+'</p><h2 id="detail-title">'+escapeHTML(p.name)+'</h2><p>'+escapeHTML(p.description)+'</p><ul class="decision-points modal-decisions" aria-label="Maklumat ringkas">'+decisions+'</ul><fieldset class="payment-method"><legend>Cara pembayaran</legend><div class="segmented"><button type="button" data-detail-payment="rto" aria-pressed="false">RTO</button><button type="button" data-detail-payment="cash" aria-pressed="false">Bayaran penuh</button></div></fieldset><div id="detail-plan-choice"></div><div id="plan-detail"></div><p class="stock">'+escapeHTML(p.stock)+'</p><p class="verification-meta">'+(p.campaignSource?('Sumber kempen: '+escapeHTML(p.campaignSource)+'. '):'')+(p.verifiedDate?('Tarikh semakan: '+escapeHTML(p.verifiedDate)+'.'):'Tarikh semakan kadar belum direkodkan; sahkan kadar dan manfaat dengan KHIND.')+'</p>'+(p.source?'<a class="source" href="'+p.source+'" target="_blank" rel="noopener noreferrer">Spesifikasi produk rasmi ↗</a>':'');
   document.querySelectorAll('[data-detail-payment]').forEach(button=>button.addEventListener('click',()=>{
     const mode=button.dataset.detailPayment;
     setPaymentMode(mode);

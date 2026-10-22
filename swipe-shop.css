@@ -47,6 +47,8 @@ button:focus-visible,a:focus-visible,.product-card:focus-visible{outline:3px sol
   color:#526047;font-size:.58rem;letter-spacing:.14em;font-weight:900}
 .photo-topline span:last-child{font-size:.62rem;letter-spacing:.035em;border:1px solid #b8c3aa;border-radius:2rem;padding:.15rem .5rem}
 .hero-appliance{display:block;width:100%;height:100%;max-height:100%;object-fit:contain;object-position:center;filter:none}
+.product-photo>.combo-photo-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;gap:clamp(.35rem,2vw,.8rem);flex:1 1 0;width:100%;height:100%;min-width:0;min-height:0}
+.product-photo>.combo-photo-pair>.combo-appliance{display:block;width:100%;height:100%;max-width:100%;max-height:100%;min-width:0;min-height:0;object-fit:contain;object-position:center}
 .photo-corner-mark{position:absolute;bottom:.68rem;left:.95rem;color:#84907a;font-size:.6rem;letter-spacing:.08em;font-weight:850}
 .no-photo{display:grid;place-items:center;text-align:center;width:100%;height:100%;padding:1rem;color:#525b50;font-size:.76rem}
 .product-copy{flex:0 0 auto;min-width:0;padding:1rem 1.03rem .92rem;background:linear-gradient(135deg,#243023,#1b241b 80%)}
@@ -355,4 +357,28 @@ button:focus-visible,a:focus-visible,.product-card:focus-visible{outline:3px sol
   .language-switch{padding:.35rem;min-width:2.65rem}
   .shop-identity strong{font-size:1.06rem}
   .shop-identity small{font-size:.54rem}
+}
+.rto-promotion-note,
+.compare-promotion {
+  display: block;
+  margin-top: .45rem;
+  color: var(--ink, #183c31);
+  font-size: .78rem;
+  font-weight: 600;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.compare-promotion {
+  padding: .65rem .75rem;
+  border-left: 3px solid var(--khind-yellow, #f4ca32);
+  background: rgba(244, 202, 50, .12);
+}
+
+/* Keep secondary labels and disclosures readable at the 12px minimum. */
+body.folio-shop :is(small,.saved-label,.progress-label,.product-overline,.product-subtitle,.product-stock,.price-kicker,.price-duration span,.product-extras>span,.swipe-hint,.swipe-hint span,.undo-button,.agent-disclosure,.prompt-kicker,.end-kicker,.compare-heading,.compare-view>p,.compare-model,.compare-metric small,.compare-benefits small,.compare-benefits p,.compare-item>a,.compare-note,.sheet-head span,.detail-model,.plan-item small,.details-caveat,.shortlist-row span,.shortlist-row p,.rescue-eyebrow,.rescue-explainer,.rescue-bypass){font-size:max(12px,.75rem)!important}
+
+@media(max-width:430px){
+ body.folio-shop .product-extras{align-items:stretch;flex-direction:column;gap:.35rem}
+ body.folio-shop .product-extras>span{display:block;min-width:0}
+ body.folio-shop .product-extras .details-button{align-self:flex-end;flex:0 0 auto}
 }

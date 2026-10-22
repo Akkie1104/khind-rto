@@ -78,8 +78,8 @@ for (const variant of ["pilih", "pilih-b", "pilih-c"]) {
   check("rescue container is embedded and hidden at load in " + variant,
     html.includes('id="rescue-question"') &&
     html.includes('aria-labelledby="rescue-title" hidden') &&
-    html.includes("swipe-shop.js?v=7") &&
-    html.includes("swipe-shop.css?v=6"));
+    html.includes("swipe-shop.js?v=20261022-5") &&
+    html.includes("swipe-shop.css?v=10"));
 }
 check("compact rescue includes reduced height and motion-safe styles",
   css.includes(".rescue-options{display:grid;grid-template-columns:repeat(2") &&
@@ -177,7 +177,7 @@ cAll.respond("aircond");
 check("C immediately resumes with unseen aircond items", cAll.id()?.startsWith("ACSON") === true);
 
 const shortDeck = launch(null, "all", products => {
-  for (const p of products.slice(3)) p.image = "";
+  products.splice(3);
 });
 shortDeck.skip(); shortDeck.skip(); shortDeck.skip();
 check("no rescue at exhausted deck, even after 3 skips", !shortDeck.rescue() &&

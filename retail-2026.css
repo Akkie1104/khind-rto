@@ -427,7 +427,7 @@ h1,h2{letter-spacing:-.045em}
   background:#161814;
   border-left:.25rem solid var(--yellow);
   color:#b5bbb1;
-  font-size:.74rem;
+  font-size:.75rem;
 }
 .campaign:empty{display:none}
 .campaign b{color:#fff;white-space:nowrap}
@@ -1079,7 +1079,7 @@ html[data-theme=dark] .theme-toggle{border-color:#40453d}
   .catalogue-heading{display:block;margin-bottom:1.1rem}
   .catalogue-heading>p{margin-top:.45rem}
   .campaign{display:block}
-  .campaign b{display:block;margin-bottom:.2rem}
+  .campaign b{display:block;margin-bottom:.2rem;white-space:normal}
   .catalogue-tools{
     display:flex;
     flex-direction:column;
@@ -1383,4 +1383,9 @@ html[data-theme=dark] .mobile-bottom-nav a{font-size:.74rem;min-height:3.6rem}
  .hero-rate-group{text-align:left}
  .hero-terms{max-width:none}
  .budget-options{grid-template-columns:1fr 1fr}
+}
+@media(max-width:56.25em){
+ .filters{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;scroll-snap-type:none;padding-right:0}
+ .filters button{scroll-snap-align:none}
+ .filters b,.filters small{font-size:.75rem}
 }

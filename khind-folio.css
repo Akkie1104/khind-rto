@@ -17,9 +17,15 @@ body.agent-body{margin:0;background:var(--folio-paper);color:var(--folio-ink);fo
 .agent-head-cta,.agent-primary,.agent-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:2.9rem;padding:.7rem 1rem;border:1px solid var(--folio-ink);border-radius:var(--folio-radius);background:var(--folio-yellow);color:var(--folio-ink);font-weight:800;text-decoration:none;transition:background-color .18s ease,transform .18s ease}
 .agent-head-cta:hover,.agent-primary:hover,.agent-secondary:hover{background:#ffe86a;transform:translateY(-1px)}
 .agent-secondary{background:transparent}
+.agent-detail .agent-secondary{background:var(--folio-paper-light);color:var(--folio-ink)!important;border-color:var(--folio-ink);text-decoration:underline;text-underline-offset:.2em}
+.agent-detail .agent-secondary:hover{background:#e8e3d5;color:var(--folio-ink)!important}
+.agent-detail .agent-secondary:focus-visible{outline:3px solid var(--folio-focus);outline-offset:3px}
+.agent-component-references .agent-secondary{background:var(--folio-paper-light);color:var(--folio-ink)!important;border-color:var(--folio-ink);text-decoration:underline;text-underline-offset:.2em}
+.agent-component-references .agent-secondary:hover{background:#e8e3d5;color:var(--folio-ink)!important;border-color:var(--folio-ink)}
+.agent-component-references .agent-secondary:focus-visible{outline:3px solid var(--folio-focus);outline-offset:3px}
 .agent-breadcrumb{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;padding:1.15rem 0;color:var(--folio-muted);font-size:.8rem}
 .agent-breadcrumb a{text-underline-offset:.2rem}
-.agent-kicker{color:var(--folio-muted);font-size:.73rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.agent-kicker{color:var(--folio-muted);font-size:.75rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
 .agent-display{max-width:14ch;margin:.2rem 0 .8rem;color:var(--folio-ink);font-size:clamp(2.4rem,6vw,5.5rem);font-weight:800;line-height:.98;letter-spacing:-.055em}
 .agent-lead{max-width:60ch;margin:0;color:var(--folio-muted);font-size:clamp(1rem,1.25vw,1.2rem)}
 .agent-gradient{background:transparent}
@@ -45,7 +51,7 @@ body.agent-body{margin:0;background:var(--folio-paper);color:var(--folio-ink);fo
 .agent-price{margin:auto 0 .4rem;color:var(--folio-ink);font-size:clamp(1.5rem,2.5vw,2rem);font-weight:850;line-height:1.15;font-variant-numeric:tabular-nums}
 .agent-price small{color:var(--folio-muted);font-size:.8rem;font-weight:600}
 .agent-price-notes,.agent-tiny{margin:.2rem 0 .8rem;color:var(--folio-muted);font-size:.8rem;line-height:1.5}
-.agent-pill{display:inline-flex;align-self:flex-start;width:max-content;max-width:100%;padding:.24rem .5rem;border:1px solid var(--folio-ink);border-radius:.35rem;background:var(--folio-yellow);color:var(--folio-ink);font-size:.7rem;font-weight:750}
+.agent-pill{display:inline-flex;align-self:flex-start;width:max-content;max-width:100%;padding:.24rem .5rem;border:1px solid var(--folio-ink);border-radius:.35rem;background:var(--folio-yellow);color:var(--folio-ink);font-size:.75rem;font-weight:750}
 .agent-item .agent-primary{align-self:flex-start;margin-top:auto}
 .agent-detail{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(18rem,.95fr);align-items:start;gap:clamp(1.5rem,4vw,4rem);margin:1rem 0 3rem}
 .agent-media{display:flex;align-items:center;justify-content:center;min-height:28rem;padding:clamp(1rem,3vw,2.5rem);background:var(--folio-paper-light);border:0;border-radius:0;overflow:hidden}
@@ -248,5 +254,18 @@ body.folio-shop{background:var(--folio-paper);color:var(--folio-ink)}
 .folio-shop .swipe-left{color:#a13228}.folio-shop .swipe-right{color:#14613b}
 @media(prefers-reduced-motion:reduce){.folio-shop #progress-fill{transition:none}}
 
-/* Align the FAQ panel with the full-width contact band and footer. */
+/* Keep the FAQ and contact band aligned with the full-width footer. */
 .folio-home .faq-section,.folio-home .contact-section{width:100%;max-width:none;margin-left:0;margin-right:0}
+
+.folio-shop .compare-item{background:var(--folio-paper-light);color:var(--folio-ink);border-color:var(--folio-line)}
+.folio-shop .compare-photo{box-sizing:border-box;height:9rem;min-height:0;overflow:hidden;background:var(--folio-paper-light)}
+.folio-shop .compare-appliance{display:block;width:100%;height:100%;max-width:100%;max-height:100%;min-width:0;min-height:0;object-fit:contain}
+.folio-shop .compare-item>h2{color:var(--folio-ink)}
+.folio-shop .compare-metric,.folio-shop .compare-benefits{border-color:var(--folio-line)}
+.folio-shop .compare-metric small,.folio-shop .compare-benefits small{color:var(--folio-muted)}
+.folio-shop .compare-metric strong,.folio-shop .compare-benefits p{color:var(--folio-ink)}
+.folio-shop .compare-item>a{color:var(--folio-rust)}
+.folio-shop .compare-heading{color:var(--folio-rust)}
+.folio-shop .compare-heading button{color:var(--folio-ink)}
+.folio-shop .compare-view>p{color:var(--folio-muted)}
+.folio-shop .compare-model{color:var(--folio-rust)}

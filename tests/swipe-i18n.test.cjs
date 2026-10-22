@@ -62,7 +62,7 @@ for (const route of ["pilih", "pilih-b", "pilih-c"]) {
   check(route + ": language selector available outside and inside modal dialogs",
     ["language-main","language-details","language-shortlist"].every(id => h.includes('id="' + id + '"')));
   check(route + ": refreshed shared assets",
-    h.includes("../swipe-shop.js?v=7") && h.includes("../swipe-shop.css?v=6"));
+    h.includes("../swipe-shop.js?v=20261022-5") && h.includes("../swipe-shop.css?v=10"));
 }
 
 const a = launch(null);

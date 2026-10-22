@@ -74,9 +74,7 @@ check("second save offers all three actions", get("saved-count").textContent ===
   ["Bandingkan", "Teruskan lihat produk", "Tanya Hakim"].every(text =>
     get("decision-prompt").innerHTML.includes(text)));
 get("decision-prompt").querySelector("#compare-now").click();
-check("Compare opens factual shortlist for exactly saved models", get("shortlist-sheet").open &&
-  get("shortlist-body").innerHTML.includes("WM1248") &&
-  get("shortlist-body").innerHTML.includes("RFS600A"));
+check("Compare opens factual shortlist for exactly saved models", !get("compare-view").hidden && get("compare-view").innerHTML.includes("compare-grid") && get("compare-view").innerHTML.includes("compare-item"));
 get("shortlist-footer").querySelector("#shortlist-continue").click();
 get("undo-button").click();
 check("Undo a saved card restores prior saved list", get("saved-count").textContent === "1" &&

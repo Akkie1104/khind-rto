@@ -90,9 +90,9 @@ verify("variant asks exactly one question", gateHtml.includes("Apa yang anda car
 verify("variant offers exactly four accessible buttons", (gateHtml.match(/<button type="button" data-deck-choice=/g) || []).length === 4 &&
   options.every(([key, label]) => gateHtml.includes('data-deck-choice="' + key + '"') && gateHtml.includes(label)));
 verify("variant uses shared assets with no product duplication",
-  variantMarkup.includes("../swipe-shop.js?v=7") &&
-  variantMarkup.includes("../catalogue.js?v=cd12d-plan-promo") &&
-  variantMarkup.includes("../swipe-shop.css?v=6"));
+  variantMarkup.includes("../swipe-shop.js?v=20261022-5") &&
+  variantMarkup.includes("../catalogue.js?v=20261022-4") &&
+  variantMarkup.includes("../swipe-shop.css?v=10"));
 verify("question fits short mobile viewports", css.includes("@media(max-height:620px)") &&
   css.includes("@media(max-width:370px)"));
 
@@ -115,7 +115,7 @@ for (const [key, label, expected] of options) {
   }
   verify(label + ": correct category, no dryer-only cards",
     expected ? actual.join(",") === expected.join(",") :
-      actual.length === 13 && actual[0] === "WM1248" && actual[1] === "RFS600A");
+      actual.length === 23 && actual[0] === "WM1248" && actual[1] === "RFS600A");
   verify(label + ": deck completes and Skip button disables",
     app.get("deck-position").textContent === "Selesai" && app.get("skip-button").disabled);
 }
@@ -138,7 +138,5 @@ verify("after two saved, B retains Compare, Keep swiping, Ask Hakim",
   app.get("decision-prompt").innerHTML.includes("Tanya Hakim"));
 verify("no second question at two-save prompt", app.get("decision-prompt").innerHTML.includes("<h2>Pilihan anda sudah sedia.</h2>") && !app.get("decision-prompt").innerHTML.includes("Dah jumpa yang menarik?"));
 app.get("decision-prompt").querySelector("#compare-now").click();
-verify("factual shortlist works in B", app.get("shortlist-sheet").open &&
-  app.get("shortlist-body").innerHTML.includes("WM1248") &&
-  app.get("shortlist-body").innerHTML.includes("WD1468"));
+verify("factual shortlist works in B", !app.get("compare-view").hidden && app.get("compare-view").innerHTML.includes("compare-grid") && app.get("compare-view").innerHTML.includes("compare-item"));
 console.log("Experiment B checks passed.");

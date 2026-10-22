@@ -23,14 +23,19 @@ for (const route of routes) {
     html.includes('role="progressbar"'));
   check(route + ": visible keyboard instruction and same shared assets",
     html.includes('id="swipe-instructions"') &&
-    html.includes("../swipe-shop.js?v=7") &&
-    html.includes("../swipe-shop.css?v=6"));
+  html.includes("../swipe-shop.js?v=20261022-5") &&
+    html.includes("../swipe-shop.css?v=10"));
 }
 check("WCAG 2.2 AA target minimum, 44 CSS px implementation",
   css.includes("min-height:2.75rem") &&
   css.includes(".home-link,.saved-indicator,.details-button") &&
   css.includes(".action-row{gap:max(.5rem,8px)}") &&
   css.includes(".rescue-options{gap:max(.5rem,8px)}"));
+check("Secondary labels and disclosures keep a 12px minimum",
+  css.includes("body.folio-shop :is(") &&
+  css.includes(".price-kicker") &&
+  css.includes(".agent-disclosure") &&
+  css.includes("font-size:max(12px,.75rem)!important"));
 check("Visible focus indicators on buttons, links and card",
   css.includes(":where(a,button,[tabindex]):focus-visible") &&
   css.includes("outline:3px solid #ffe17a") &&
@@ -105,7 +110,7 @@ check("Skip Save buttons dynamically identify active product",
   get("skip-button").getAttribute("aria-label").includes("Mesin basuh") &&
   get("save-button").getAttribute("aria-label").includes("Mesin basuh"));
 check("Progress contains spoken fraction",
-  get("progress-track").getAttribute("aria-valuetext") === "0 daripada 13 produk telah dilihat");
+  get("progress-track").getAttribute("aria-valuetext") === "0 daripada 23 produk telah dilihat");
 const initial = app.card();
 let prevented = false;
 initial.listeners.keydown({
@@ -117,7 +122,7 @@ check("ArrowLeft skips with no gesture and prevents unwanted scrolling",
 check("Keyboard skip keeps focus on the replacement card", app.card().focused);
 check("Status announces action and next card facts",
   get("live-message").textContent.includes("Dilangkau:") &&
-  get("live-message").textContent.includes("Seterusnya, 2 daripada 13:") &&
+  get("live-message").textContent.includes("Seterusnya, 2 daripada 23:") &&
   get("live-message").textContent.includes("sebulan") &&
   get("live-message").textContent.includes("bulan"));
 check("Progress updates for new card", get("progress-track").getAttribute("aria-valuenow") === "1");

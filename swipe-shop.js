@@ -62,7 +62,7 @@
     collection: ["KOLEKSI KHIND RTO", "KHIND RTO COLLECTION"],
     normalFrom: ["KADAR BULANAN BIASA DARI", "REGULAR MONTHLY RATE FROM"],
     normalSelected: ["KADAR BULANAN BIASA · ", "REGULAR MONTHLY RATE · "],
-    estimateFrom: ["Anggaran jumlah dari ", "Estimated total from "],
+    estimateFrom: ["Anggaran jumlah pada kadar biasa, sebelum promosi: ", "Estimated total at regular rates, before promotions: "],
     arrowHint: [". Anak panah kiri untuk langkau, kanan untuk simpan.",
       ". Press Left Arrow to skip or Right Arrow to save."],
     savedResult: ["Disimpan: ", "Saved: "],
@@ -102,8 +102,9 @@
     normalPlans: ["Pelan & bayaran biasa", "Plans and regular monthly payments"],
     cashReference: ["Harga tunai rujukan: ", "Reference cash price: "],
     listedBenefits: ["Manfaat yang disenaraikan", "Listed benefits"],
-    detailsDisclaimer: ["*Anggaran kadar biasa × tempoh, tidak termasuk promosi atau caj tambahan. Harga, stok, manfaat, tempoh dan kelayakan perlu disahkan melalui KHIND. Banding jumlah RTO dengan harga tunai.",
-      "*Estimated regular monthly amount × term, excluding promotions and additional charges. Confirm rates, stock, benefits, term and eligibility with KHIND. Compare total RTO cost with the cash price."],
+    benefitsToConfirm: ["Manfaat untuk pelan ini perlu disahkan dengan KHIND.", "Benefits for this plan need confirmation from KHIND."],
+    detailsDisclaimer: ["*Jumlah kadar biasa tidak termasuk promosi atau caj tambahan. Sebarang anggaran promosi bertarikh ialah senario jika layak, bukan sebut harga. Sahkan harga, stok, manfaat, tempoh, kelayakan dan caj dengan KHIND. Banding jumlah RTO dengan harga tunai.",
+      "*Regular-rate total excludes promotions and additional charges. Any dated promotion estimate is an if-eligible scenario, not a quote. Confirm prices, stock, benefits, term, eligibility and fees with KHIND. Compare total RTO cost with the cash price."],
     productPage: ["Halaman produk", "Product page"],
     officialReference: ["Rujukan rasmi", "Official reference"],
     savedKicker: ["PILIHAN ANDA", "YOUR PICKS"],
@@ -123,15 +124,15 @@
     noPromotion: ["Tiada promosi disahkan dalam data.", "No promotion confirmed in the data."],
     unknownStock: ["Status stok semasa tidak dinyatakan. Sahkan dengan KHIND.",
       "Current stock status not provided. Confirm with KHIND."],
-    rateToConfirm: ["Kadar perlu disahkan", "Rate requires confirmation"],
+    rateToConfirm: ["Kadar perlu disahkan. ", "Rate requires confirmation. "],
     notRanked: ["Banding fakta yang tersenarai sahaja. Kami tidak membuat penarafan automatik.",
       "Compare listed facts only. Products are not ranked automatically."],
     undoRemove: ["Undur buang: ", "Undo remove: "],
     emptyPicks: ["Tiada produk disimpan.", "No saved products."],
     emptyPicksBody: ["Teruskan melihat produk untuk mencari pilihan anda.",
       "Keep browsing to find your picks."],
-    shortlistDisclaimer: ["Kadar ialah kadar bulanan biasa daripada data rujukan bertarikh, bukan sebut harga langsung. Promosi harga tunai tidak bermaksud diskaun pelan RTO. Stok, promosi, harga dan terma perlu disahkan dengan KHIND.",
-      "Rates are dated regular monthly catalogue references, not live quotes. Cash-price promotions are not RTO plan discounts. Confirm stock, promotions, prices and terms with KHIND."],
+    shortlistDisclaimer: ["Kadar ialah kadar bulanan biasa daripada data rujukan bertarikh, bukan sebut harga langsung. Promosi harga tunai tidak bermaksud diskaun pelan RTO; sebarang promosi RTO dipaparkan sebagai senario berasingan jika layak. Sahkan stok, harga, promosi, caj dan terma dengan KHIND.",
+      "Rates are dated regular monthly catalogue references, not live quotes. Cash-price promotions are not RTO plan discounts; any RTO promotion is shown separately as an if-eligible scenario. Confirm stock, prices, promotions, fees and terms with KHIND."],
     askAboutThese: ["Tanya Hakim tentang pilihan ini", "Ask Hakim about these"],
     removeResult: [" dibuang daripada simpanan. ", " removed from your picks. "],
     remainingSaved: [" produk masih disimpan. Anda boleh undur buang.",
@@ -209,10 +210,24 @@
     .filter(q => Number.isFinite(Number(q.rate)) && Number(q.rate) > 0)
     .map(q => ({ name: String(q.name || "Pelan"), rate: Number(q.rate) }));
   const cheapest = p => plansFor(p).sort((a, b) => a.rate - b.rate)[0];
+  const comboHasPhotos = p => Array.isArray(p.components) && p.components.length === 2 &&
+    p.components.every(id => approvedImage(productById.get(id)?.image));
   const valid = p => p && typeof p.id === "string" && p.name &&
     Number.isInteger(Number(p.months)) && Number(p.months) > 0 &&
-    plansFor(p).length && approvedImage(p.image);
+    plansFor(p).length && (approvedImage(p.image) || comboHasPhotos(p));
   const sourceProducts = Array.isArray(window.KHIND_PRODUCTS) ? window.KHIND_PRODUCTS : [];
+  const productById = new Map(sourceProducts.map(p => [p.id, p]));
+  const hasVerifiedRate = p => /^\d{4}-\d{2}-\d{2}$/.test(String(p?.verifiedDate || "")) &&
+    /^https:\/\/(?:www\.khindrto\.com\.my|easyr2o\.khind\.com\.my)\//i.test(String(p?.source || ""));
+  const localized = (p, field) => language === "ms" ?
+    (p?.[field] || "") : (p?.[field + "En"] || (field === "stock" ? t("unknownStock") : p?.[field]) || "");
+  const localizedPlanName = name => language === "en" && name === "Kombo" ? "Combo" : name;
+  const planBenefits = (p, plan) => {
+    const selected = language === "ms" ? p.planBenefits?.[plan?.name] : p.planBenefitsEn?.[plan?.name];
+    if (selected) return selected;
+    const general = language === "ms" ? p.benefits : p.benefitsEn;
+    return (general ? general + " " : "") + t("benefitsToConfirm");
+  };
   // Variant B asks one question before rendering. Control always starts with a product.
   const categoryGate = $("one-question-gate");
   const isVariantB = document.documentElement.getAttribute("data-swipe-variant") === "one-question" && !!categoryGate;
@@ -226,7 +241,7 @@
     if (choice === "washing") {
       // The shared "laundry" category also includes dryer-only products.
       // Include washer-dryers, exclude dryer-only entries using supplied catalogue text.
-      const facts = [p.name, p.description, ...(Array.isArray(p.keywords) ? p.keywords : [])].join(" ");
+      const facts = [p.name, p.nameEn, p.description, p.descriptionEn, ...(Array.isArray(p.keywords) ? p.keywords : [])].join(" ");
       return p.category === "laundry" && /basuh|washer|wash/i.test(facts);
     }
     return false;
@@ -246,12 +261,14 @@
   }
   // Prices and dated catalogue entries are sourced exclusively from catalogue.js.
   // They are reference regular monthly rates, not real-time offers or approval results.
-  const hasDatedRates = p => /^\d{4}-\d{2}-\d{2}$/.test(String(p.verifiedDate || ""));
+  const hasDatedRates = p => /^\d{4}-\d{2}-\d{2}$/.test(String(p.verifiedDate || "")) &&
+    /^https:\/\/(?:www\.khindrto\.com\.my|easyr2o\.khind\.com\.my)\//i.test(String(p.source || ""));
   const verifiedPool = buildDeck("all").filter(hasDatedRates);
   function deriveBudgetBands() {
     // Up to three contiguous broad groups of distinct real starting rates.
     // Every displayed endpoint is an actual catalogue plan rate.
-    const values = [...new Set(verifiedPool.map(p => cheapest(p).rate))].sort((a, b) => a - b);
+    const values = [...new Set(verifiedPool.flatMap(p => plansFor(p).map(plan => plan.rate)))]
+      .sort((a, b) => a - b);
     const groups = Math.min(3, values.length);
     const bands = [];
     for (let i = 0; i < groups; i++) {
@@ -335,19 +352,39 @@
   function factualPromotion(p) {
     // cashPromo is a recorded CASH price only. Never imply a monthly RTO discount.
     const regular = Number(p.cash), promo = Number(p.cashPromo);
+    const selectedRtoOffer = rtoPromotionText(p, shownPlan(p));
     if (p.cashPromo != null && Number.isFinite(regular) && regular > 0 &&
         Number.isFinite(promo) && promo > 0 && promo < regular) {
-      return t("promoCash") + money(promo) + t("promoCheck");
+      return [selectedRtoOffer, t("promoCash") + money(promo) + t("promoCheck")].filter(Boolean).join(" ");
     }
-    return t("noPromotion");
+    return selectedRtoOffer || t("noPromotion");
+  }
+  function rtoPromotion(p, plan) {
+    const months = Math.trunc(Number(p?.months));
+    const promoMonths = Math.trunc(Number(p?.promoMonths));
+    const percent = Number(p?.promoPercent);
+    const verified = /^\d{4}-\d{2}-\d{2}$/.test(String(p?.promoVerifiedDate || ""));
+    if (!plan || !verified || !hasVerifiedRate(p) || months < 1 || promoMonths < 1 ||
+        !Number.isFinite(percent) || percent <= 0 || percent >= 100) return null;
+    const appliedMonths = Math.min(months, promoMonths);
+    const promoRate = Number(plan.rate) * (1 - percent / 100);
+    const total = promoRate * appliedMonths + Number(plan.rate) * (months - appliedMonths);
+    return { appliedMonths, promoRate, regularMonths: months - appliedMonths, total, date: p.promoVerifiedDate };
+  }
+  function rtoPromotionText(p, plan) {
+    const offer = rtoPromotion(p, plan);
+    if (!offer) return "";
+    if (language === "en") {
+      return "RTO promotion reference (checked " + offer.date + "; if eligible; estimated rate uses exact 50% math and KHIND rounding must be confirmed): " + money(offer.promoRate) + "/month for " + offer.appliedMonths + " months, then " + money(plan.rate) + "/month for " + offer.regularMonths + " months; estimated total " + money(offer.total) + ". Confirm availability and eligibility with KHIND.";
+    }
+    return "Rujukan promosi RTO (disemak " + offer.date + "; jika layak; kadar anggaran guna kiraan tepat 50% dan pembundaran KHIND perlu disahkan): " + money(offer.promoRate) + "/bulan selama " + offer.appliedMonths + " bulan, kemudian " + money(plan.rate) + "/bulan selama " + offer.regularMonths + " bulan; anggaran jumlah " + money(offer.total) + ". Sahkan tawaran dan kelayakan dengan KHIND.";
   }
   function factualAvailability(p) {
     return typeof p.stock === "string" && p.stock.trim() ?
-      p.stock.trim() : t("unknownStock");
+      localized(p, "stock") : t("unknownStock");
   }
   function monthlyReference(p) {
-    const date = String(p.verifiedDate || "");
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return t("rateToConfirm");
+    if (!hasVerifiedRate(p)) return t("rateToConfirm");
     return money(shownPlan(p).rate) + t("monthSuffix");
   }
   function rescueCategory(p) {
@@ -427,13 +464,24 @@
     if (state.index >= deck.length) return t("allSeen");
     const p = deck[state.index], plan = shownPlan(p);
     return t("nextCard") + (state.index + 1) + t("of") + deck.length +
-      ": " + p.name + ", " + money(plan.rate) + t("ratePerMonth") +
+      ": " + localized(p, "name") + ", " + money(plan.rate) + t("ratePerMonth") +
       Number(p.months) + t("months") + ".";
   }
   function photo(p, className, eager) {
+    if (Array.isArray(p.components) && p.components.length === 2) {
+      const parts = p.components.map(id => productById.get(id)).filter(Boolean);
+      if (parts.length === 2 && parts.every(part => approvedImage(part.image))) {
+        return '<span class="combo-photo-pair" role="img" aria-label="' +
+          escape(localized(p, "name") || p.name) + '">' + parts.map((part, index) =>
+          '<img class="' + className + ' combo-appliance" src="' + escape(approvedImage(part.image)) +
+          '" alt="' + escape(localized(part, "name") + " " + part.id) + '" loading="' +
+          (eager ? "eager" : "lazy") + '" decoding="async" referrerpolicy="no-referrer">'
+        ).join("") + '</span>';
+      }
+    }
     const src = approvedImage(p.image);
     return src ? '<img class="' + className + '" src="' + escape(src) +
-      '" alt="' + escape(p.name + " " + p.id) +
+      '" alt="' + escape(localized(p, "name") + " " + p.id) +
       '" loading="' + (eager ? "eager" : "lazy") +
       '" decoding="async" referrerpolicy="no-referrer">' :
       '<span class="no-photo">' + t("unavailable") + '</span>';
@@ -441,8 +489,9 @@
   function productCard(p) {
     const plan = shownPlan(p);
     const total = plan.rate * Number(p.months);
+    const promotion = rtoPromotionText(p, plan);
     return '<article id="active-card" class="product-card" tabindex="0" aria-label="' +
-      escape(p.name) + t("arrowHint") + '"' +
+      escape(localized(p, "name")) + t("arrowHint") + '"' +
       ' aria-describedby="swipe-instructions" aria-keyshortcuts="ArrowLeft ArrowRight">' +
       '<div class="swipe-overlay swipe-left" aria-hidden="true">' + t("skip").toUpperCase() + '</div>' +
       '<div class="swipe-overlay swipe-right" aria-hidden="true">' + t("save").toUpperCase() + ' ♥</div>' +
@@ -451,14 +500,14 @@
       photo(p, "hero-appliance", true) +
       '<span class="photo-corner-mark" aria-hidden="true">' + t("photo") + '</span></div>' +
       '<div class="product-copy"><p class="product-overline">' + escape(labelCategory(p.category)) + ' <span>· ' + escape(p.id) + '</span></p>' +
-      '<h1 lang="ms">' + escape(p.name) + '</h1><p class="product-subtitle" lang="ms">' + escape(p.description || "") + '</p>' +
-      (p.stock ? '<p class="product-stock" lang="ms">' + escape(p.stock) + '</p>' : '') +
+      '<h1 lang="' + language + '">' + escape(localized(p, "name")) + '</h1><p class="product-subtitle" lang="' + language + '">' + escape(localized(p, "description")) + '</p>' +
+      '<p class="product-stock" lang="' + language + '">' + escape(factualAvailability(p)) + '</p>' +
       '<div class="price-row"><div><span class="price-kicker">' +
-      (isVariantC && selectedBudgetBand ? t("normalSelected") + escape(plan.name) : t("normalFrom")) + '</span>' +
+      (!hasVerifiedRate(p) ? t("rateToConfirm") : (isVariantC && selectedBudgetBand ? t("normalSelected") + escape(localizedPlanName(plan.name)) : t("normalFrom"))) + '</span>' +
       '<p class="product-price">' + money(plan.rate) + '<small>' + t("monthSuffix") + '</small></p></div>' +
       '<div class="price-duration"><strong>' + Number(p.months) + '</strong><span>' + t("months").trim() + '</span></div></div>' +
-      '<div class="product-extras"><span>' + t("estimateFrom") + '<strong>' + money(total) +
-      '</strong>*</span><button type="button" id="details-button" class="details-button">' + t("viewDetails") + ' <span aria-hidden="true">↗</span></button></div>' +
+      '<div class="product-extras"><span>' + (!hasVerifiedRate(p) ? '<span class="rate-confirmation" lang="' + language + '">' + t("rateToConfirm") + '</span>' : '') + t("estimateFrom") + '<strong>' + money(total) +
+      '</strong>*' + (promotion ? '<small class="rto-promotion-note" lang="' + language + '">' + escape(promotion) + '</small>' : '') + '</span><button type="button" id="details-button" class="details-button">' + t("viewDetails") + ' <span aria-hidden="true">↗</span></button></div>' +
       '</div></article>';
   }
   function setControls() {
@@ -471,10 +520,10 @@
       '<span aria-hidden="true">♥</span> ' + t("save");
     const current = deck[state.index];
     $("skip-button").setAttribute("aria-label", current ?
-      t("skipItemAria") + current.name : t("skip"));
+      t("skipItemAria") + localized(current, "name") : t("skip"));
     $("save-button").setAttribute("aria-label", state.saved.length >= savedLimit ?
       t("saveMax") :
-      current ? t("saveItemAria") + current.name : t("save"));
+      current ? t("saveItemAria") + localized(current, "name") : t("save"));
     $("undo-button").disabled = state.busy || !state.history.length;
     $("saved-open").disabled = !state.saved.length;
     $("saved-count").textContent = String(state.saved.length);
@@ -569,7 +618,7 @@
         state.prompted = true;
       }
       render();
-      announce((save ? t("savedResult") : t("skippedResult")) + p.name + ". " +
+      announce((save ? t("savedResult") : t("skippedResult")) + localized(p, "name") + ". " +
         state.saved.length + t("productsSaved") + nextCardAnnouncement());
       // The focused card was replaced by innerHTML; move focus to its successor.
       // Button actions leave focus on their persistent button unless it became disabled.
@@ -604,7 +653,7 @@
     lastImpression = null;
     render();
     focusCurrentCard();
-    announce(t("undoResult") + deck[state.index].name + ". " +
+      announce(t("undoResult") + localized(deck[state.index], "name") + ". " +
       nextCardAnnouncement());
   }
   function enableDrag(card) {
@@ -669,9 +718,9 @@
       '" target="_blank" rel="noopener noreferrer">' + t("askAbout") + ' ↗</a></div>';
     decisionPrompt.querySelector("#compare-now").addEventListener("click", () => {
       state.prompting = false;
+      state.comparing = true;
       emit("compare_open", { action_source: "button" });
       render();
-      openShortlist();
     });
     decisionPrompt.querySelector("#keep-swiping").addEventListener("click", () => {
       state.prompting = false;
@@ -696,17 +745,17 @@
     $("details-body").innerHTML =
       '<div class="details-photo">' + photo(p, "details-appliance", false) + '</div>' +
       '<div class="details-summary"><span class="detail-model">' + escape(p.id) + '</span>' +
-      '<h2 id="details-title" lang="ms">' + escape(p.name) + '</h2>' +
-      '<p lang="ms">' + escape(p.description || "") + '</p></div>' +
-      '<h3>' + t("normalPlans") + '</h3><div class="plan-list">' +
-      plans.map(q => '<div class="plan-item"><span>' + escape(q.name) + '</span><strong>' +
+      '<h2 id="details-title" lang="' + language + '">' + escape(localized(p, "name")) + '</h2>' +
+      '<p lang="' + language + '">' + escape(localized(p, "description")) + '</p></div>' +
+      '<h3>' + t("normalPlans") + '</h3>' + (!hasVerifiedRate(p) ? '<p class="rate-confirmation" lang="' + language + '">' + t("rateToConfirm") + (language === "ms" ? " dengan KHIND sebelum memohon." : " with KHIND before applying.") + '</p>' : '') + '<div class="plan-list">' +
+      plans.map(q => '<div class="plan-item"><span>' + escape(localizedPlanName(q.name)) + '</span><strong>' +
         money(q.rate) + ' <small>' + t("monthSuffix") + '</small></strong><small>' + t("estimated") +
         money(q.rate * Number(p.months)) + ' / ' + Number(p.months) + t("months") +
-        '*</small></div>').join("") + '</div>' +
+        '*</small>' + (rtoPromotionText(p, q) ? '<small class="rto-promotion-note" lang="' + language + '">' + escape(rtoPromotionText(p, q)) + '</small>' : '') + '</div>').join("") + '</div>' +
       (Number.isFinite(Number(p.cash)) && p.cash != null ?
         '<p class="cash-reference">' + t("cashReference") + '<strong>' + money(p.cash) + '</strong></p>' : "") +
-      (p.benefits ? '<h3>' + t("listedBenefits") + '</h3><p lang="ms">' + escape(p.benefits) + '</p>' : "") +
-      (p.stock ? '<p class="stock-note" lang="ms">' + escape(p.stock) + '</p>' : "") +
+      '<h3>' + t("listedBenefits") + '</h3><p lang="' + language + '">' + escape(planBenefits(p, shownPlan(p))) + '</p>' +
+      (p.stock ? '<p class="stock-note" lang="' + language + '">' + escape(localized(p, "stock")) + '</p>' : "") +
       '<p class="details-caveat">' + t("detailsDisclaimer") + '</p>' +
       '<div class="detail-links"><a href="../products/' + encodeURIComponent(p.id) +
       '/">' + t("productPage") + ' →</a>' +
@@ -720,12 +769,12 @@
   function shortlistCard(p, index) {
     const plan = shownPlan(p);
     const date = String(p.verifiedDate || "");
-    const checked = /^\d{4}-\d{2}-\d{2}$/.test(date) ?
+    const checked = hasVerifiedRate(p) ?
       t("checked") + date : t("dateMissing");
     const facts = [
       [t("model"), p.id, false],
       [t("category"), labelCategory(p.category), false],
-      [t("majorSpec"), p.description || t("unsupplied"), !!p.description],
+      [t("majorSpec"), localized(p, "description") || t("unsupplied"), !!localized(p, "description")],
       [t("monthlyRate"), monthlyReference(p), false],
       [t("term"), String(p.months) + t("months"), false],
       [t("promotion"), factualPromotion(p), false],
@@ -734,9 +783,9 @@
     return '<article class="saved-product" aria-labelledby="saved-product-title-' + index + '">' +
       '<div class="saved-product-top"><div class="saved-photo">' + photo(p, "shortlist-appliance", false) +
       '</div><div class="saved-product-intro"><span class="saved-order">' + t("savedChoice") +
-      (index + 1) + '</span><h3 lang="ms" id="saved-product-title-' + index + '">' + escape(p.name) +
+      (index + 1) + '</span><h3 lang="' + language + '" id="saved-product-title-' + index + '">' + escape(localized(p, "name")) +
       '</h3><p>' + escape(p.id) + '</p><strong>' + escape(monthlyReference(p)) +
-      '</strong><small>' + escape(plan.name) + ' · ' + Number(p.months) + t("months") + ' · ' +
+      '</strong><small>' + escape(localizedPlanName(plan.name)) + ' · ' + Number(p.months) + t("months") + ' · ' +
       escape(checked) + '</small></div></div>' +
       '<dl class="saved-facts">' + facts.map(([label, value, sourceMalay]) =>
         '<div class="saved-fact"><dt>' + escape(label) + '</dt><dd' +
@@ -781,7 +830,7 @@
         setControls();
         renderShortlist();
         $("shortlist-body").querySelector("#shortlist-undo-remove").focus({ preventScroll: true });
-        announce(p.name + t("removeResult") + state.saved.length + t("remainingSaved"));
+      announce(localized(p, "name") + t("removeResult") + state.saved.length + t("remainingSaved"));
       });
     });
     if (removedFromShortlist) {
@@ -833,18 +882,19 @@
         const plan = shownPlan(p);
         return '<article class="compare-item"><div class="compare-photo">' + photo(p, "compare-appliance", false) +
           '</div><span class="compare-model">' + escape(p.id) + '</span>' +
-          '<h2 lang="ms">' + escape(p.name) + '</h2>' +
+      '<h2 lang="' + language + '">' + escape(localized(p, "name")) + '</h2>' +
           '<div class="compare-metric"><small>' + t("monthlyRate") + '</small><strong>' +
           money(plan.rate) + t("monthSuffix") + '</strong></div>' +
           '<div class="compare-metric"><small>' + t("term") + '</small><strong>' +
           Number(p.months) + t("months") + '</strong></div>' +
           '<div class="compare-metric"><small>' + t("compareEstimated") + '</small><strong>' +
           money(plan.rate * Number(p.months)) + '</strong></div>' +
+          (rtoPromotionText(p, plan) ? '<div class="compare-promotion" lang="' + language + '">' + escape(rtoPromotionText(p, plan)) + '</div>' : "") +
           (p.cash != null && Number.isFinite(Number(p.cash)) ?
             '<div class="compare-metric"><small>' + t("cashReference") + '</small><strong>' +
             money(p.cash) + '</strong></div>' : "") +
           '<div class="compare-benefits"><small>' + t("listedBenefits") +
-            '</small><p lang="ms">' + escape(p.benefits || "") + '</p></div>' +
+            '</small><p lang="' + language + '">' + escape(planBenefits(p, plan)) + '</p></div>' +
           '<a href="../products/' + encodeURIComponent(p.id) + '/">' + t("viewDetails") + ' ↗</a></article>';
       }).join("") + '</div></div>' +
       '<p class="compare-note">' + t("shortlistDisclaimer") + '</p>' +
@@ -872,8 +922,9 @@
       '<button class="prompt-secondary" type="button" id="restart-deck">' + t("restart") + '</button>' +
       '<a class="text-link" href="../catalogue/">' + t("fullCatalogue") + ' ↗</a>';
     $("end-compare")?.addEventListener("click", () => {
+      state.comparing = true;
       emit("compare_open", { action_source: "button" });
-      openShortlist();
+      render();
     });
     $("end-shortlist")?.addEventListener("click", openShortlist);
     $("restart-deck").addEventListener("click", () => {

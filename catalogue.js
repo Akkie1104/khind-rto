@@ -19,7 +19,10 @@ window.KHIND_PRODUCTS = [
     "benefits": "Waranti 4 tahun; 1 servis penjagaan; kapsul 1 tahun.",
     "stock": "",
     "verifiedDate": "2026-10-12",
-    "q3": true
+    "q3": true,
+    "nameEn": "Front-load washer",
+    "descriptionEn": "9 kg · Washer",
+    "benefitsEn": "4-year warranty; 1 care service; 1-year capsule plan."
   },
   {
     "id": "DHP90",
@@ -40,7 +43,10 @@ window.KHIND_PRODUCTS = [
     "benefits": "Waranti 4 tahun. Standard termasuk insurans, relokasi dan pelupusan mengikut skop pelan.",
     "stock": "",
     "verifiedDate": "2026-10-12",
-    "q3": true
+    "q3": true,
+    "nameEn": "Drymaster heat-pump dryer",
+    "descriptionEn": "9 kg · Dryer",
+    "benefitsEn": "4-year warranty. Standard plan includes insurance, relocation and disposal within the plan scope."
   },
   {
     "id": "WD1468",
@@ -61,7 +67,10 @@ window.KHIND_PRODUCTS = [
     "benefits": "Waranti 3 tahun; 1 servis penjagaan; kapsul 3 tahun.",
     "stock": "",
     "verifiedDate": "2026-10-12",
-    "q3": true
+    "q3": true,
+    "nameEn": "Washer-dryer",
+    "descriptionEn": "11 kg wash / 7 kg dry",
+    "benefitsEn": "3-year warranty; 1 care service; 3-year capsule plan."
   },
   {
     "id": "RFS600A",
@@ -86,7 +95,18 @@ window.KHIND_PRODUCTS = [
     "benefits": "Waranti 5 tahun. Premium: 1 servis penjagaan, insurans, relokasi dan pelupusan, tertakluk skop.",
     "stock": "",
     "verifiedDate": "2026-10-12",
-    "q3": true
+    "q3": true,
+    "nameEn": "Side-by-side refrigerator",
+    "descriptionEn": "592 L · Food storage",
+    "benefitsEn": "5-year warranty. Premium includes 1 care service, insurance, relocation and disposal, subject to plan scope.",
+    "planBenefits": {
+      "Basic": "Waranti 5 tahun. Manfaat tambahan pelan Basic perlu disahkan dengan KHIND.",
+      "Premium": "Waranti 5 tahun. Premium: 1 servis penjagaan, insurans, relokasi dan pelupusan, tertakluk skop."
+    },
+    "planBenefitsEn": {
+      "Basic": "5-year warranty. Additional benefits for the Basic plan need confirmation from KHIND.",
+      "Premium": "5-year warranty. Premium: 1 care service, insurance, relocation and disposal, subject to plan scope."
+    }
   },
   {
     "id": "RFM466A",
@@ -111,7 +131,18 @@ window.KHIND_PRODUCTS = [
     "benefits": "Waranti 5 tahun. Premium: 1 servis penjagaan, insurans, relokasi dan pelupusan, tertakluk skop.",
     "stock": "",
     "verifiedDate": "2026-10-12",
-    "q3": true
+    "q3": true,
+    "nameEn": "Chillmaster X",
+    "descriptionEn": "466 L · Refrigerator",
+    "benefitsEn": "5-year warranty. Premium includes 1 care service, insurance, relocation and disposal, subject to plan scope.",
+    "planBenefits": {
+      "Basic": "Waranti 5 tahun. Manfaat tambahan pelan Basic perlu disahkan dengan KHIND.",
+      "Premium": "Waranti 5 tahun. Premium: 1 servis penjagaan, insurans, relokasi dan pelupusan, tertakluk skop."
+    },
+    "planBenefitsEn": {
+      "Basic": "5-year warranty. Additional benefits for the Basic plan need confirmation from KHIND.",
+      "Premium": "5-year warranty. Premium: 1 care service, insurance, relocation and disposal, subject to plan scope."
+    }
   },
   {
     "id": "RF480",
@@ -119,7 +150,6 @@ window.KHIND_PRODUCTS = [
     "description": "480L · Peti sejuk",
     "category": "fridge",
     "cash": 4200,
-    "cashPromo": 3200,
     "months": 60,
     "plans": [
       {
@@ -134,8 +164,24 @@ window.KHIND_PRODUCTS = [
     "image": "https://cdn.prod.website-files.com/673177735a80fcb0f16f912d/69707b6cbee5122aef3f0701_Khind%20Refrigerator_01.png",
     "source": "https://www.khindrto.com.my/products/chillmaster-lite",
     "benefits": "Waranti 5 tahun. Premium: 1 servis penjagaan, insurans, relokasi dan pelupusan, tertakluk skop.",
-    "stock": "",
-    "q3": true
+    "stock": "Laman rasmi KHIND menyatakan pra-tempahan. Tarikh bekalan perlu disahkan.",
+    "stockEn": "KHIND's official page lists this as pre-order. Confirm the supply date.",
+    "verifiedDate": "2026-10-22",
+    "promoMonths": 3,
+    "promoPercent": 50,
+    "promoVerifiedDate": "2026-10-22",
+    "q3": true,
+    "nameEn": "Chillmaster Lite",
+    "descriptionEn": "480 L · Refrigerator",
+    "benefitsEn": "5-year warranty. Premium includes 1 care service, insurance, relocation and disposal, subject to plan scope.",
+    "planBenefits": {
+      "Basic": "Waranti 5 tahun. Manfaat tambahan pelan Basic perlu disahkan dengan KHIND.",
+      "Premium": "Waranti 5 tahun. Premium: 1 servis penjagaan, insurans, relokasi dan pelupusan, tertakluk skop."
+    },
+    "planBenefitsEn": {
+      "Basic": "5-year warranty. Additional benefits for the Basic plan need confirmation from KHIND.",
+      "Premium": "5-year warranty. Premium: 1 care service, insurance, relocation and disposal, subject to plan scope."
+    }
   },
   {
     "id": "WM150A",
@@ -160,7 +206,19 @@ window.KHIND_PRODUCTS = [
     "benefits": "Waranti 4 tahun. Basic: 1 servis; Premium: 4 servis serta insurans, relokasi dan pelupusan, tertakluk skop.",
     "stock": "Stok terhad / menunggu stok. Sahkan kawasan dan tarikh.",
     "verifiedDate": "2026-10-12",
-    "q3": true
+    "q3": true,
+    "nameEn": "Ecowash top-load washer",
+    "descriptionEn": "15 kg · Washer",
+    "benefitsEn": "4-year warranty. Basic: 1 service. Premium: 4 services plus insurance, relocation and disposal, subject to plan scope.",
+    "stockEn": "Limited stock / awaiting stock. Confirm location and date.",
+    "planBenefits": {
+      "Basic": "Waranti 4 tahun. Basic: 1 servis. Skop manfaat dan caj perlu disahkan dengan KHIND.",
+      "Premium": "Waranti 4 tahun. Premium: 4 servis serta insurans, relokasi dan pelupusan, tertakluk skop."
+    },
+    "planBenefitsEn": {
+      "Basic": "4-year warranty. Basic: 1 service. Confirm benefits and scope with KHIND.",
+      "Premium": "4-year warranty. Premium: 4 services plus insurance, relocation and disposal, subject to plan scope."
+    }
   },
   {
     "id": "ACSON-1.0",
@@ -168,7 +226,6 @@ window.KHIND_PRODUCTS = [
     "description": "1.0HP · Penyaman udara",
     "category": "cooling",
     "cash": 4000,
-    "cashPromo": 3500,
     "months": 60,
     "plans": [
       {
@@ -178,9 +235,14 @@ window.KHIND_PRODUCTS = [
     ],
     "image": "https://cdn.prod.website-files.com/673177735a80fcb0f16f912d/691eedc92d5490647d84b617_01_AC_carousel-1.jpg",
     "source": "https://www.khindrto.com.my/products/koolseries-airconditioner",
-    "benefits": "Waranti 5 tahun; 5 servis tahunan setiap unit; insurans tertakluk skop.",
+    "verifiedDate": "2026-10-22",
+    "benefits": "KHIND menyatakan KHIND Care Plan, servis dan insurans tersedia. Sahkan tempoh waranti, jadual servis, perlindungan dan skop untuk pelan ini.",
     "stock": "Sahkan kesesuaian bilik dan caj pemasangan tambahan.",
-    "q3": true
+    "q3": true,
+    "nameEn": "ACSON Kool 1.0 HP",
+    "descriptionEn": "1.0 HP · Air conditioner",
+    "benefitsEn": "KHIND lists KHIND Care Plan servicing and insurance. Confirm the warranty period, service schedule, inclusions and scope for this plan.",
+    "stockEn": "Confirm room suitability and any additional installation charges."
   },
   {
     "id": "ACSON-1.5",
@@ -188,7 +250,6 @@ window.KHIND_PRODUCTS = [
     "description": "1.5HP · Penyaman udara",
     "category": "cooling",
     "cash": 4500,
-    "cashPromo": 4000,
     "months": 60,
     "plans": [
       {
@@ -198,9 +259,14 @@ window.KHIND_PRODUCTS = [
     ],
     "image": "https://cdn.prod.website-files.com/673177735a80fcb0f16f912d/691eedc92d5490647d84b617_01_AC_carousel-1.jpg",
     "source": "https://www.khindrto.com.my/products/koolseries-airconditioner",
-    "benefits": "Waranti 5 tahun; 5 servis tahunan setiap unit; insurans tertakluk skop.",
+    "verifiedDate": "2026-10-22",
+    "benefits": "KHIND menyatakan KHIND Care Plan, servis dan insurans tersedia. Sahkan tempoh waranti, jadual servis, perlindungan dan skop untuk pelan ini.",
     "stock": "Sahkan kesesuaian bilik dan caj pemasangan tambahan.",
-    "q3": true
+    "q3": true,
+    "nameEn": "ACSON Kool 1.5 HP",
+    "descriptionEn": "1.5 HP · Air conditioner",
+    "benefitsEn": "KHIND lists KHIND Care Plan servicing and insurance. Confirm the warranty period, service schedule, inclusions and scope for this plan.",
+    "stockEn": "Confirm room suitability and any additional installation charges."
   },
   {
     "id": "ACSON-2.0",
@@ -208,7 +274,6 @@ window.KHIND_PRODUCTS = [
     "description": "2.0HP · Penyaman udara",
     "category": "cooling",
     "cash": 5500,
-    "cashPromo": 5000,
     "months": 60,
     "plans": [
       {
@@ -218,9 +283,14 @@ window.KHIND_PRODUCTS = [
     ],
     "image": "https://cdn.prod.website-files.com/673177735a80fcb0f16f912d/691eedc92d5490647d84b617_01_AC_carousel-1.jpg",
     "source": "https://www.khindrto.com.my/products/koolseries-airconditioner",
-    "benefits": "Waranti 5 tahun; 5 servis tahunan setiap unit; insurans tertakluk skop.",
+    "verifiedDate": "2026-10-22",
+    "benefits": "KHIND menyatakan KHIND Care Plan, servis dan insurans tersedia. Sahkan tempoh waranti, jadual servis, perlindungan dan skop untuk pelan ini.",
     "stock": "Sahkan kesesuaian bilik dan caj pemasangan tambahan.",
-    "q3": true
+    "q3": true,
+    "nameEn": "ACSON Kool 2.0 HP",
+    "descriptionEn": "2.0 HP · Air conditioner",
+    "benefitsEn": "KHIND lists KHIND Care Plan servicing and insurance. Confirm the warranty period, service schedule, inclusions and scope for this plan.",
+    "stockEn": "Confirm room suitability and any additional installation charges."
   },
   {
     "id": "SI6029BP",
@@ -243,10 +313,22 @@ window.KHIND_PRODUCTS = [
     "image": "https://cdn.prod.website-files.com/673177735a80fcb0f16f912d/685292ca4e8a14b4981801d6_carousel1.png",
     "source": "https://www.khindrto.com.my/products/steamgen-si6029bp",
     "benefits": "Waranti 2 tahun. Premium termasuk papan seterika; Basic tidak termasuk.",
-    "stock": "Stok habis. ETA WM: 21 Okt; ETA KK & KU: Dis. Sahkan stok sebelum memohon.",
+    "stock": "Stok dilaporkan habis. Catatan ETA (WM 21 Okt; KK & KU Dis) tiada tahun dan mungkin telah berubah. Sahkan stok serta tarikh terkini dengan KHIND.",
     "campaignSource": "Senarai produk KHIND",
     "verifiedDate": "2026-10-12",
-    "q3": false
+    "q3": false,
+    "nameEn": "SteamGen steam iron",
+    "descriptionEn": "Garment care",
+    "benefitsEn": "2-year warranty. Premium includes an ironing board; Basic does not.",
+    "stockEn": "Stock was reported unavailable. The recorded ETA (WM 21 Oct; KK & KU Dec) has no year and may have changed. Confirm current stock and dates with KHIND.",
+    "planBenefits": {
+      "Basic": "Waranti 2 tahun. Basic tidak termasuk papan seterika.",
+      "Premium": "Waranti 2 tahun. Premium termasuk papan seterika."
+    },
+    "planBenefitsEn": {
+      "Basic": "2-year warranty. Basic does not include an ironing board.",
+      "Premium": "2-year warranty. Premium includes an ironing board."
+    }
   },
   {
     "id": "WD1438",
@@ -268,7 +350,11 @@ window.KHIND_PRODUCTS = [
     "stock": "Sabah sahaja mengikut pelan. Sahkan stok.",
     "campaignSource": "Senarai produk KHIND",
     "verifiedDate": "2026-10-12",
-    "q3": true
+    "q3": true,
+    "nameEn": "Washer-dryer",
+    "descriptionEn": "10 kg wash / 6 kg dry",
+    "benefitsEn": "3-year RTO warranty; 1-year capsule plan. Sabah only, subject to plan. Confirm stock.",
+    "stockEn": "Sabah only under this plan. Confirm stock."
   },
   {
     "id": "CD12D",
@@ -291,7 +377,11 @@ window.KHIND_PRODUCTS = [
     "campaignSource": "Pelan KHIND CD12D",
     "yearEndPromo": false,
     "verifiedDate": "2026-10-12",
-    "q3": false
+    "q3": false,
+    "nameEn": "Vented dryer",
+    "descriptionEn": "12 kg · Dryer",
+    "benefitsEn": "48-month warranty. Standard includes 1 care service, insurance, relocation and disposal within plan scope. Confirm stock and final terms.",
+    "stockEn": "Confirm stock and final terms before applying."
   },
   {
     "id": "COMBO-1",
@@ -311,7 +401,14 @@ window.KHIND_PRODUCTS = [
     "source": "",
     "benefits": "Waranti kedua-dua unit: 4 tahun. Mesin basuh: 1 servis penjagaan dan kapsul 1 tahun.",
     "stock": "",
-    "q3": true
+    "q3": true,
+    "nameEn": "Combo 01 · WM1248 + DHP90",
+    "descriptionEn": "Front-load washer + heat-pump dryer",
+    "benefitsEn": "4-year warranty on both units. Washer: 1 care service and 1-year capsule plan.",
+    "components": [
+      "WM1248",
+      "DHP90"
+    ]
   },
   {
     "id": "COMBO-2",
@@ -331,7 +428,14 @@ window.KHIND_PRODUCTS = [
     "source": "",
     "benefits": "Waranti washer-dryer: 3 tahun. Peti sejuk: 5 tahun. Tempoh waranti berbeza daripada tempoh sewaan.",
     "stock": "",
-    "q3": true
+    "q3": true,
+    "nameEn": "Combo 02 · WD1468 + RFM466A",
+    "descriptionEn": "Washer-dryer + refrigerator",
+    "benefitsEn": "Washer-dryer warranty: 3 years. Refrigerator warranty: 5 years. Warranty terms differ from rental term.",
+    "components": [
+      "WD1468",
+      "RFM466A"
+    ]
   },
   {
     "id": "COMBO-3",
@@ -351,7 +455,14 @@ window.KHIND_PRODUCTS = [
     "source": "",
     "benefits": "Waranti washer-dryer: 3 tahun. Peti sejuk: 5 tahun. Tempoh waranti berbeza daripada tempoh sewaan.",
     "stock": "",
-    "q3": true
+    "q3": true,
+    "nameEn": "Combo 03 · WD1468 + RFS600A",
+    "descriptionEn": "Washer-dryer + side-by-side refrigerator",
+    "benefitsEn": "Washer-dryer warranty: 3 years. Refrigerator warranty: 5 years. Warranty terms differ from rental term.",
+    "components": [
+      "WD1468",
+      "RFS600A"
+    ]
   },
   {
     "id": "COMBO-4",
@@ -371,7 +482,14 @@ window.KHIND_PRODUCTS = [
     "source": "",
     "benefits": "Waranti: 5 tahun setiap unit; 5 servis tahunan setiap unit.",
     "stock": "Sahkan kesesuaian bilik dan caj pemasangan tambahan.",
-    "q3": true
+    "q3": true,
+    "nameEn": "Combo 04 · ACSON 1.0 HP × 2",
+    "descriptionEn": "Two ACSON Kool 1.0 HP air conditioners",
+    "benefitsEn": "5-year warranty per unit; 5 annual services per unit.",
+    "components": [
+      "ACSON-1.0",
+      "ACSON-1.0"
+    ]
   },
   {
     "id": "COMBO-5",
@@ -391,7 +509,14 @@ window.KHIND_PRODUCTS = [
     "source": "",
     "benefits": "Waranti: 5 tahun setiap unit; 5 servis tahunan setiap unit.",
     "stock": "Sahkan kesesuaian bilik dan caj pemasangan tambahan.",
-    "q3": true
+    "q3": true,
+    "nameEn": "Combo 05 · ACSON 1.5 HP + 1.0 HP",
+    "descriptionEn": "ACSON Kool 1.5 HP + 1.0 HP air conditioners",
+    "benefitsEn": "5-year warranty per unit; 5 annual services per unit.",
+    "components": [
+      "ACSON-1.5",
+      "ACSON-1.0"
+    ]
   },
   {
     "id": "COMBO-6",
@@ -411,7 +536,14 @@ window.KHIND_PRODUCTS = [
     "source": "",
     "benefits": "Waranti: 5 tahun setiap unit; 5 servis tahunan setiap unit.",
     "stock": "Sahkan kesesuaian bilik dan caj pemasangan tambahan.",
-    "q3": true
+    "q3": true,
+    "nameEn": "Combo 06 · ACSON 1.5 HP × 2",
+    "descriptionEn": "Two ACSON Kool 1.5 HP air conditioners",
+    "benefitsEn": "5-year warranty per unit; 5 annual services per unit.",
+    "components": [
+      "ACSON-1.5",
+      "ACSON-1.5"
+    ]
   },
   {
     "id": "COMBO-7",
@@ -431,7 +563,14 @@ window.KHIND_PRODUCTS = [
     "source": "",
     "benefits": "Waranti: 5 tahun setiap unit; 5 servis tahunan setiap unit.",
     "stock": "Sahkan kesesuaian bilik dan caj pemasangan tambahan.",
-    "q3": true
+    "q3": true,
+    "nameEn": "Combo 07 · ACSON 2.0 HP × 2",
+    "descriptionEn": "Two ACSON Kool 2.0 HP air conditioners",
+    "benefitsEn": "5-year warranty per unit; 5 annual services per unit.",
+    "components": [
+      "ACSON-2.0",
+      "ACSON-2.0"
+    ]
   },
   {
     "id": "COMBO-8",
@@ -451,7 +590,14 @@ window.KHIND_PRODUCTS = [
     "source": "",
     "benefits": "Waranti: 5 tahun setiap unit; 5 servis tahunan setiap unit.",
     "stock": "Sahkan kesesuaian bilik dan caj pemasangan tambahan.",
-    "q3": false
+    "q3": false,
+    "nameEn": "Combo 08 · ACSON 1.0 HP + 2.0 HP",
+    "descriptionEn": "ACSON Kool 1.0 HP + 2.0 HP air conditioners",
+    "benefitsEn": "5-year warranty per unit; 5 annual services per unit.",
+    "components": [
+      "ACSON-1.0",
+      "ACSON-2.0"
+    ]
   },
   {
     "id": "COMBO-9",
@@ -471,7 +617,15 @@ window.KHIND_PRODUCTS = [
     "source": "",
     "benefits": "Waranti mesin basuh: 4 tahun. Peti sejuk: 5 tahun.",
     "stock": "Stok terhad / menunggu stok. Sahkan kawasan dan tarikh.",
-    "q3": false
+    "q3": false,
+    "nameEn": "Combo 09 · WM150A + RFM466A",
+    "descriptionEn": "Top-load washer + refrigerator",
+    "benefitsEn": "Washer warranty: 4 years. Refrigerator warranty: 5 years.",
+    "components": [
+      "WM150A",
+      "RFM466A"
+    ],
+    "stockEn": "Limited stock / awaiting stock. Confirm location and date."
   },
   {
     "id": "COMBO-10",
@@ -491,7 +645,15 @@ window.KHIND_PRODUCTS = [
     "source": "",
     "benefits": "Waranti mesin basuh: 4 tahun. Peti sejuk: 5 tahun.",
     "stock": "Stok terhad / menunggu stok. Sahkan kawasan dan tarikh.",
-    "q3": false
+    "q3": false,
+    "nameEn": "Combo 10 · WM150A + RFS600A",
+    "descriptionEn": "Top-load washer + side-by-side refrigerator",
+    "benefitsEn": "Washer warranty: 4 years. Refrigerator warranty: 5 years.",
+    "components": [
+      "WM150A",
+      "RFS600A"
+    ],
+    "stockEn": "Limited stock / awaiting stock. Confirm location and date."
   }
 ];
 
@@ -517,15 +679,30 @@ const KHIND_KEYWORDS = {
   CD12D:['dryer','pengering','vented dryer','air vented','12kg']
 };
 const KHIND_SOURCE_CONFLICTS = {};
+const KHIND_PLAN_BENEFITS_EN = {
+  RFS600A: {
+    Basic: "5-year warranty. Additional Basic plan benefits need confirmation with KHIND.",
+    Premium: "5-year warranty. Premium includes 1 care service, insurance, relocation and disposal, subject to plan scope."
+  },
+  RFM466A: {
+    Basic: "5-year warranty. Additional Basic plan benefits need confirmation with KHIND.",
+    Premium: "5-year warranty. Premium includes 1 care service, insurance, relocation and disposal, subject to plan scope."
+  },
+  RF480: {
+    Basic: "5-year warranty. Additional Basic plan benefits need confirmation with KHIND.",
+    Premium: "5-year warranty. Premium includes 1 care service, insurance, relocation and disposal, subject to plan scope."
+  }
+};
 window.KHIND_PRODUCTS = window.KHIND_PRODUCTS.map(product=>({
   ...product,
+  planBenefitsEn:product.planBenefitsEn||KHIND_PLAN_BENEFITS_EN[product.id]||null,
   keywords:[
     ...(KHIND_KEYWORDS[product.id]||[]),
     ...(product.category==='bundle'?['combo','kombo','bundle','pakej']:[])
   ],
- sourceDate:product.source?'2026-09-28':null,
- campaignSource:product.campaignSource||'KHIND October Sales Booster materials received 2026-10-01',
+ sourceDate:product.sourceDate||null,
+ campaignSource:product.campaignSource||'',
   tenure:product.months,
- verifiedDate:product.verifiedDate||'2026-10-01',
+ verifiedDate:product.verifiedDate||'',
   sourceConflict:KHIND_SOURCE_CONFLICTS[product.id]||null
 }));

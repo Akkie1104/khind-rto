@@ -66,8 +66,8 @@ a.get("save-button").click();
 check("two saves enable Compare prompt",a.get("decision-prompt").innerHTML.includes("compare-now"));
 a.get("decision-prompt").querySelector("#compare-now").click();
 check("Compare and shortlist transitions instrumented separately",
- a.named("compare_open").length===1 && a.named("shortlist_open").length===1);
-const saved=a.get("shortlist-footer").innerHTML;
+ a.named("compare_open").length===1 && a.named("shortlist_open").length===0);
+const saved=a.get("compare-view").innerHTML;
 check("shortlist WhatsApp exists",saved.includes("wa.me/60174201247"));
 a.document.listeners.click({target:{closest:()=>({getAttribute:()=> "https://wa.me/60174201247?text=not-logged"})}});
 check("WhatsApp event does not copy message URL or customer info",

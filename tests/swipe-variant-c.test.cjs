@@ -91,12 +91,50 @@ check("C starts without a hardcoded price", !/RM\d/.test(gate));
 check("C preserves independent agent, no approval promise", gate.includes("bukan semakan kelayakan atau kelulusan pinjaman") &&
   htmlC.includes("bukan KHIND HQ"));
 check("C uses source catalogue and common swipe controls",
-  htmlC.includes("../catalogue.js?v=cd12d-plan-promo") &&
-  htmlC.includes("../swipe-shop.js?v=7") &&
+  htmlC.includes("../catalogue.js?v=20261022-4") &&
+  htmlC.includes("../swipe-shop.js?v=20261022-5") &&
   htmlC.includes('id="skip-button"') &&
   htmlC.includes('id="save-button"') &&
   htmlC.includes('id="undo-button"') &&
   htmlC.includes('id="details-sheet"'));
+const rf480App = launch("budget-first");
+rf480App.choose(1);
+const rf480Card = rf480App.cards().find(card => card.id === "RF480");
+check("RF480 card separates its dated three-month RTO offer from regular total",
+  !!rf480Card && rf480Card.html.includes("RM47.50/bulan selama 3 bulan") &&
+  rf480Card.html.includes("RM95/bulan selama 57 bulan") &&
+  rf480Card.html.includes("RM5,557.50") &&
+  rf480Card.html.includes("pembundaran KHIND perlu disahkan") &&
+  rf480Card.html.includes("Anggaran jumlah pada kadar biasa, sebelum promosi"));
+const rf480Details = launch("budget-first");
+rf480Details.choose(1);
+let rf480Guard = 0;
+while (rf480Details.code() !== "RF480" && rf480Details.code() && rf480Guard++ < 30) {
+  rf480Details.get("skip-button").click();
+  if (!rf480Details.get("rescue-question").hidden) {
+    rf480Details.get("rescue-question").querySelector("#rescue-skip").click();
+  }
+}
+rf480Details.get("card-slot").querySelector("#details-button").click();
+check("RF480 details calculate both plan totals from the same three-month source data",
+  rf480Details.get("details-body").innerHTML.includes("RM4,387.50") &&
+  rf480Details.get("details-body").innerHTML.includes("RM5,557.50") &&
+  rf480Details.get("details-body").innerHTML.includes("jika layak"));
+const rf480Compare = launch("budget-first");
+rf480Compare.choose(1);
+let rf480CompareGuard = 0;
+while (rf480Compare.code() !== "RF480" && rf480Compare.code() && rf480CompareGuard++ < 30) {
+  rf480Compare.get("skip-button").click();
+  if (!rf480Compare.get("rescue-question").hidden) {
+    rf480Compare.get("rescue-question").querySelector("#rescue-skip").click();
+  }
+}
+rf480Compare.get("save-button").click();
+rf480Compare.get("save-button").click();
+rf480Compare.get("decision-prompt").querySelector("#compare-now").click();
+check("RF480 comparison retains the selected plan promotion and estimate",
+  rf480Compare.get("compare-view").innerHTML.includes("RM47.50/bulan selama 3 bulan") &&
+  rf480Compare.get("compare-view").innerHTML.includes("RM5,557.50"));
 check("A and B entry points remain distinct", !htmlA.includes("budget-question-gate") &&
   !htmlB.includes("budget-question-gate"));
 check("C retains mobile-specific design", cssC.includes("max-width:370px") &&
@@ -109,7 +147,9 @@ check("C does not render a product before optional tap",
 const choices = unsorted.get("budget-options").innerHTML;
 const bands = [...choices.matchAll(/data-budget-choice="(\d+)"[\s\S]*?<span class="budget-amount">(RM[\d,.]+)(?: – (RM[\d,.]+))?/g)]
   .map(match => ({ index: Number(match[1]), low: match[2], high: match[3] ?? match[2] }));
-const listed = unsorted.products.filter(p => p.image && p.plans?.length && /^\d{4}-/.test(p.verifiedDate || ""));
+const listed = unsorted.products.filter(p => p.image && p.plans?.length &&
+  /^\d{4}-\d{2}-\d{2}$/.test(p.verifiedDate || "") &&
+  /^https:\/\/(?:www\.khindrto\.com\.my|easyr2o\.khind\.com\.my)\//i.test(p.source || ""));
 const regularRates = new Set(listed.flatMap(p => p.plans.map(q => Number(q.rate))));
 const sourceAmounts = value => "RM" + Number(value).toLocaleString("en-MY", { maximumFractionDigits: 2 });
 check("C generates three broad bands from real rates", bands.length === 3 &&
@@ -171,9 +211,7 @@ app.get("save-button").click();
 check("C keeps two-save compare / keep swiping / Ask Hakim", ["Bandingkan", "Teruskan lihat produk", "Tanya Hakim"]
   .every(s => app.get("decision-prompt").innerHTML.includes(s)));
 app.get("decision-prompt").querySelector("#compare-now").click();
-check("C opens factual saved shortlist", app.get("shortlist-sheet").open &&
-  app.get("shortlist-body").innerHTML.includes("saved-facts") &&
-  app.get("shortlist-body").innerHTML.includes("Kadar bulanan biasa"));
+check("C opens factual saved shortlist", !app.get("compare-view").hidden && app.get("compare-view").innerHTML.includes("compare-grid") && app.get("compare-view").innerHTML.includes("compare-item"));
 const recalculated = launch("budget-first", products => { products.find(p => p.id === "SI6029BP").plans[0].rate = 65; });
 check("bands recalculated when actual catalogue terms change",
   recalculated.get("budget-options").innerHTML.includes("RM65") &&
