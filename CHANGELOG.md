@@ -18,3 +18,9 @@
 - Refreshed the shared `khind-folio.css` cache key to `folio-11` across 35 pages.
 - Updated the storefront workflow to validate the versioned folio cache key.
 - Published as `42193868e2157fe919b2fdd8dfda004c3e04f95e`; GitHub Actions validation and Pages deployment succeeded.
+
+
+## 2026-10-22 - Clarified KHIND rate-reference links
+- Relabeled the WD1438 and CD12D EasyR2O links so they identify the rate reference rather than claiming to link product photos/specifications.
+- Added regression checks for the source links on all ten combo detail pages and both EasyR2O rate links.
+- Local candidate verification passed: 12 Node test files, JavaScript syntax checks for storefront.js/catalogue.js, and git diff --check. Not deployed.

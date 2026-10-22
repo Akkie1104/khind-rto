@@ -297,3 +297,11 @@
 - The local catalogue passed the matching no-results case with the RM80 budget filter active: it showed the empty-state message and one `Kosongkan carian dan penapis` action. That action cleared search and budget together and restored 23 offers.
 - The browser URL policy blocked a `data:` fixture used to view the deployed picker at 360/390px; only HTTP and HTTPS URLs are allowed. No alternate route was attempted. Deployed mobile-width visual acceptance remains unverified.
 - Deployed hover, reduced-motion runtime, required viewport matrix, and all required screenshot types remain unverified; deployed commit/reference was not established this turn. No production edits, push, message, or application submission. Release gate stays closed.
+
+
+## 2026-10-22 - Mobile viewport and source-link verification
+
+- Opened the deployed /pilih-c/ in the visible browser at 390 × 844 CSS px. The document and body scroll widths are 390 px; active card bounds are x=14.4–375.6 px. The screenshot is visible in the browser session but was not exported as a file.
+- Corrected WD1438 and CD12D official EasyR2O link labels to describe rate references. Added tests ensuring each combo detail page links all its component models to the matching catalogue source URLs and that WD1438/CD12D links are labeled as rates.
+- Candidate verification: 12 Node test files passed; syntax checks for storefront.js and catalogue.js passed; git diff --check passed.
+- Candidate remains local/unpublished. The deployed picker and commercial/accessibility/privacy findings remain open; production was not changed, no WhatsApp message sent, and no application submitted.

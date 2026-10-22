@@ -309,3 +309,11 @@ Last updated: 2026-10-22
 - The local catalogue counterpart passed the same no-results case with both search and the RM80 filter active: it showed an empty-state explanation and one `Kosongkan carian dan penapis` action, which restored all 23 offers and cleared both controls.
 - A browser-policy check blocked a `data:` URL fixture for loading the deployed picker at 360/390px because only HTTP and HTTPS URLs are allowed. No workaround was attempted; deployed mobile-width visual acceptance remains unverified in this browser session.
 - Deployed acceptance remains incomplete: hover, reduced-motion runtime, required live viewport matrix, and screenshots for all required page types are not verified. The live deployment reference was not established during this checkpoint. No production change, push, WhatsApp message, or application submission was made; release gate and goal remain active.
+
+
+## 2026-10-22 - Mobile viewport and product-source link checkpoint
+
+- **VERIFIED live picker:** Kept /pilih-c/ open in the visible browser at 390 × 844 CSS px. The current card and save/skip controls are visible; DOM measurement reports viewport/document/body widths of 390/390/390 px and the card bounds from x=14.4 to x=375.6. Screenshot was captured in-session; it was not exported as a standalone file.
+- **Local candidate change:** WD1438 and CD12D now label their EasyR2O product-list/detail links as KHIND RTO rate references instead of photo/specification links. Added regression coverage matching all ten combo component links against the source URLs in catalogue.js.
+- **Verified local checks:** all 12 Node test files passed; node syntax checks passed for storefront.js and catalogue.js; git diff --check passed.
+- **Release status:** candidate remains local and unpublished on codex/khind-rto-storefront-fixes. Production remains at c94cd93. The live 13-card picker, English product copy, low-contrast official links, combo reference absence, RF480 pricing/benefit mismatch, and enquiry privacy copy still require deployed fixes and re-verification. No message was sent and no application was submitted.
