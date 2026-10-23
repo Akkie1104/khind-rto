@@ -188,7 +188,7 @@ button:focus-visible,a:focus-visible,.product-card:focus-visible{outline:3px sol
 .rescue-question{height:100%;width:100%;display:flex;align-items:center;justify-content:center;overflow-y:auto;overscroll-behavior:contain;padding:.35rem}
 .rescue-card{width:100%;max-width:30rem;margin:auto;padding:clamp(.95rem,3.8vw,1.5rem);border:1px solid #6c754b;border-radius:1.1rem;background:radial-gradient(circle at 80% -10%,#34402a,#19251b 58%,#121c14);box-shadow:0 1rem 2rem #0005}
 .rescue-eyebrow{font-size:.62rem;font-weight:900;letter-spacing:.13em;color:var(--yellow);margin:0 0 .55rem}
-.rescue-card h2{font-size:clamp(1.4rem,5.5vw,1.8rem);font-weight:900;letter-spacing:-.05em;line-height:1.2;margin:0}
+.rescue-card h2{font-size:clamp(1.4rem,5.5vw,1.8rem);font-weight:900;letter-spacing:-.05em;line-height:1.2;margin:0;color:#fbfcef}
 .rescue-card h2:focus{outline:none}
 .rescue-explainer{font-size:.77rem;color:#c8d6c2;line-height:1.45;margin:.45rem 0 1.05rem}
 .rescue-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}

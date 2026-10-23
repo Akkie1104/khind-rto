@@ -75,7 +75,7 @@ for (const route of ["pilih", "pilih-b", "pilih-c"]) {
     page.includes('id="shortlist-title" tabindex="-1"') &&
     page.includes('id="shortlist-body"') &&
     page.includes('id="shortlist-footer"') &&
-    page.includes("../swipe-shop.js?v=20261022-5"));
+    page.includes("../swipe-shop.js?v=20261023-2"));
 }
 check("Shortlist mobile styling supports 1–3, 44 px targets, reduced motion",
   css.includes(".shortlist-screen[open]") &&
@@ -147,8 +147,15 @@ check("Compare now opens the two-product comparison view",
   !b.get("compare-view").hidden &&
   b.get("compare-view").innerHTML.includes("compare-grid") &&
   b.get("compare-view").innerHTML.includes("RFS600A"));
-check("Comparison WhatsApp enquiry includes both exact source model IDs",
-  b.get("compare-view").innerHTML.includes("WM1248%2C%20RFS600A"));
+const enquiryHref = b.get("compare-view").innerHTML.match(/href="(https:\/\/wa\.me\/[^"]+)"/)?.[1] || "";
+const enquiryMessage = enquiryHref ? new URL(enquiryHref).searchParams.get("text") || "" : "";
+check("Comparison WhatsApp enquiry includes each selected plan, rate, term and estimate",
+  enquiryMessage.includes("WM1248 (Standard, RM85/bulan x 48 bulan; anggaran jumlah kadar biasa RM4,080") &&
+  enquiryMessage.includes("RFS600A (Basic, RM99/bulan x 60 bulan; anggaran jumlah kadar biasa RM5,940"));
+check("Comparison WhatsApp enquiry discloses unconfirmed-fee caveat",
+  enquiryMessage.includes("tidak termasuk fi atau caj yang belum disahkan"));
+check("Comparison WhatsApp enquiry asks for no sensitive personal information",
+  !/nombor kad pengenalan|nombor akaun|kata laluan|one-time password|\bOTP\b/i.test(enquiryMessage));
 b.get("compare-continue").click();
 check("Continue from comparison returns to the active deck",
   b.get("compare-view").hidden && !b.get("card-slot").hidden);

@@ -90,9 +90,9 @@ verify("variant asks exactly one question", gateHtml.includes("Apa yang anda car
 verify("variant offers exactly four accessible buttons", (gateHtml.match(/<button type="button" data-deck-choice=/g) || []).length === 4 &&
   options.every(([key, label]) => gateHtml.includes('data-deck-choice="' + key + '"') && gateHtml.includes(label)));
 verify("variant uses shared assets with no product duplication",
-  variantMarkup.includes("../swipe-shop.js?v=20261022-5") &&
+  variantMarkup.includes("../swipe-shop.js?v=20261023-2") &&
   variantMarkup.includes("../catalogue.js?v=20261022-4") &&
-  variantMarkup.includes("../swipe-shop.css?v=10"));
+  variantMarkup.includes("../swipe-shop.css?v=11"));
 verify("question fits short mobile viewports", css.includes("@media(max-height:620px)") &&
   css.includes("@media(max-width:370px)"));
 
