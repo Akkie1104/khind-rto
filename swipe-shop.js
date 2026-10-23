@@ -24,7 +24,7 @@
     askHakim: ["Tanya Hakim", "Ask Hakim"],
     remove: ["Buang", "Remove"],
     keepSwiping: ["Teruskan lihat produk", "Keep swiping"],
-    switch: ["Switch to English", "Switch to Malay"],
+    switch: ["Tukar ke Bahasa Inggeris", "Switch to Malay"],
     languageChanged: ["Bahasa Melayu dipilih.", "English selected."],
     goBack: ["Kembali ke laman utama", "Go to homepage"],
     savedAria: ["Lihat pilihan disimpan, ", "View saved picks, "],
