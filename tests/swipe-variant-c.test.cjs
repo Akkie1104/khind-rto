@@ -92,7 +92,7 @@ check("C preserves independent agent, no approval promise", gate.includes("bukan
   htmlC.includes("bukan KHIND HQ"));
 check("C uses source catalogue and common swipe controls",
   htmlC.includes("../catalogue.js?v=20261022-4") &&
-  htmlC.includes("../swipe-shop.js?v=20261023-1") &&
+  htmlC.includes("../swipe-shop.js?v=20261023-2") &&
   htmlC.includes('id="skip-button"') &&
   htmlC.includes('id="save-button"') &&
   htmlC.includes('id="undo-button"') &&
