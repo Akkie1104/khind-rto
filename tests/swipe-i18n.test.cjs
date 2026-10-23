@@ -77,6 +77,9 @@ check("A: one saved and one skipped before switch",
   a.current() === "ACSON-1.0" && a.get("saved-count").textContent === "1" &&
   a.get("deck-position").textContent === "Pilihan 3");
 a.get("language-main").click();
+check("A: language switch and product stage accessible names switch to English",
+  a.get("language-main").getAttribute("aria-label") === "Switch to Malay" &&
+  a.get("swipe-stage").getAttribute("aria-label") === "Appliance chooser and product card");
 check("A: visible Skip button and active category translate to English",
   a.get("skip-button").innerHTML.includes("Skip") &&
   a.get("card-slot").innerHTML.includes("Aircond"));
@@ -176,6 +179,6 @@ check("C: chosen plan and tenure appear in English shortlist",
   c.get("shortlist-body").innerHTML.includes("months"));
 console.log("Bilingual guided shopping regression checks passed.");
 
-check("A: language switch and product stage accessible names switch to English",
-  a.get("language-main").getAttribute("aria-label") === "Switch to Malay" &&
-  a.get("swipe-stage").getAttribute("aria-label") === "Appliance chooser and product card");
+check("A: accessible names update when switching back to Malay",
+  a.get("language-main").getAttribute("aria-label") === "Tukar ke Bahasa Inggeris" &&
+  a.get("swipe-stage").getAttribute("aria-label") === "Pilihan peralatan dan kad produk");
