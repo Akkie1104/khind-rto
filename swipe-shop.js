@@ -24,7 +24,7 @@
     askHakim: ["Tanya Hakim", "Ask Hakim"],
     remove: ["Buang", "Remove"],
     keepSwiping: ["Teruskan lihat produk", "Keep swiping"],
-    switch: ["Switch to English", "Tukar ke Bahasa Melayu"],
+    switch: ["Switch to English", "Switch to Malay"],
     languageChanged: ["Bahasa Melayu dipilih.", "English selected."],
     goBack: ["Kembali ke laman utama", "Go to homepage"],
     savedAria: ["Lihat pilihan disimpan, ", "View saved picks, "],
@@ -442,12 +442,25 @@
     rescuePanel.querySelector("#rescue-title").focus({ preventScroll: true });
   }
   function whatsappUrl(items) {
-    const ids = items.map(p => p.id).join(", ");
+    const details = items.map(p => {
+      const plan = shownPlan(p);
+      const months = Number(p.months);
+      const total = money(plan.rate * months);
+      const planName = localizedPlanName(plan.name);
+      const monthly = language === "ms" ? "/bulan" : "/month";
+      const term = language === "ms" ? months + " bulan" : months + " months";
+      const confirmation = hasVerifiedRate(p) ? "" :
+        (language === "ms" ? "; kadar perlu disahkan dengan KHIND" : "; rate needs KHIND confirmation");
+      const promotion = rtoPromotionText(p, plan);
+      const entry = p.id + " (" + planName + ", " + money(plan.rate) + monthly +
+        " x " + term + "; " + (language === "ms" ? "anggaran jumlah kadar biasa " : "regular-rate total estimate ") + total + confirmation;
+      return entry + (promotion ? "; " + promotion : "") + ")";
+    }).join("; ");
     const message = language === "ms" ?
-      "Salam Hakim, saya berminat dengan produk KHIND RTO berikut: " + ids +
-        ". Boleh bantu semak kadar biasa, jumlah keseluruhan, tempoh, manfaat pelan, stok dan proses rasmi? Terima kasih." :
-      "Hello Hakim, I'm interested in these KHIND RTO products: " + ids +
-        ". Please help confirm regular monthly amounts, total costs, terms, benefits, stock and the official application process. Thank you.";
+      "Salam Hakim, saya berminat dengan pilihan KHIND RTO berikut: " + details +
+        ". Ini anggaran kadar biasa, bukan sebut harga, dan tidak termasuk fi atau caj yang belum disahkan. Sila sahkan kadar, promosi, stok, manfaat dan syarat rasmi dengan KHIND. Terima kasih." :
+      "Hello Hakim, I am interested in these KHIND RTO options: " + details +
+        ". These are regular-rate estimates, not a quote, and exclude unconfirmed fees or charges. Please confirm rates, promotions, stock, benefits and official terms with KHIND. Thank you.";
     return "https://wa.me/60174201247?text=" + encodeURIComponent(message);
   }
   // A persistent, polite status region communicates outcomes without moving pointer focus.
@@ -1018,6 +1031,7 @@
     document.querySelector(".home-link")?.setAttribute("aria-label", t("goBack"));
     $("progress-label").setAttribute("aria-label", t("progressSection"));
     $("progress-track").setAttribute("aria-label", t("progressLabel"));
+    $("swipe-stage").setAttribute("aria-label", t("stageLabel"));
     if (isVariantB) {
       set("gate-marker", t("categoryMarker"));
       set("gate-eyebrow", t("categoryEyebrow"));

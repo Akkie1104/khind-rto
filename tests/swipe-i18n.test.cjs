@@ -62,7 +62,7 @@ for (const route of ["pilih", "pilih-b", "pilih-c"]) {
   check(route + ": language selector available outside and inside modal dialogs",
     ["language-main","language-details","language-shortlist"].every(id => h.includes('id="' + id + '"')));
   check(route + ": refreshed shared assets",
-    h.includes("../swipe-shop.js?v=20261022-5") && h.includes("../swipe-shop.css?v=10"));
+    h.includes("../swipe-shop.js?v=20261023-2") && h.includes("../swipe-shop.css?v=11"));
 }
 
 const a = launch(null);
@@ -175,3 +175,7 @@ check("C: chosen plan and tenure appear in English shortlist",
   c.get("shortlist-body").innerHTML.includes("Term") &&
   c.get("shortlist-body").innerHTML.includes("months"));
 console.log("Bilingual guided shopping regression checks passed.");
+
+check("A: language switch and product stage accessible names switch to English",
+  a.get("language-main").getAttribute("aria-label") === "Switch to Malay" &&
+  a.get("swipe-stage").getAttribute("aria-label") === "Appliance chooser and product card");

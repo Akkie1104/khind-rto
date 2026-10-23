@@ -269,3 +269,4 @@ body.folio-shop{background:var(--folio-paper);color:var(--folio-ink)}
 .folio-shop .compare-heading button{color:var(--folio-ink)}
 .folio-shop .compare-view>p{color:var(--folio-muted)}
 .folio-shop .compare-model{color:var(--folio-rust)}
+.rto-exp-entry{max-width:34rem;margin:15vh auto;padding:2rem;font:inherit}

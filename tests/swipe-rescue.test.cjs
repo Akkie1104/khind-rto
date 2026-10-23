@@ -78,8 +78,8 @@ for (const variant of ["pilih", "pilih-b", "pilih-c"]) {
   check("rescue container is embedded and hidden at load in " + variant,
     html.includes('id="rescue-question"') &&
     html.includes('aria-labelledby="rescue-title" hidden') &&
-    html.includes("swipe-shop.js?v=20261022-5") &&
-    html.includes("swipe-shop.css?v=10"));
+    html.includes("swipe-shop.js?v=20261023-2") &&
+    html.includes("swipe-shop.css?v=11"));
 }
 check("compact rescue includes reduced height and motion-safe styles",
   css.includes(".rescue-options{display:grid;grid-template-columns:repeat(2") &&
@@ -195,3 +195,6 @@ check("existing two-save comparison still appears", engagement.get("decision-pro
 engagement.get("decision-prompt").querySelector("#keep-swiping").click();
 check("comparison does not introduce an immediate rescue question", !engagement.rescue());
 console.log("Conditional rescue checks passed.");
+
+check("rescue heading uses a light high-contrast text color",
+  css.includes(".rescue-card h2{") && css.includes("color:#fbfcef"));
