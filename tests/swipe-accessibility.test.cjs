@@ -24,7 +24,7 @@ for (const route of routes) {
   check(route + ": visible keyboard instruction and same shared assets",
     html.includes('id="swipe-instructions"') &&
   html.includes("../swipe-shop.js?v=20261023-2") &&
-    html.includes("../swipe-shop.css?v=10"));
+    html.includes("../swipe-shop.css?v=11"));
 }
 check("WCAG 2.2 AA target minimum, 44 CSS px implementation",
   css.includes("min-height:2.75rem") &&
