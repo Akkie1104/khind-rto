@@ -44,3 +44,9 @@
 
 ## 2026-11-02 readiness continuation
 - Removed unverified WM1248 and RF480 promotional schedules from calculated customer estimates. Added explicit RM43* and conflicting RF480 source notes and regression tests. Candidate only; not deployed.
+
+## 2026-11-02 — Final candidate review before pause
+- A browser review of the actual candidate worktree found two additional customer-facing gaps: WM1248 detail still calculated RM42.50 for six months, and the homepage promo renderer treated missing eligibility flags as eligible. Candidate now requires explicit yearEndPromo true and uses regular-rate calculations for unconfirmed offers.
+- WM1248 home and product detail now show RM85 x 48 months = RM4,080 and state KHIND RM43* terms are unexplained. RF480 remains on regular rates (Basic RM4,500; Premium RM5,700) with the official 3/6-month conflict disclosed. Campaign pages no longer claim an unverified expiry or show a generic WM1248 promo example.
+- Candidate verification: node --check script.js and test suite passed 26/26. Local candidate browser checked homepage, product detail pages and promotion route; WM1248 WhatsApp drafts now use RM85 x 48 months with no promotional schedule. This local preview does not verify production.
+- Production remains at 406f9539c62ae5d3c215b84c07c9279e34bc3996. No changes were pushed or deployed. Full current route/viewport and network matrix still needs a fresh run before any release; KHIND confirmations remain open. No applications or WhatsApp messages were sent.

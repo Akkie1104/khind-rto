@@ -57,7 +57,7 @@ function normalizeProduct(product){
     stockEn:stockEn||(stock?'':'Stock status and ETA are not stated in the reference. Confirm with KHIND.'),
     keywords:Array.isArray(product.keywords)?product.keywords.map(value=>String(value)):[],
     campaignSource:String(product.campaignSource??''),
-    yearEndPromo:product.yearEndPromo!==false,
+    yearEndPromo:product.yearEndPromo===true,
     verifiedDate:String(product.verifiedDate??''),
     sourceConflict:product.sourceConflict&&typeof product.sourceConflict==='object'?{
       ...product.sourceConflict,
@@ -172,7 +172,7 @@ if(heroProduct&&heroProduct.plans.length){
  if(terms)terms.textContent=preview.discount?'6 bulan pertama; tertakluk kelayakan promosi.':'Kadar rujukan; sahkan terma akhir.';
 }
 const banner=document.querySelector('#campaign');
-if(yearEndCampaign) banner.innerHTML='<b>Kempen lain yang direkodkan: 1 Okt – 31 Dis 2026</b><span>Produk individu terpilih: 50% sehingga 6 bulan pertama · Kombo: RM65 untuk 6 bulan pertama · DHP90: dari RM30 untuk 6 bulan pertama.<br>Rujukan rasmi RF480 diperiksa 22 Okt 2026: 50% untuk 3 bulan pertama; tarikh tamat dan kelayakan tidak dinyatakan.<small>Kadar biasa bersambung selepas tempoh promosi. Sahkan tawaran, pembundaran, dan pra-tempahan RF480 dengan KHIND.</small></span>';
+if(banner) banner.innerHTML='<b>Rujukan promosi KHIND</b><span>Kelayakan, kadar dan tempoh promosi berbeza mengikut model. Tawaran aktif, caj dan syarat penuh perlu disahkan dengan KHIND. Anggaran di bawah menggunakan kadar bulanan biasa sehingga sumber semasa mengesahkan promosi khusus.</span>';
 let category='all';
 const grid=document.querySelector('#products');
 const categoryStory=document.querySelector('#category-story');

@@ -22,6 +22,7 @@ window.KHIND_PRODUCTS = [
     "promoStatus": "Current KHIND page shows RM85/month and RM43* per month but does not explain RM43* eligibility or promotion duration. Do not calculate a promotional schedule until KHIND confirms.",
     "promoStatusEn": "The current KHIND page shows RM85/month and RM43* per month but does not explain RM43* eligibility or promotion duration. Do not calculate a promotional schedule until KHIND confirms.",
     "q3": false,
+    "yearEndPromo": false,
     "nameEn": "Front-load washer",
     "descriptionEn": "9 kg · Washer",
     "benefitsEn": "4-year warranty; 1 care service; 1-year capsule plan."
@@ -172,6 +173,7 @@ window.KHIND_PRODUCTS = [
     "promoStatus": "Current KHIND pages conflict: one says 50% for 6 months and another says 3 months; eligibility and end date are not explained. Confirm before quoting.",
     "promoStatusEn": "Current KHIND pages conflict: one says 50% for 6 months and another says 3 months; eligibility and end date are not explained. Confirm before quoting.",
     "q3": false,
+    "yearEndPromo": false,
     "nameEn": "Chillmaster Lite",
     "descriptionEn": "480 L · Refrigerator",
     "benefitsEn": "5-year warranty. Premium includes 1 care service, insurance, relocation and disposal, subject to plan scope.",
