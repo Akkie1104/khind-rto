@@ -38,8 +38,7 @@ function bootPage(now = "2026-11-02T12:00:00Z") {
     name: "Chillmaster Lite",
     months: "60",
     promostart: "0",
-    promomonths: "3",
-    promo: "yes"
+    promo: "no"
   };
   const ids = {
     "#agent-selected-price": element(),
@@ -94,7 +93,7 @@ test("RF480 plan switching updates displayed benefits and every WhatsApp CTA", (
   const assertPlan = ({ index, rate, promoRate, estimate, plan, benefit }) => {
     choice.selectedIndex = index;
     choice.listeners.change();
-    assert.equal(ids["#agent-selected-price"].innerHTML, `RM${promoRate} <small>/bulan</small>`);
+    assert.equal(ids["#agent-selected-price"].innerHTML, `RM${rate} <small>/bulan</small>`);
     assert.equal(ids["#agent-regular-rate"].textContent, `RM${rate}/bulan`);
     assert.equal(ids["#agent-total"].textContent, `RM${estimate} anggaran`);
     assert.ok(ids["#agent-plan-benefits"].textContent.includes(benefit));
@@ -102,7 +101,7 @@ test("RF480 plan switching updates displayed benefits and every WhatsApp CTA", (
     assert.equal(new Set(prefills).size, 1, "all WhatsApp links share the same selected-plan draft");
     assert.match(prefills[0], new RegExp(`Pelan ${plan}`));
     assert.match(prefills[0], new RegExp(`kadar biasa RM${rate}/bulan selama 60 bulan`));
-    assert.ok(prefills[0].includes(`Promosi (jika layak): RM${promoRate}/bulan selama 3 bulan, kemudian RM${rate}/bulan selama 57 bulan`));
+    assert.ok(!prefills[0].includes("Promosi (jika layak):"));
     assert.match(prefills[0], new RegExp(`Anggaran jumlah bayaran RM${estimate}`));
     assert.match(prefills[0], /sahkan fi, kelayakan promosi/i);
   };
@@ -110,16 +109,16 @@ test("RF480 plan switching updates displayed benefits and every WhatsApp CTA", (
   assertPlan({
     index: 0,
     rate: 75,
-    promoRate: "37.50",
-    estimate: "4,387.50",
+    promoRate: "75",
+    estimate: "4,500",
     plan: "Basic",
     benefit: "Manfaat tambahan pelan Basic perlu disahkan"
   });
   assertPlan({
     index: 1,
     rate: 95,
-    promoRate: "47.50",
-    estimate: "5,557.50",
+    promoRate: "95",
+    estimate: "5,700",
     plan: "Premium",
     benefit: "Premium: 1 servis penjagaan"
   });

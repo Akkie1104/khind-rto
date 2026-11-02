@@ -91,7 +91,7 @@ verify("variant offers exactly four accessible buttons", (gateHtml.match(/<butto
   options.every(([key, label]) => gateHtml.includes('data-deck-choice="' + key + '"') && gateHtml.includes(label)));
 verify("variant uses shared assets with no product duplication",
   variantMarkup.includes("../swipe-shop.js?v=20261102-3") &&
-  variantMarkup.includes("../catalogue.js?v=20261022-4") &&
+  variantMarkup.includes("../catalogue.js?v=20261102-1") &&
   variantMarkup.includes("../swipe-shop.css?v=13"));
 verify("question fits short mobile viewports", css.includes("@media(max-height:620px)") &&
   css.includes("@media(max-width:370px)"));

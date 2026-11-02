@@ -91,7 +91,7 @@ check("C starts without a hardcoded price", !/RM\d/.test(gate));
 check("C preserves independent agent, no approval promise", gate.includes("bukan semakan kelayakan atau kelulusan pinjaman") &&
   htmlC.includes("bukan KHIND HQ"));
 check("C uses source catalogue and common swipe controls",
-  htmlC.includes("../catalogue.js?v=20261022-4") &&
+  htmlC.includes("../catalogue.js?v=20261102-1") &&
   htmlC.includes("../swipe-shop.js?v=20261102-3") &&
   htmlC.includes('id="skip-button"') &&
   htmlC.includes('id="save-button"') &&
@@ -100,12 +100,11 @@ check("C uses source catalogue and common swipe controls",
 const rf480App = launch("budget-first");
 rf480App.choose(1);
 const rf480Card = rf480App.cards().find(card => card.id === "RF480");
-check("RF480 card separates its dated three-month RTO offer from regular total",
-  !!rf480Card && rf480Card.html.includes("RM47.50/bulan selama 3 bulan") &&
-  rf480Card.html.includes("RM95/bulan selama 57 bulan") &&
-  rf480Card.html.includes("RM5,557.50") &&
-  rf480Card.html.includes("pembundaran KHIND perlu disahkan") &&
-  rf480Card.html.includes("Anggaran jumlah pada kadar biasa, sebelum promosi"));
+check("RF480 card uses regular total without inventing a promo schedule",
+  !!rf480Card && rf480Card.html.includes("RM95<small>/bulan</small>") &&
+  rf480Card.html.includes("RM5,700") &&
+  rf480Card.html.includes("KADAR BULANAN BIASA") &&
+  !rf480Card.html.includes("selama 3 bulan"));
 const rf480Details = launch("budget-first");
 rf480Details.choose(1);
 let rf480Guard = 0;
@@ -116,10 +115,10 @@ while (rf480Details.code() !== "RF480" && rf480Details.code() && rf480Guard++ < 
   }
 }
 rf480Details.get("card-slot").querySelector("#details-button").click();
-check("RF480 details calculate both plan totals from the same three-month source data",
-  rf480Details.get("details-body").innerHTML.includes("RM4,387.50") &&
-  rf480Details.get("details-body").innerHTML.includes("RM5,557.50") &&
-  rf480Details.get("details-body").innerHTML.includes("jika layak"));
+check("RF480 details calculate regular plan totals without unverified promotion",
+  rf480Details.get("details-body").innerHTML.includes("RM4,500") &&
+  rf480Details.get("details-body").innerHTML.includes("RM5,700") &&
+  rf480Details.get("details-body").innerHTML.includes("Pelan & bayaran biasa"));
 const rf480Compare = launch("budget-first");
 rf480Compare.choose(1);
 let rf480CompareGuard = 0;
@@ -132,9 +131,10 @@ while (rf480Compare.code() !== "RF480" && rf480Compare.code() && rf480CompareGua
 rf480Compare.get("save-button").click();
 rf480Compare.get("save-button").click();
 rf480Compare.get("decision-prompt").querySelector("#compare-now").click();
-check("RF480 comparison retains the selected plan promotion and estimate",
-  rf480Compare.get("compare-view").innerHTML.includes("RM47.50/bulan selama 3 bulan") &&
-  rf480Compare.get("compare-view").innerHTML.includes("RM5,557.50"));
+check("RF480 comparison retains the selected regular-rate estimate",
+  rf480Compare.get("compare-view").innerHTML.includes("RM95/bulan") &&
+  rf480Compare.get("compare-view").innerHTML.includes("RM5,700") &&
+  !rf480Compare.get("compare-view").innerHTML.includes("selama 3 bulan"));
 check("A and B entry points remain distinct", !htmlA.includes("budget-question-gate") &&
   !htmlB.includes("budget-question-gate"));
 check("C retains mobile-specific design", cssC.includes("max-width:370px") &&

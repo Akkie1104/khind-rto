@@ -100,7 +100,7 @@ check("Model, category, 9kg specification and checked regular amount come from c
   html.includes("9kg · Basuh") &&
   html.includes("RM85/bulan") &&
   html.includes("Standard · 48 bulan") &&
-  html.includes("Disemak 2026-10-12"));
+  html.includes("Disemak 2026-11-02"));
 check("Cash promotion does not imply an RTO monthly rate discount",
   html.includes("Promosi harga tunai direkodkan (RM3,000)") &&
   html.includes("status semasa perlu disahkan") &&

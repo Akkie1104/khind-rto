@@ -353,3 +353,8 @@ Artifacts below are local files in projects/khind-rto (the parent of .candidate-
 - Candidate r3 JSON: .qa-candidate-full-r3-20261102.json
 - Live screenshots: .qa-live-home-1440-20261102.png; .qa-live-home-360-20261102.png; .qa-live-catalogue-390-20261102.png; .qa-live-RF480-390-20261102.png; .qa-live-picker-390-20261102.png; .qa-live-comparison-390-20261102.png; .qa-live-touch-20261102.png.
 - Candidate screenshots: .qa-candidate-home-360-r3-20261102.png; .qa-candidate-home-1440-r3-20261102.png; .qa-candidate-catalogue-390-r3-20261102.png; .qa-candidate-picker-390-r3-20261102.png; .qa-candidate-RF480-390-r3-20261102.png; .qa-candidate-comparison-390-r3-20261102.png; .qa-candidate-touch-r3-20261102.png.
+
+## Live readiness continuation — 2026-11-02
+- Production is still commit 406f9539c62ae5d3c215b84c07c9279e34bc3996. GitHub Pages run #42 and storefront validation #69 both succeeded on this commit; neither supersedes the manual acceptance findings recorded above.
+- A local candidate now suppresses WM1248 and RF480 promo calculations until KHIND confirms their terms. RF480 detail shows regular-plan totals and the conflicting official 3/6-month offer language. Candidate test suite: 25/25 passed. Candidate has not been published.
+- Site is not verified live-ready. New candidate release needs explicit user approval; full deployed-route, network/console, responsive, accessibility, and customer-flow checks must be repeated after release. KHIND commercial confirmations remain open.

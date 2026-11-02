@@ -41,3 +41,6 @@
 - Rechecked all 23 product routes and their loaded images, alt text and KHIND reference links. Live catalogue recovery, ten FAQ disclosures, picker save/skip/undo, comparison, language metadata, three-item cap and removal passed at available 1280px.
 - Confirmed live RF480 defect: only one of three WhatsApp links follows the selected plan and estimate. The unpublished candidate fixes all three in preview.
 - Candidate suite 22/22, JS syntax checks and diff check pass. Required responsive matrix, reduced-motion, full console/network audit, touch swipes and screenshot set remain open. Site is not verified live-ready; no production action.
+
+## 2026-11-02 readiness continuation
+- Removed unverified WM1248 and RF480 promotional schedules from calculated customer estimates. Added explicit RM43* and conflicting RF480 source notes and regression tests. Candidate only; not deployed.
