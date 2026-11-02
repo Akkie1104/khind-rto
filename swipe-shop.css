@@ -382,3 +382,10 @@ body.folio-shop :is(small,.saved-label,.progress-label,.product-overline,.produc
  body.folio-shop .product-extras>span{display:block;min-width:0}
  body.folio-shop .product-extras .details-button{align-self:flex-end;flex:0 0 auto}
 }
+
+/* Readable saved control and two-band focus rings on cream and dark surfaces. */
+.folio-shop .saved-indicator .saved-label{color:inherit}
+.folio-shop .saved-indicator:disabled{opacity:1;color:var(--folio-muted)}
+.folio-shop :is(a,button,[tabindex]):focus-visible{outline:3px solid var(--folio-ink);outline-offset:3px;box-shadow:0 0 0 3px var(--folio-paper-light)}
+
+body.folio-shop :is(.photo-corner-mark,.product-overline span,.home-link,.question-eyebrow,.question-option-number,.question-disclosure,.budget-option-caption,.photo-topline,.photo-topline span:last-child,.question-marker span){font-size:max(12px,.75rem)!important}

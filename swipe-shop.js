@@ -703,14 +703,25 @@
     });
     card.addEventListener("pointerup", event => {
       if (!gesture || gesture.id !== event.pointerId) return;
-      const dx = gesture.dx;
-      const active = gesture.active;
+      // The final move may be coalesced or omitted; release coordinates are authoritative.
+      const dx = Number.isFinite(event.clientX) ? event.clientX - gesture.x : gesture.dx;
+      const dy = Number.isFinite(event.clientY) ? event.clientY - gesture.y : 0;
+      const active = gesture.active || Math.abs(dx) >= 12 && Math.abs(dx) > Math.abs(dy);
       gesture = null;
       reset();
       if (active && Math.abs(dx) >= Math.min(105, card.clientWidth * .24)) commitDecision(dx > 0, false, "gesture");
     });
-    card.addEventListener("pointercancel", () => { gesture = null; reset(); });
-    card.addEventListener("lostpointercapture", () => { if (gesture) { gesture = null; reset(); } });
+    card.addEventListener("pointercancel", event => {
+      if (!gesture || gesture.id !== event.pointerId) return;
+      gesture = null;
+      reset();
+    });
+    card.addEventListener("lostpointercapture", event => {
+      // Touch images implicitly capture first; their bubbled transfer event is not card capture loss.
+      if (!gesture || event.target !== card || gesture.id !== event.pointerId) return;
+      gesture = null;
+      reset();
+    });
     card.addEventListener("keydown", event => {
       if (event.target !== card) return;
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
@@ -973,9 +984,13 @@
   document.querySelector("[data-close-details]").addEventListener("click", () => detailsSheet.close());
   document.querySelector("[data-close-shortlist]").addEventListener("click", closeShortlist);
   detailsSheet.addEventListener("close", () => {
-    if (!detailsReturnToShortlist) return;
-    detailsReturnToShortlist = false;
-    if (state.saved.length) openShortlist();
+    if (detailsReturnToShortlist) {
+      detailsReturnToShortlist = false;
+      if (state.saved.length) openShortlist();
+      return;
+    }
+    // Translation recreates the card, so the native dialog's old opener is detached.
+    cardSlot.querySelector("#details-button")?.focus({ preventScroll: true });
   });
   [detailsSheet, shortlistSheet].forEach(dialog => dialog.addEventListener("click", event => {
     if (event.target !== dialog) return;

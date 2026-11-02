@@ -317,3 +317,39 @@ Last updated: 2026-10-22
 - **Local candidate change:** WD1438 and CD12D now label their EasyR2O product-list/detail links as KHIND RTO rate references instead of photo/specification links. Added regression coverage matching all ten combo component links against the source URLs in catalogue.js.
 - **Verified local checks:** all 12 Node test files passed; node syntax checks passed for storefront.js and catalogue.js; git diff --check passed.
 - **Release status:** candidate remains local and unpublished on codex/khind-rto-storefront-fixes. Production remains at c94cd93. The live 13-card picker, English product copy, low-contrast official links, combo reference absence, RF480 pricing/benefit mismatch, and enquiry privacy copy still require deployed fixes and re-verification. No message was sent and no application was submitted.
+
+## Current live-readiness acceptance - 2026-11-02
+
+**Candidate verified locally; production is not verified live-ready. A new production release requires explicit approval.** This section supersedes the earlier partial 2 November checkpoint claims; older dated entries above remain historical.
+
+### Production baseline
+
+- Repository: Akkie1104/khind-rto. Current main/deployed commit: 406f9539c62ae5d3c215b84c07c9279e34bc3996. Pages deployment #42 (run 39901928307) and validation #69 (run 39901928180) succeeded for that commit. No production release was made during this continuation.
+- Chromium audit covered 35 required routes at 1440, 1024, 768, 390 and 360 CSS px: 175/175 loaded with titles/H1s and no document overflow or clipped visible text. All 23 product routes at all five widths had loaded product image(s) with nonzero natural dimensions and alt text (115/115 product-width checks). No title, product-image, HTTP, page or console errors were reported.
+- Five failed requests all point to the same malformed DHP90 image URL in the homepage combo; this is distinct from the passing product-detail images. Production also fails the 12px supporting-text minimum on the homepage/mobile navigation/picker variants; active/hover product navigation is 1.404:1 on cream; closing translated Details leaves focus on BODY; trusted left/right touch swipes make no decision; and RF480 plan changes update only the primary WhatsApp CTA.
+- Other required live customer flows passed: catalogue category/budget/search/recovery; all ten FAQ disclosures and main navigation routes; picker button/keyboard skip, save, Undo, EN/BM switching and Details state; comparison, three-item cap, removal and continuing. Comparison showed WM1248 Standard RM85 x 48 = RM4,080 and RFS600A Basic RM99 x 60 = RM5,940. Reduced-motion runtime passed. Required screenshots were saved. No WhatsApp message or application was submitted.
+
+### Candidate r3
+
+- Source is the unpublished, uncommitted codex/khind-live-readiness-20261102 worktree based on 406f953. The original divergent checkout is preserved. Candidate changes correct the DHP90 combo image URL; add official WM1248 hero/social photography and metadata; update every RF480 WhatsApp CTA for the selected plan; fix homepage selected-plan benefits; restore translated Details focus; improve saved/control/navigation contrast; enforce supporting text minimums; and fix final-coordinate plus implicit-image-capture touch handling.
+- Fresh candidate Chromium r3 audit passed 175/175 route-width checks: titles/H1s, no document overflow, no clipped visible text and no sub-12px visible text. All 115/115 product-width image checks passed. There were zero load, failed-request, HTTP or harness errors; the corrected DHP90 image returned 200.
+- Focused candidate browser checks passed: product-nav active/hover contrast 14.26:1; EN/BM metadata and picker state preservation; translated Details close focuses #details-button; enabled Saved label contrast 14.26:1; RF480 Basic/Premium updates all three drafts, rates, promotional schedule, 60-month term, benefits/caveat and estimates (RM4,387.50 / RM5,557.50); comparison totals; reduced-motion runtime; and trusted right-save/left-skip touch gestures.
+- Candidate official share image is genuine KHIND WM1248 photography, 1100 x 1340, 64,638-byte WebP. Local HTTP readback returned image/webp and identical asset bytes; no generated product substitute was used. Arithmetic and image/source checks do not establish current commercial eligibility.
+- Fresh source checks: node --test tests/*.test.cjs passed 25/25. JavaScript syntax checks passed for script.js, storefront.js and swipe-shop.js; final git diff --check passed. Candidate runtime evidence establishes this local revision only; production still has the defects above.
+
+### Unresolved KHIND confirmations and release gate
+
+- WM1248 RM43* promotional eligibility and duration.
+- Every undated or otherwise unverified rate, promotion, date, rounding rule, plan term, benefit, fee and cash-price reference identified by the data audit.
+- Current RF480/ACSON source dates, promotion dates/eligibility and terms; current official source/terms for COMBO-1 through COMBO-10; and current stock/ETA, including SI6029BP and washer delivery notes.
+- Keep these claims labelled for KHIND confirmation. Candidate verification is not confirmation of commercial terms. No new production release has approval; the site remains not verified live-ready until applicable candidate fixes are approved, deployed and rechecked, with commercial confirmations or explicit source-backed limitations retained.
+- No push, deployment, external message or application submission occurred. No customer data was used.
+
+### Saved evidence
+
+Artifacts below are local files in projects/khind-rto (the parent of .candidate-live), not deployed website assets.
+
+- Live JSON: .qa-live-readiness-20261102.json
+- Candidate r3 JSON: .qa-candidate-full-r3-20261102.json
+- Live screenshots: .qa-live-home-1440-20261102.png; .qa-live-home-360-20261102.png; .qa-live-catalogue-390-20261102.png; .qa-live-RF480-390-20261102.png; .qa-live-picker-390-20261102.png; .qa-live-comparison-390-20261102.png; .qa-live-touch-20261102.png.
+- Candidate screenshots: .qa-candidate-home-360-r3-20261102.png; .qa-candidate-home-1440-r3-20261102.png; .qa-candidate-catalogue-390-r3-20261102.png; .qa-candidate-picker-390-r3-20261102.png; .qa-candidate-RF480-390-r3-20261102.png; .qa-candidate-comparison-390-r3-20261102.png; .qa-candidate-touch-r3-20261102.png.

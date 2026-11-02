@@ -98,6 +98,55 @@ check("rightward gesture captured distinctly with updated saved count",
  gesture.named("card_swipe_right").length===1 &&
  gesture.named("card_swipe_right")[0].saved_count===1);
 
+const touch=launch();
+const touchCard=()=>touch.get("card-slot").querySelector("#active-card");
+const touchEvent=(pointerId,clientX,clientY=120)=>({button:0,isPrimary:true,pointerType:"touch",isTrusted:true,pointerId,clientX,clientY,target:{closest:()=>null}});
+touchCard().listeners.pointerdown(touchEvent(5,195));
+touchCard().listeners.pointerup(touchEvent(5,361));
+check("touch release saves using final coordinates even when move events are coalesced",
+  touch.named("card_swipe_right").length===1 && touch.get("saved-count").textContent==="1" &&
+  touch.get("progress-track").getAttribute("aria-valuenow")==="1");
+touchCard().listeners.pointerdown(touchEvent(6,195));
+touchCard().listeners.pointermove(touchEvent(6,180));
+touchCard().listeners.pointerup(touchEvent(6,29));
+check("touch release skips using final coordinates after a smaller intermediate move",
+  touch.named("card_swipe_left").length===1 && touch.get("saved-count").textContent==="1" &&
+  touch.get("progress-track").getAttribute("aria-valuenow")==="2");
+const unchanged=touch.get("progress-track").getAttribute("aria-valuenow");
+touchCard().listeners.pointerdown(touchEvent(7,195));
+touchCard().listeners.pointerup(touchEvent(7,210,300));
+touchCard().listeners.pointerdown(touchEvent(8,195));
+touchCard().listeners.pointercancel(touchEvent(8,361));
+touchCard().listeners.pointerup(touchEvent(8,361));
+check("vertical scrolling and cancelled touch gestures never decide a card",
+  touch.get("progress-track").getAttribute("aria-valuenow")===unchanged && touch.get("saved-count").textContent==="1");
+
+const captureTouch=launch();
+function dragFromImage(pointerId,start,end) {
+  const card=captureTouch.get("card-slot").querySelector("#active-card");
+  const image={closest:()=>null};
+  const properties=new Map(),classes=new Set();
+  card.style={setProperty:(key,value)=>properties.set(key,value),removeProperty:key=>properties.delete(key)};
+  card.classList={add:key=>classes.add(key),remove:key=>classes.delete(key)};
+  card.setPointerCapture=id=>card.listeners.lostpointercapture({target:image,pointerId:id});
+  card.listeners.pointerdown({...touchEvent(pointerId,start),target:image});
+  card.listeners.pointermove({...touchEvent(pointerId,end),target:image});
+  check("bubbled image capture transfer preserves drag state " + pointerId,
+    classes.has("dragging") && properties.get("--drag-x")===(end-start)+"px");
+  card.listeners.pointerup({...touchEvent(pointerId,end),target:card});
+}
+dragFromImage(9,195,361);
+dragFromImage(10,195,29);
+check("touch from captured image saves right and skips left exactly once",
+  captureTouch.named("card_swipe_right").length===1 && captureTouch.named("card_swipe_left").length===1 &&
+  captureTouch.get("saved-count").textContent==="1" && captureTouch.get("progress-track").getAttribute("aria-valuenow")==="2");
+const cancelledCard=captureTouch.get("card-slot").querySelector("#active-card");
+cancelledCard.listeners.pointerdown(touchEvent(11,195));
+cancelledCard.listeners.lostpointercapture({target:cancelledCard,pointerId:11});
+cancelledCard.listeners.pointerup(touchEvent(11,361));
+check("losing the active card capture cancels only that gesture",
+  captureTouch.get("progress-track").getAttribute("aria-valuenow")==="2");
+
 const rescue=launch();
 rescue.get("skip-button").click();rescue.get("skip-button").click();rescue.get("skip-button").click();
 check("rescue question shown only after third consecutive skip",

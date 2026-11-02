@@ -92,7 +92,7 @@
  const price=document.querySelector('#agent-selected-price');
  const rateText=document.querySelector('#agent-regular-rate');
  const totalText=document.querySelector('#agent-total');
- const ask=document.querySelector('#agent-ask');
+ const planWhatsAppLinks=[...document.querySelectorAll('a[href^="https://wa.me/"]')];
  const planChoice=document.querySelector('#agent-plan-choice');
  const priceLabel=document.querySelector('.agent-plan-label');
  const totalLabel=document.querySelector('#agent-total-label');
@@ -133,10 +133,12 @@
    if(price)price.innerHTML=money(first)+' <small>/bulan</small>';
    if(rateText)rateText.textContent=money(amount)+'/bulan';
    if(totalText)totalText.textContent=money(estimate)+' anggaran';
-   if(ask){
+   {
      const model=planChoice.dataset.model,name=planChoice.dataset.name;
-     const msg='Salam Hakim, saya berminat dengan '+name+' ('+model+'). Pelan '+o.text+', kadar biasa '+money(amount)+'/bulan, tempoh '+months+' bulan. Mohon sahkan jumlah bayaran pertama, promosi, stok, manfaat waranti dan syarat penuh sebelum saya memohon.';
-     ask.href='https://wa.me/60174201247?text='+encodeURIComponent(msg);
+     const promoSchedule=currentPromo?' Promosi (jika layak): '+money(first)+'/bulan selama '+promoMonths+' bulan, kemudian '+money(amount)+'/bulan selama '+(months-promoMonths)+' bulan.':'';
+     const msg='Salam Hakim, saya berminat dengan '+name+' ('+model+'). Pelan '+planName+', kadar biasa '+money(amount)+'/bulan selama '+months+' bulan.'+promoSchedule+' Anggaran jumlah bayaran '+money(estimate)+' (tidak termasuk fi atau caj yang belum disahkan). Mohon sahkan fi, kelayakan promosi, stok, manfaat dan syarat penuh sebelum saya memohon.';
+     const href='https://wa.me/60174201247?text='+encodeURIComponent(msg);
+     planWhatsAppLinks.forEach(link=>{link.href=href;});
    }
  }
  planChoice?.addEventListener('change',updatePlan);

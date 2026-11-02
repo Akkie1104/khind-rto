@@ -15,5 +15,9 @@
 .guide-intro h2{color:#faf7de;font-size:clamp(1.1rem,1rem + .45vw,1.42rem);margin:.1rem 0 .4rem}
 .guide-intro p{color:#d4decf;font-size:.89rem;line-height:1.55;margin:0}
 .guide-intro .guide-label{color:#f5d34e;font-size:.74rem;letter-spacing:.075em;font-weight:850}
+
+/* Keep supporting homepage copy readable at every responsive breakpoint. */
+.folio-home :is(.campaign small,.footer-inner,.promo-number,.section-label,.promo-tag,.story-copy,.guide-label,.site-notice,.mobile-bottom-nav a,.mobile-bottom-nav span,.brand span){font-size:max(12px,.75rem)!important}
+.folio-home .folio-index span{font-size:max(12px,clamp(.7rem,1vw,.9rem))!important}
 @media(max-width:43rem){.guide-intro{grid-template-columns:1fr}.guide-intro .guide-trigger{width:100%}}
 @media(prefers-reduced-motion:reduce){.guide-trigger{transition:none}}

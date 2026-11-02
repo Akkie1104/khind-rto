@@ -270,3 +270,7 @@ body.folio-shop{background:var(--folio-paper);color:var(--folio-ink)}
 .folio-shop .compare-view>p{color:var(--folio-muted)}
 .folio-shop .compare-model{color:var(--folio-rust)}
 .rto-exp-entry{max-width:34rem;margin:15vh auto;padding:2rem;font:inherit}
+
+.mobile-bottom-nav :is(a,span){font-size:max(12px,.75rem)!important}
+.agent-nav a{font-size:max(12px,.75rem)!important}
+.agent-nav a:hover,.agent-nav a[aria-current=page]{color:var(--folio-ink);text-decoration:underline;text-decoration-thickness:2px}

@@ -62,7 +62,7 @@ for (const route of ["pilih", "pilih-b", "pilih-c"]) {
   check(route + ": language selector available outside and inside modal dialogs",
     ["language-main","language-details","language-shortlist"].every(id => h.includes('id="' + id + '"')));
   check(route + ": refreshed shared assets",
-    h.includes("../swipe-shop.js?v=20261023-2") && h.includes("../swipe-shop.css?v=11"));
+    h.includes("../swipe-shop.js?v=20261102-3") && h.includes("../swipe-shop.css?v=13"));
 }
 
 const a = launch(null);
@@ -96,12 +96,19 @@ check("A: Details open in English for same current product",
   a.get("details-sheet").open && a.get("details-body").innerHTML.includes("ACSON-1.0") &&
   a.get("details-body").innerHTML.includes("Plans and regular monthly payments"));
 a.get("details-body").scrollTop = 180;
+const detailsOpenerBeforeTranslation = a.get("card-slot").querySelector("#details-button");
 a.get("language-details").click();
 check("A: switching language inside Details keeps it open on same product",
   a.get("details-sheet").open && a.get("details-body").innerHTML.includes("ACSON-1.0") &&
   a.get("details-body").innerHTML.includes("Pelan & bayaran biasa") &&
   a.get("details-body").scrollTop === 180 && a.doc.documentElement.lang === "ms");
 a.get("details-sheet").close();
+a.get("details-sheet").listeners.close?.();
+const detailsOpenerAfterTranslation = a.get("card-slot").querySelector("#details-button");
+check("A: closing translated Details restores focus to its replacement trigger without changing picks",
+  detailsOpenerAfterTranslation !== detailsOpenerBeforeTranslation &&
+  detailsOpenerAfterTranslation.focused && a.current() === "ACSON-1.0" &&
+  a.get("saved-count").textContent === "1" && a.get("deck-position").textContent === "Pilihan 3");
 a.get("undo-button").click();
 check("A: undo restores skipped product after language change without losing save",
   a.current() === "RFS600A" && a.get("deck-position").textContent === "Pilihan 2" &&
